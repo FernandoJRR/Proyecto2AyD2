@@ -1,5 +1,7 @@
 package com.ayd.product_service.product.models;
 
+import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
+import com.ayd.product_service.product.dtos.UpdateProductRequestDTO;
 import com.ayd.product_service.product.emuns.EnumProductState;
 import com.ayd.product_service.product.emuns.EnumProductType;
 import com.ayd.product_service.shared.models.Auditor;
@@ -27,4 +29,31 @@ public class Product extends Auditor {
     private EnumProductType type;
     @Column(nullable = false)
     private EnumProductState state;
+
+    public Product(CreateProductRequestDTO createProductRequestDTO) {
+        this.name = createProductRequestDTO.getName();
+        this.code = createProductRequestDTO.getCode();
+        this.barCode = createProductRequestDTO.getBarCode();
+        this.type = createProductRequestDTO.getType();
+        this.state = createProductRequestDTO.getState();
+    }
+
+    public Product updateProduct(UpdateProductRequestDTO updateProductRequestDTO) {
+        if(updateProductRequestDTO.getName() != null) {
+            this.name = updateProductRequestDTO.getName();
+        }
+        if(updateProductRequestDTO.getCode() != null) {
+            this.code = updateProductRequestDTO.getCode();
+        }
+        if(updateProductRequestDTO.getBarCode() != null) {
+            this.barCode = updateProductRequestDTO.getBarCode();
+        }
+        if(updateProductRequestDTO.getType() != null) {
+            this.type = updateProductRequestDTO.getType();
+        }
+        if(updateProductRequestDTO.getState() != null) {
+            this.state = updateProductRequestDTO.getState();
+        }
+        return this;
+    }
 }

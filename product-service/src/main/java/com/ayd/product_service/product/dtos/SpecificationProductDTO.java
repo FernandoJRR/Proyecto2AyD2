@@ -1,5 +1,8 @@
 package com.ayd.product_service.product.dtos;
 
+import com.ayd.product_service.product.emuns.EnumProductState;
+import com.ayd.product_service.product.emuns.EnumProductType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -10,12 +13,11 @@ import lombok.Value;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponseDTO {
+public class SpecificationProductDTO {
     private String id;
     private String name;
     private String code;
     private String barCode;
-    private String type;
-    private String state;
-    private String createdAt;
+    private EnumProductType type;
+    private EnumProductState state;
 }

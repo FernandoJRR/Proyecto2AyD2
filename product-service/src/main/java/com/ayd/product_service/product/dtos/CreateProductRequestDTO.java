@@ -6,9 +6,15 @@ import com.ayd.product_service.product.emuns.EnumProductType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateProductRequestDTO {
     @NotBlank(message = "El nombre del producto es obligatorio")
     @Size(min = 1, max = 100, message = "El nombre del producto debe tener entre 1 y 100 caracteres")

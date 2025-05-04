@@ -6,9 +6,8 @@ import org.mapstruct.Mapper;
 
 import com.ayd.product_service.product.dtos.ProductResponseDTO;
 import com.ayd.product_service.product.models.Product;
-import com.ayd.product_service.shared.utils.DateFormatterUtil;
 
-@Mapper(componentModel = "spring", uses = { DateFormatterUtil.class })
+@Mapper(componentModel = "spring")
 public interface ProductMapper {
 
     public ProductResponseDTO fromProductToProductResponseDTO(Product product);

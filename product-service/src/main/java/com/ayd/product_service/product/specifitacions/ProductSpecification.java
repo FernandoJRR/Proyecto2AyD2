@@ -2,6 +2,8 @@ package com.ayd.product_service.product.specifitacions;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.ayd.product_service.product.emuns.EnumProductState;
+import com.ayd.product_service.product.emuns.EnumProductType;
 import com.ayd.product_service.product.models.Product;
 
 public class ProductSpecification {
@@ -20,12 +22,12 @@ public class ProductSpecification {
                 barCode == null ? null : cb.like(cb.lower(root.get("barCode")), "%" + barCode.toLowerCase() + "%");
     }
 
-    public static Specification<Product> hasType(Integer type) {
+    public static Specification<Product> hasType(EnumProductType type) {
         return (root, query, cb) ->
             type == null ? null : cb.equal(root.get("type"), type);
     }
     
-    public static Specification<Product> hasState(Integer state) {
+    public static Specification<Product> hasState(EnumProductState state) {
         return (root, query, cb) ->
             state == null ? null : cb.equal(root.get("state"), state);
     }
