@@ -6,8 +6,10 @@ import com.ayd.product_service.product.emuns.EnumProductType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Value;
 
-public class UpdateProducRequestDTO {
+@Value
+public class UpdateProductRequestDTO {
     @NotBlank(message = "El id del producto es obligatorio")
     private String id;
     @NotBlank(message = "El nombre del producto es obligatorio")
