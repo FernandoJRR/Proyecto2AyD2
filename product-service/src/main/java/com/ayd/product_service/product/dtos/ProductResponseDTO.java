@@ -1,15 +1,8 @@
 package com.ayd.product_service.product.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Value;
 
-@Data
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
 public class ProductResponseDTO {
     private String id;
     private String name;
