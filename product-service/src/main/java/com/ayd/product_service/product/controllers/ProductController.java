@@ -2,6 +2,7 @@ package com.ayd.product_service.product.controllers;
 
 import lombok.RequiredArgsConstructor;
 
+import java.lang.Thread.State;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.rsocket.RSocketProperties.Server.Spec;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
 import com.ayd.product_service.product.dtos.ProductResponseDTO;
 import com.ayd.product_service.product.dtos.SpecificationProductDTO;
+import com.ayd.product_service.product.dtos.StateProductResponseDTO;
+import com.ayd.product_service.product.dtos.TypeProductResponseDTO;
 import com.ayd.product_service.product.dtos.UpdateProductRequestDTO;
 import com.ayd.product_service.product.mappers.ProductMapper;
 import com.ayd.product_service.product.models.Product;
@@ -103,7 +106,6 @@ public class ProductController {
     @Operation(summary = "Obtener todos los productos", description = "Devuelve una lista de productos. Puede recibir filtros opcionales en el cuerpo de la solicitud para realizar búsquedas más específicas.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de productos obtenida exitosamente"),
-            @ApiResponse(responseCode = "400", description = "Error de validación en los filtros proporcionados"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
     @GetMapping("/all")
@@ -114,4 +116,38 @@ public class ProductController {
         return productMapper.fromProductsToProductResponseDTOs(products);
     }
 
+    @Operation(summary = "Obtener productos por lista de IDs", description = "Devuelve una lista de productos cuyos IDs coincidan con los proporcionados en el cuerpo de la solicitud.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de productos obtenida exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
+    @GetMapping("/ids")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponseDTO> getProductsByIds(
+            @RequestBody(required = false) List<String> ids) {
+        List<Product> products = forProductPort.getProductsByIds(ids);
+        return productMapper.fromProductsToProductResponseDTOs(products);
+    }
+
+    @Operation(summary = "Obtener estados de producto", description = "Devuelve una lista de todos los estados posibles que puede tener un producto en el sistema.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de estados obtenida exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
+    @GetMapping("/states")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StateProductResponseDTO> getStates() {
+        return forProductPort.getStates();
+    }
+
+    @Operation(summary = "Obtener tipos de producto", description = "Devuelve una lista con los tipos de producto disponibles en el sistema.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de tipos obtenida exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
+    @GetMapping("/types")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TypeProductResponseDTO> getTypes() {
+        return forProductPort.getTypes();
+    }
 }

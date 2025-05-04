@@ -1,5 +1,6 @@
 package com.ayd.product_service.product.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
@@ -7,7 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
 import com.ayd.product_service.product.dtos.SpecificationProductDTO;
+import com.ayd.product_service.product.dtos.StateProductResponseDTO;
+import com.ayd.product_service.product.dtos.TypeProductResponseDTO;
 import com.ayd.product_service.product.dtos.UpdateProductRequestDTO;
+import com.ayd.product_service.product.emuns.EnumProductState;
+import com.ayd.product_service.product.emuns.EnumProductType;
 import com.ayd.product_service.product.models.Product;
 import com.ayd.product_service.product.ports.ForProductPort;
 import com.ayd.product_service.product.repositories.ProductRepository;
@@ -88,5 +93,31 @@ public class ProductService implements ForProductPort {
             .and(ProductSpecification.hasState(specificationProductDTO.getState()));
         List<Product> products = productRepository.findAll(spec);
         return products;
+    }
+
+    @Override
+    public List<Product> getProductsByIds(List<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        List<Product> products = productRepository.findAllById(ids);
+        return products;
+    }
+
+    @Override
+    public List<StateProductResponseDTO> getStates() {
+        //Obtenemos los valores del EnumProductState
+        List<StateProductResponseDTO> states = new ArrayList<>();
+        states.add(new StateProductResponseDTO(EnumProductState.ACTIVE, "Activo"));
+        states.add(new StateProductResponseDTO(EnumProductState.INACTIVE, "Inactivo"));
+        return states;
+    }
+
+    @Override
+    public List<TypeProductResponseDTO> getTypes() {
+        //Obtenemos los valores del EnumProductType
+        List<TypeProductResponseDTO> types = new ArrayList<>();
+        types.add(new TypeProductResponseDTO(EnumProductType.GOOD, "Bien"));
+        return types;
     }
 }

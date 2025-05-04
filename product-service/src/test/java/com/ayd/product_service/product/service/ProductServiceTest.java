@@ -18,6 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
 import com.ayd.product_service.product.dtos.UpdateProductRequestDTO;
 import com.ayd.product_service.product.dtos.SpecificationProductDTO;
+import com.ayd.product_service.product.dtos.StateProductResponseDTO;
+import com.ayd.product_service.product.dtos.TypeProductResponseDTO;
 import com.ayd.product_service.product.emuns.EnumProductState;
 import com.ayd.product_service.product.emuns.EnumProductType;
 import com.ayd.product_service.product.models.Product;
@@ -399,5 +401,101 @@ public class ProductServiceTest {
                 () -> assertEquals(NAME, result.get(0).getName()));
 
         verify(productRepository).findAll(any(Specification.class));
+    }
+
+    /**
+     * dado: que se proporciona una lista de IDs válida.
+     * cuando: se llama al método getProductsByIds.
+     * entonces: se retorna la lista de productos correspondientes.
+     */
+    @Test
+    public void getProductsByIdsShouldReturnProductsWhenIdsProvided() {
+        // Arrange
+        List<String> ids = List.of(PRODUCT_ID);
+        List<Product> mockProducts = List.of(product);
+        when(productRepository.findAllById(ids)).thenReturn(mockProducts);
+
+        // Act
+        List<Product> result = productService.getProductsByIds(ids);
+
+        // Assert
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertEquals(1, result.size()),
+                () -> assertEquals(PRODUCT_ID, result.get(0).getId()));
+
+        verify(productRepository).findAllById(ids);
+    }
+
+    /**
+     * dado: que la lista de IDs es null.
+     * cuando: se llama al método getProductsByIds.
+     * entonces: se retorna una lista vacía sin llamar al repositorio.
+     */
+    @Test
+    public void getProductsByIdsShouldReturnEmptyListWhenIdsIsNull() {
+        // Act
+        List<Product> result = productService.getProductsByIds(null);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(productRepository, never()).findAllById(any());
+    }
+
+    /**
+     * dado: que la lista de IDs está vacía.
+     * cuando: se llama al método getProductsByIds.
+     * entonces: se retorna una lista vacía sin llamar al repositorio.
+     */
+    @Test
+    public void getProductsByIdsShouldReturnEmptyListWhenIdsIsEmpty() {
+        // Act
+        List<Product> result = productService.getProductsByIds(List.of());
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(productRepository, never()).findAllById(any());
+    }
+
+    /**
+     * dado: que se llama al método getStates.
+     * cuando: se ejecuta correctamente.
+     * entonces: se retorna la lista con todos los estados definidos.
+     */
+    @Test
+    public void getStatesShouldReturnAllEnumProductStates() {
+        // Act
+        List<StateProductResponseDTO> result = productService.getStates();
+
+        // Assert
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertEquals(2, result.size()),
+                () -> assertTrue(result.stream().anyMatch(state -> state.getId() == EnumProductState.ACTIVE)),
+                () -> assertTrue(result.stream().anyMatch(state -> state.getId() == EnumProductState.INACTIVE)),
+                () -> assertTrue(result.stream().anyMatch(state -> state.getName().equals("Activo"))),
+                () -> assertTrue(result.stream().anyMatch(state -> state.getName().equals("Inactivo"))));
+    }
+
+    /**
+     * dado: que se llama al método getTypes.
+     * cuando: se ejecuta correctamente.
+     * entonces: se retorna la lista con todos los tipos definidos.
+     */
+    @Test
+    public void getTypesShouldReturnAllEnumProductTypes() {
+        // Act
+        List<TypeProductResponseDTO> result = productService.getTypes();
+
+        // Assert
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertEquals(1, result.size()),
+                () -> assertEquals(EnumProductType.GOOD, result.get(0).getId()),
+                () -> assertEquals("Bien", result.get(0).getName()));
     }
 }
