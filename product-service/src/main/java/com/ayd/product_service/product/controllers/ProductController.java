@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.rsocket.RSocketProperties.Server.Spec;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
 import com.ayd.product_service.product.dtos.ProductResponseDTO;
+import com.ayd.product_service.product.dtos.SpecificationProductDTO;
 import com.ayd.product_service.product.dtos.UpdateProductRequestDTO;
 import com.ayd.product_service.product.mappers.ProductMapper;
 import com.ayd.product_service.product.models.Product;
@@ -26,12 +28,10 @@ import com.ayd.product_service.product.ports.ForProductPort;
 import com.ayd.product_service.shared.exceptions.DuplicatedEntryException;
 import com.ayd.product_service.shared.exceptions.NotFoundException;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -49,8 +49,6 @@ public class ProductController {
             @ApiResponse(responseCode = "409", description = "Ya existe un producto con los mismos datos"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-
-    
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ProductResponseDTO createProduct(@Valid @RequestBody CreateProductRequestDTO createProductRequestDTO)
@@ -59,6 +57,14 @@ public class ProductController {
         return productMapper.fromProductToProductResponseDTO(product);
     }
 
+    @Operation(summary = "Actualizar un producto existente", description = "Actualiza los datos de un producto identificado por su ID. Valida duplicados y existencia previa del producto.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Producto actualizado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos en la solicitud (validación de campos)"),
+            @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+            @ApiResponse(responseCode = "409", description = "Ya existe otro producto con los mismos datos"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponseDTO updateProduct(
@@ -69,10 +75,43 @@ public class ProductController {
         return productMapper.fromProductToProductResponseDTO(product);
     }
 
+    @Operation(summary = "Eliminar un producto", description = "Elimina un producto del sistema utilizando su ID. Si el producto no existe, devuelve un error.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Producto eliminado exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Boolean deleteProduct(@PathVariable String id) throws NotFoundException {
         return forProductPort.deleteProduct(id);
+    }
+
+    @Operation(summary = "Obtener un producto por ID", description = "Devuelve la información de un producto a partir de su identificador único.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Producto encontrado exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponseDTO getProductById(@PathVariable String id) throws NotFoundException {
+        Product product = forProductPort.getProduct(id);
+        return productMapper.fromProductToProductResponseDTO(product);
+    }
+
+    @Operation(summary = "Obtener todos los productos", description = "Devuelve una lista de productos. Puede recibir filtros opcionales en el cuerpo de la solicitud para realizar búsquedas más específicas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de productos obtenida exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Error de validación en los filtros proporcionados"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponseDTO> getAllProducts(
+            @RequestBody(required = false) SpecificationProductDTO specificationProductDTO) {
+        List<Product> products = forProductPort.getProducts(specificationProductDTO);
+        return productMapper.fromProductsToProductResponseDTOs(products);
     }
 
 }

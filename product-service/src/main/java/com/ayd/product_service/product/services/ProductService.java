@@ -77,6 +77,9 @@ public class ProductService implements ForProductPort {
 
     @Override
     public List<Product> getProducts(SpecificationProductDTO specificationProductDTO) {
+        if (specificationProductDTO == null) {
+            return productRepository.findAll();
+        }
         Specification<Product> spec = Specification.
             where(ProductSpecification.hasName(specificationProductDTO.getName()))
             .and(ProductSpecification.hasCode(specificationProductDTO.getCode()))
