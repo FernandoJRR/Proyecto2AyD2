@@ -1,8 +1,11 @@
 package com.ayd.inventory_service.stock.services;
 
+import com.ayd.inventory_service.shared.exceptions.NotFoundException;
 import com.ayd.inventory_service.stock.dtos.ProductResponseDTO;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
 
@@ -15,23 +18,41 @@ public class ProductService {
         this.webClient = builder.baseUrl("http://localhost:8084/api/").build();
     }
 
-    public ProductResponseDTO getProductById(String productId) {
+    public ProductResponseDTO getProductById(String productId) throws NotFoundException {
         String url = "v1/products/" + productId;
-        return webClient.get()
-                .uri(url)
-                .retrieve()
-                .bodyToMono(ProductResponseDTO.class)
-                .block();
+        try {
+            return webClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .bodyToMono(ProductResponseDTO.class)
+                    .block();
+        } catch (WebClientResponseException e){
+            if (e.getStatusCode().is4xxClientError()) {
+                throw new NotFoundException("No se encontró el producto");
+            } else if (e.getStatusCode().is5xxServerError()) {
+                throw new RuntimeException("Error en el servicio de productos");
+            }else {
+                throw new RuntimeException("Error en el servicio de inventario");
+            }
+        }
     }
 
-    public List<ProductResponseDTO> getProductsByIds(List<String> productIds) {
+    public List<ProductResponseDTO> getProductsByIds(List<String> productIds){
         String url = "v1/products/ids";
-        return webClient.post()
-                .uri(url)
-                .bodyValue(productIds)
-                .retrieve()
-                .bodyToFlux(ProductResponseDTO.class)
-                .collectList()
-                .block();
+        try{
+            return webClient.post()
+                    .uri(url)
+                    .bodyValue(productIds)
+                    .retrieve()
+                    .bodyToFlux(ProductResponseDTO.class)
+                    .collectList()
+                    .block();
+        } catch ( WebClientResponseException e) {
+            if (e.getStatusCode().is5xxServerError()) {
+                throw new RuntimeException("Error en el servicio de productos");
+            } else {
+                throw new RuntimeException("Error en el servicio de inventario");
+            }
+        }
     }
 }
