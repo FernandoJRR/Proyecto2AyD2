@@ -8,6 +8,6 @@ import lombok.Value;
 public class CashRegisterResponseDTO {
     private Long id;
     private String name;
-    private String active;
+    private boolean active;
     private WarehouseResponseDTO warehouse;
 }

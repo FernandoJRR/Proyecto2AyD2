@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class ProductEntryDetail extends Auditor {
-     private Long productId;
+    private String productId;
 
     private Integer quantity;
 
