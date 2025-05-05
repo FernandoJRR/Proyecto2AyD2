@@ -2,6 +2,7 @@ package com.ayd.product_service.shared.config;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -22,54 +23,51 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-        private final AppProperties appProperties;
-        private final AuthenticationFilter authenticationFilter;
+    private final AppProperties appProperties;
+    private final AuthenticationFilter authenticationFilter;
+    
+    @Value("${spring.profiles.active:prod}")
+    private String activeProfile;
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http.csrf(csrf -> csrf.disable())
-                                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activa CORS
-                                .authorizeHttpRequests(auth -> auth
-                                                // .requestMatchers("/api/v1/login").permitAll()
-                                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                                // vamos a resguardar las rutas con los permisos necesarios
-                                                .anyRequest().authenticated() // Protege el resto de rutas
-                                )
-                                // sin sesiones
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .addFilterBefore(authenticationFilter,
-                                                UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-                return http.getOrBuild();
+        if ("local".equals(activeProfile)) {
+            http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        } else {
+            http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .anyRequest().authenticated())
+                    .addFilterBefore(authenticationFilter,
+                            UsernamePasswordAuthenticationFilter.class);
         }
 
-        /**
-         * Configuración de CORS personalizada
-         */
-        @Bean
-        public CorsConfigurationSource corsConfigurationSource() {
+        return http.getOrBuild();
+    }
 
-                System.out.println(appProperties.getFrontURL());
-                CorsConfiguration configuration = new CorsConfiguration();
-                // agrega todas las rutas permitidas
-                configuration.setAllowedOrigins(List.of(appProperties.getFrontURL(), appProperties.getGatewayURL()));
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-                // decimos que operaciones http estan permitidos
-                configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-
-                // decimos que headers estan permitidos
-                configuration.setAllowedHeaders(
-                                List.of("Authorization", "Content-Type", "auth-user", "auth-permissions"));
-
-                // permite cookies y credenciales
-                configuration.setAllowCredentials(true);
-
-                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-                // aplicamos CORS a todas las rutas del sistema
-                source.registerCorsConfiguration("/**", configuration);
-                return source;
+        if ("local".equals(activeProfile)) {
+            configuration.addAllowedOriginPattern("*"); // permite cualquier origen
+        } else {
+            configuration.setAllowedOrigins(List.of(
+                appProperties.getFrontURL(),
+                appProperties.getGatewayURL()));
         }
+
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "auth-user", "auth-permissions"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
 }

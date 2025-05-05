@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
+import com.ayd.product_service.product.dtos.DeleteProductResponseDTO;
 import com.ayd.product_service.product.dtos.ProductResponseDTO;
 import com.ayd.product_service.product.dtos.SpecificationProductDTO;
 import com.ayd.product_service.product.dtos.StateProductResponseDTO;
@@ -81,8 +82,9 @@ public class ProductController {
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean deleteProduct(@PathVariable String id) throws NotFoundException {
-        return forProductPort.deleteProduct(id);
+    public DeleteProductResponseDTO deleteProduct(@PathVariable String id) throws NotFoundException {
+        boolean rssult = forProductPort.deleteProduct(id);
+        return new DeleteProductResponseDTO(id, rssult, "Producto con id: " + id+" eliminado correctamente");
     }
 
     @Operation(summary = "Obtener un producto por ID", description = "Devuelve la información de un producto a partir de su identificador único.")
