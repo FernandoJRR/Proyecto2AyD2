@@ -1,19 +1,11 @@
 package com.ayd.employee_service.auth.login.ports;
 
-import java.util.Set;
+import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.ayd.employee_service.users.models.User;
 
-public interface ForUserLoader extends UserDetailsService {
-    /**
-     * Metodo usado para cargar los permisos del usuario al jwt o al contexto de
-     * seguridad de spring
-     *
-     * @param user
-     * @return
-     */
-    public Set<GrantedAuthority> loadUserPermissions(User user);
+public interface ForUserLoader {
+    List<String> loadUserPermissions(User user) throws UsernameNotFoundException;
 }

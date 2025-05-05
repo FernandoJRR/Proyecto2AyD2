@@ -1,6 +1,7 @@
-package com.ayd.employee_service.auth.jwt.utils;
+package com.ayd.api_gateway.jwt.utils;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,8 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtManagerUtil {
 
+    public static final String SECRET_KEY = "claveSercretisimaXdLuisMonterroso";
+
     /**
      * Extrae y devuelve el nombre de usuario del token jwt.
      *
@@ -20,6 +23,18 @@ public class JwtManagerUtil {
      */
     public String extractUsername(String token) throws JwtException, IllegalArgumentException {
         return extractAllClaims(token).getSubject();
+    }
+
+    /**
+     * Extrae y devuelve el nombre de usuario del token jwt.
+     *
+     * @param token el token jwt del cual se extraerá el nombre de usuario.
+     * @return el nombre de usuario contenido en el token.
+     */
+    public String extractPermissons(String token) throws JwtException, IllegalArgumentException {
+        List<String> authorities = extractAllClaims(token).get("authorities", List.class);
+        String rawAuthorities = String.join(",", authorities);
+        return rawAuthorities;
     }
 
     /**
@@ -40,9 +55,8 @@ public class JwtManagerUtil {
      * @param username el nombre de usuario esperado.
      * @return true si el token es válido, false en caso contrario.
      */
-    public boolean isTokenValid(String token, String username) throws JwtException, IllegalArgumentException {
-        String extractedUsername = extractUsername(token);
-        return extractedUsername.equals(username) && !isTokenExpired(token);
+    public boolean isTokenValid(String token) throws JwtException, IllegalArgumentException {
+        return !isTokenExpired(token);
     }
 
     /**
@@ -55,7 +69,7 @@ public class JwtManagerUtil {
         // crea un parser para validar el jwt
         return Jwts.parser()
                 // aqui se verifica el jwt con la llave secretea
-                .verifyWith(Keys.hmacShaKeyFor(JwtGeneratorUtil.SECRET_KEY.getBytes()))
+                .verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

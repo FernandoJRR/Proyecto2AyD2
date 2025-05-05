@@ -11,5 +11,4 @@ public interface ForUsersPort {
     public User findUserById(String userId) throws NotFoundException;
 
     public User findUserByUsername(String username) throws NotFoundException;
-
 }

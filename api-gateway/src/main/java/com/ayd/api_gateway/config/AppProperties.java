@@ -1,4 +1,4 @@
-package com.ayd.product_service.shared.config;
+package com.ayd.api_gateway.config;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,5 +13,4 @@ import org.springframework.context.annotation.Configuration;
 public class AppProperties {
 
     private String frontURL;
-    private String gatewayURL;
 }

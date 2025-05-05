@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,8 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.ayd.employee_service.auth.jwt.filters.JwtAuthenticationFilter;
-import com.ayd.employee_service.auth.login.ports.ForUserLoader;
+import com.ayd.employee_service.auth.jwt.filters.AuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,24 +27,22 @@ public class SecurityConfig {
 
         private final AppProperties appProperties;
 
-        private final ForUserLoader forUserLoader;
-
-        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final AuthenticationFilter authenticationFilter;
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http.csrf(csrf -> csrf.disable())
                                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activa CORS
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/api/v1/login").permitAll()
-                                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/v1/login")
+                                                .permitAll()
                                                 // vamos a resguardar las rutas con los permisos necesarios
                                                 .anyRequest().authenticated() // Protege el resto de rutas
                                 )
                                 // sin sesiones
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.getOrBuild();
         }
@@ -62,13 +56,14 @@ public class SecurityConfig {
                 System.out.println(appProperties.getFrontURL());
                 CorsConfiguration configuration = new CorsConfiguration();
                 // agrega todas las rutas permitidas
-                configuration.setAllowedOrigins(List.of(appProperties.getFrontURL()));
+                configuration.setAllowedOrigins(List.of(appProperties.getFrontURL(), appProperties.getGatewayURL()));
 
                 // decimos que operaciones http estan permitidos
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
                 // decimos que headers estan permitidos
-                configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+                configuration.setAllowedHeaders(
+                                List.of("Authorization", "Content-Type", "auth-user", "auth-permissions"));
 
                 // permite cookies y credenciales
                 configuration.setAllowCredentials(true);
@@ -92,19 +87,4 @@ public class SecurityConfig {
         public PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder(BCryptVersion.$2B, 12);
         }
-
-        /**
-         * Configura el autenticationmanager, le da que implementacion del metodo
-         * loadByUserName usara, asi como el econder
-         *
-         * @return
-         */
-        @Bean
-        public AuthenticationManager authenticationManager() {
-                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-                authProvider.setUserDetailsService(forUserLoader);
-                authProvider.setPasswordEncoder(passwordEncoder());
-                return new ProviderManager(List.of(authProvider));
-        }
-
 }
