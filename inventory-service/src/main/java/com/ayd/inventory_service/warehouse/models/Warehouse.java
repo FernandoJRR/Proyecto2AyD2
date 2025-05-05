@@ -5,6 +5,8 @@ import java.util.List;
 import com.ayd.inventory_service.cashRegister.models.CashRegister;
 import com.ayd.inventory_service.shared.models.Auditor;
 import com.ayd.inventory_service.stock.models.Stock;
+import com.ayd.inventory_service.warehouse.dtos.CreateWarehouseRequestDTO;
+import com.ayd.inventory_service.warehouse.dtos.UpdateWarehouseRequestDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,4 +33,17 @@ public class Warehouse extends Auditor {
     private List<CashRegister> cashRegisters;
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     private List<Stock> stock;
+
+    public Warehouse(CreateWarehouseRequestDTO createWarehouseRequestDTO) {
+        this.name = createWarehouseRequestDTO.getName();
+        this.ubication = createWarehouseRequestDTO.getUbication();
+        this.active = createWarehouseRequestDTO.isActive();
+    }
+
+    public Warehouse updateWarehouse(UpdateWarehouseRequestDTO updateWarehouseRequestDTO) {
+        this.name = updateWarehouseRequestDTO.getName();
+        this.ubication = updateWarehouseRequestDTO.getUbication();
+        this.active = updateWarehouseRequestDTO.isActive();
+        return this;
+    }
 }

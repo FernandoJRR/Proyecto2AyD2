@@ -26,9 +26,7 @@ import lombok.NoArgsConstructor;
 public class ProductEntry extends Auditor{
     
     private String invoiceNumber;
-
-    private Long supplierId;
-
+    
     private LocalDate date;
 
     @ManyToOne
