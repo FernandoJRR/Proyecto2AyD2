@@ -121,7 +121,7 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Lista de productos obtenida exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @GetMapping("/ids")
+    @PostMapping("/ids")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponseDTO> getProductsByIds(
             @RequestBody(required = false) List<String> ids) {
