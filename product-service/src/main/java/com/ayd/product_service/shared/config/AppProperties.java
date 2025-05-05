@@ -13,4 +13,5 @@ import org.springframework.context.annotation.Configuration;
 public class AppProperties {
 
     private String frontURL;
+    private String gatewayURL;
 }

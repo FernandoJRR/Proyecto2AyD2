@@ -1,5 +1,5 @@
 
-package com.ayd.product_service.shared.utils;
+package com.ayd.employee_service.shared.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

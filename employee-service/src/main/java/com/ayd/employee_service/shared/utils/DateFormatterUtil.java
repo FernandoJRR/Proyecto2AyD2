@@ -1,4 +1,4 @@
-package com.ayd.product_service.shared.utils;
+package com.ayd.employee_service.shared.utils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
