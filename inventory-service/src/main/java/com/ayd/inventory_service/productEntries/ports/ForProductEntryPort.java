@@ -15,7 +15,7 @@ public interface ForProductEntryPort {
             throws NotFoundException;
 
     public ProductEntry saveProductEntry(ProductEntryRequestDTO productEntryRequestDTO)
-            throws NotFoundException, DuplicatedEntryException;
+            throws NotFoundException, DuplicatedEntryException,IllegalStateException;
 
     public List<ProductEntry> getAllProductEntries();
 }

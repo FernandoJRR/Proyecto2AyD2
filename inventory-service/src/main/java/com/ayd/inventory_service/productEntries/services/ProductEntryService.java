@@ -12,6 +12,7 @@ import com.ayd.inventory_service.productEntries.ports.ForProductEntryPort;
 import com.ayd.inventory_service.productEntries.repositories.ProductEntryRepository;
 import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
 import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.inventory_service.stock.ports.ForStockPort;
 import com.ayd.inventory_service.supplier.models.Supplier;
 import com.ayd.inventory_service.supplier.ports.ForSupplierPort;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
@@ -27,6 +28,7 @@ public class ProductEntryService implements ForProductEntryPort {
 
     private final ProductEntryRepository productEntryRepository;
     private final ForProductEntryDetailPort forProductEntryDetailPort;
+    private final ForStockPort forStockPort;
     private final ForWarehousePort forWarehousePort;
     private final ForSupplierPort forSupplierPort;
 
@@ -44,7 +46,7 @@ public class ProductEntryService implements ForProductEntryPort {
 
     @Override
     public ProductEntry saveProductEntry(ProductEntryRequestDTO productEntryRequestDTO)
-            throws NotFoundException, DuplicatedEntryException {
+            throws NotFoundException, DuplicatedEntryException,IllegalStateException {
         Warehouse warehouse = forWarehousePort.getWarehouse(productEntryRequestDTO.getWarehouseId());
         Supplier supplier = forSupplierPort.getSupplierById(productEntryRequestDTO.getSupplierId());
         if (productEntryRepository.existsByInvoiceNumber(productEntryRequestDTO.getInvoiceNumber())) {
@@ -54,6 +56,8 @@ public class ProductEntryService implements ForProductEntryPort {
         productEntry = productEntryRepository.save(productEntry);
         for (ProductEntryDetailRequestDTO productEntryDetailRequestDTO : productEntryRequestDTO.getDetails()) {
             forProductEntryDetailPort.saveProductEntryDetail(productEntryDetailRequestDTO, productEntry);
+            forStockPort.addStockByProductIdAndWarehouseId(productEntryDetailRequestDTO.getProductId(), 
+                    productEntry.getWarehouse(),productEntryDetailRequestDTO.getQuantity());
         }
         productEntry = getProductEntryById(productEntry.getId());
         return productEntry;

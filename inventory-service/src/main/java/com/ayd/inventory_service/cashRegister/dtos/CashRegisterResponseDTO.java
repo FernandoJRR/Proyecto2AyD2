@@ -6,8 +6,9 @@ import lombok.Value;
 
 @Value
 public class CashRegisterResponseDTO {
-    private Long id;
-    private String name;
+    private String id;
+    private String code;
+    private String employeeId;
     private boolean active;
     private WarehouseResponseDTO warehouse;
 }

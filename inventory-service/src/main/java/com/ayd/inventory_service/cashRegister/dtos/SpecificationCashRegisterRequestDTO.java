@@ -4,8 +4,9 @@ import lombok.Value;
 
 @Value
 public class SpecificationCashRegisterRequestDTO {
-    private String name;
+    private String id;
     private String code;
     private Boolean active;
+    private String employeeId;
     private String warehouseId;
 }

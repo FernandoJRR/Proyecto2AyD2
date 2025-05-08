@@ -26,4 +26,14 @@ public class Stock extends Auditor {
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
+
+    public Integer sumQuantity(Integer quantity) {
+        this.quantity += quantity;
+        return this.quantity;
+    }
+
+    public Integer subQuantity(Integer quantity) {
+        this.quantity -= quantity;
+        return this.quantity;
+    }
 }

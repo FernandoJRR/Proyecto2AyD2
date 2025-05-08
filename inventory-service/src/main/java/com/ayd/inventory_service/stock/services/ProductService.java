@@ -1,7 +1,7 @@
 package com.ayd.inventory_service.stock.services;
 
 import com.ayd.inventory_service.shared.exceptions.NotFoundException;
-import com.ayd.inventory_service.stock.dtos.ProductResponseDTO;
+import com.ayd.inventory_service.stock.dtos.StockResponseDTO;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -18,13 +18,13 @@ public class ProductService {
         this.webClient = builder.baseUrl("http://localhost:8084/api/").build();
     }
 
-    public ProductResponseDTO getProductById(String productId) throws NotFoundException {
+    public StockResponseDTO getProductById(String productId) throws NotFoundException {
         String url = "v1/products/" + productId;
         try {
             return webClient.get()
                     .uri(url)
                     .retrieve()
-                    .bodyToMono(ProductResponseDTO.class)
+                    .bodyToMono(StockResponseDTO.class)
                     .block();
         } catch (WebClientResponseException e){
             if (e.getStatusCode().is4xxClientError()) {
@@ -37,14 +37,14 @@ public class ProductService {
         }
     }
 
-    public List<ProductResponseDTO> getProductsByIds(List<String> productIds){
+    public List<StockResponseDTO> getProductsByIds(List<String> productIds){
         String url = "v1/products/ids";
         try{
             return webClient.post()
                     .uri(url)
                     .bodyValue(productIds)
                     .retrieve()
-                    .bodyToFlux(ProductResponseDTO.class)
+                    .bodyToFlux(StockResponseDTO.class)
                     .collectList()
                     .block();
         } catch ( WebClientResponseException e) {

@@ -1,5 +1,7 @@
 package com.ayd.inventory_service.cashRegister.models;
 
+import com.ayd.inventory_service.cashRegister.dtos.CreateCashRegisterRequestDTO;
+import com.ayd.inventory_service.cashRegister.dtos.UpdateCashRegisterRequestDTO;
 import com.ayd.inventory_service.shared.models.Auditor;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
 
@@ -18,16 +20,36 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class CashRegister extends Auditor {
-    @Column(unique = true, nullable = false, length = 100)
-    private String name;
-
     @Column(unique = true, nullable = false, length = 50)
     private String code;
 
     @Column(nullable = false)
     private boolean active;
 
+    @Column(nullable = true, length = 100)
+    private String employeeId;
+
     @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
+
+    public CashRegister(CreateCashRegisterRequestDTO createCashRegisterRequestDTO,Warehouse warehouse) {
+        this.code = createCashRegisterRequestDTO.getCode();
+        this.active = createCashRegisterRequestDTO.isActive();
+        this.employeeId = createCashRegisterRequestDTO.getEmployeeId();
+        this.warehouse = warehouse;
+    }
+
+    public CashRegister update(UpdateCashRegisterRequestDTO updateCashRegisterRequestDTO,Warehouse warehouse) {
+        this.code = updateCashRegisterRequestDTO.getCode();
+        this.active = updateCashRegisterRequestDTO.isActive();
+        this.employeeId = updateCashRegisterRequestDTO.getEmployeeId();
+        this.warehouse = warehouse;
+        return this;
+    }
+
+    public boolean toogleActive() {
+        this.active = !this.active;
+        return this.active;
+    }
 }
