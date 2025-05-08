@@ -11,6 +11,7 @@ import com.ayd.inventory_service.productEntries.models.ProductEntryDetail;
 
 public interface ProductEntryDetailRepository extends JpaRepository<ProductEntryDetail, String> {
     public List<ProductEntryDetail> findByProductId(String productId);
+    public List<ProductEntryDetail> findByProductEntryId(String productEntryId);
 
     @Query("SELECT COALESCE(SUM(p.unitPrice * p.quantity), 0) FROM ProductEntryDetail p WHERE p.productEntry.id = :productEntryId")
     BigDecimal sumTotalByProductEntryId(@Param("productEntryId") String productEntryId);
