@@ -46,4 +46,9 @@ public class Warehouse extends Auditor {
         this.active = updateWarehouseRequestDTO.isActive();
         return this;
     }
+
+    public boolean toogleActive() {
+        this.active = !this.active;
+        return this.active;
+    }
 }

@@ -21,4 +21,6 @@ public interface ForWarehousePort {
     public Warehouse getWarehouse(String id) throws NotFoundException;
 
     public List<Warehouse> getWarehouses(SpecificationWarehouseDTO specificationWarehouseDTO);
+
+    public Warehouse tootgleActive(String id) throws NotFoundException;
 }

@@ -2,14 +2,17 @@ package com.ayd.inventory_service.productEntries.services;
 
 import java.util.List;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ayd.inventory_service.productEntries.dtos.ProductEntryDetailRequestDTO;
 import com.ayd.inventory_service.productEntries.dtos.ProductEntryRequestDTO;
+import com.ayd.inventory_service.productEntries.dtos.ProductEntrySpecificationDTO;
 import com.ayd.inventory_service.productEntries.models.ProductEntry;
 import com.ayd.inventory_service.productEntries.ports.ForProductEntryDetailPort;
 import com.ayd.inventory_service.productEntries.ports.ForProductEntryPort;
 import com.ayd.inventory_service.productEntries.repositories.ProductEntryRepository;
+import com.ayd.inventory_service.productEntries.specifications.ProductEntrySpecificacion;
 import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
 import com.ayd.inventory_service.shared.exceptions.NotFoundException;
 import com.ayd.inventory_service.stock.ports.ForStockPort;
@@ -66,6 +69,23 @@ public class ProductEntryService implements ForProductEntryPort {
     @Override
     public List<ProductEntry> getAllProductEntries() {
         return productEntryRepository.findAll();
+    }
+
+    @Override
+    public List<ProductEntry> getAlByProductEntrieSpecification(
+            ProductEntrySpecificationDTO productEntrySpecificationDTO) {
+        if (productEntrySpecificationDTO == null) {
+            return getAllProductEntries();
+        }
+        Specification<ProductEntry> specification = Specification
+                .where(ProductEntrySpecificacion.hasInvoiceNumber(productEntrySpecificationDTO.getInvoiceNumber()))
+                .and(ProductEntrySpecificacion.hasId(productEntrySpecificationDTO.getId()))
+                .and(ProductEntrySpecificacion.hasDate(productEntrySpecificationDTO.getDate()))
+                .and(ProductEntrySpecificacion.hasWarehouseId(productEntrySpecificationDTO.getWarehouseId()))
+                .and(ProductEntrySpecificacion.hasSupplierId(productEntrySpecificationDTO.getSupplierId()));
+        
+        List<ProductEntry> productEntries = productEntryRepository.findAll(specification);
+        return productEntries;
     }
 
 }

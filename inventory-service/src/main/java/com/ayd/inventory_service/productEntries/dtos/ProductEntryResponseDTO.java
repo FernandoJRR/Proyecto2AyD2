@@ -3,14 +3,17 @@ package com.ayd.inventory_service.productEntries.dtos;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.ayd.inventory_service.supplier.dtos.SupplierResponseDTO;
+import com.ayd.inventory_service.warehouse.dtos.WarehouseResponseDTO;
+
 import lombok.Value;
 
 @Value
 public class ProductEntryResponseDTO {
-    String productEntryId;
+    String id;
     String invoiceNumber;
     LocalDate date;
-    String warehouseId;
-    String supplierId;
+    WarehouseResponseDTO warehouse;
+    SupplierResponseDTO supplier;
     List<ProductEntryDetailResponseDTO> details;
 }

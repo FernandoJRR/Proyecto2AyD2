@@ -78,4 +78,13 @@ public class WarehouseService implements ForWarehousePort {
         return warehouseRepository.findAll(spec);
     }
 
+    @Override
+    public Warehouse tootgleActive(String id) throws NotFoundException {
+        Warehouse warehouse = warehouseRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("No se encontro la bodega con id: " + id));
+        warehouse.toogleActive();
+        warehouseRepository.save(warehouse);
+        return warehouse;
+    }
+
 }
