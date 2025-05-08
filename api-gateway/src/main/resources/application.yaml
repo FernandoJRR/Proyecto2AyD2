@@ -1,12 +1,9 @@
 spring:
-
   profiles:
     active: local
 
   application:
     name: api-gateway
-
-
 
   jpa:
     hibernate:
@@ -14,5 +11,23 @@ spring:
     database-platform: org.hibernate.dialect.MariaDBDialect
 
 
+  cloud:
+    gateway:
+      routes:
+        - id: employee-service
+          uri: lb://EMPLOYEE-SERVICE
+          predicates:
+            - Path=/api/v1/login, /api/v1/login/**,/api/v1/history-types/**,/api/v1/permissions/**,/api/v1/permissions,/api/v1/employee-types/**,/api/v1/employee-types,/api/v1/employees/**,/api/v1/employees,/api/v1/vacations/**
+        - id: products-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/v1/products,/api/v1/products/**
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+
+
 server:
   port: 8080
+

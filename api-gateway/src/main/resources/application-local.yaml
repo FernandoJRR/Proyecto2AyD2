@@ -1,16 +1,9 @@
 app:
   frontURL: http://localhost:3000
 
-spring:
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 
-  cloud:
-    gateway:
-      routes:
-        - id: employee-service
-          uri: http://localhost:8082
-          predicates:
-            - Path=/api/v1/login, /api/v1/login/**,/api/v1/history-types/**,/api/v1/permissions/**,/api/v1/permissions,/api/v1/employee-types/**,/api/v1/employee-types,/api/v1/employees/**,/api/v1/employees,/api/v1/vacations/**
-        - id: products-service
-          uri: http://localhost:8084
-          predicates:
-            - Path=/api/v1/products,/api/v1/products/**
+
