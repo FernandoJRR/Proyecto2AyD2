@@ -6,6 +6,7 @@ import java.util.List;
 import com.ayd.inventory_service.productEntries.models.ProductEntry;
 import com.ayd.inventory_service.shared.models.Auditor;
 import com.ayd.inventory_service.supplier.dtos.CreateSupplierRequestDTO;
+import com.ayd.inventory_service.supplier.dtos.UpdateSupplierRequestDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -47,5 +48,19 @@ public class Supplier extends Auditor {
         this.taxRegime = supplierRequestDTO.getTaxRegime();
         this.address = supplierRequestDTO.getAddress();
         this.active = supplierRequestDTO.getActive();
+    }
+
+    public Supplier update(UpdateSupplierRequestDTO supplierRequestDTO) {
+        this.nit = supplierRequestDTO.getNit();
+        this.name = supplierRequestDTO.getName();
+        this.taxRegime = supplierRequestDTO.getTaxRegime();
+        this.address = supplierRequestDTO.getAddress();
+        this.active = supplierRequestDTO.getActive();
+        return this;
+    }
+
+    public boolean toogleActive() {
+        this.active = !this.active;
+        return this.active;
     }
 }
