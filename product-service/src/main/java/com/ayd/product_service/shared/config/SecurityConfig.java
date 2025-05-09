@@ -25,9 +25,6 @@ public class SecurityConfig {
 
     private final AppProperties appProperties;
     private final AuthenticationFilter authenticationFilter;
-    
-    @Value("${spring.profiles.active:prod}")
-    private String activeProfile;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,15 +33,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        if ("local".equals(activeProfile)) {
-            http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-        } else {
-            http.authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                    .anyRequest().authenticated())
-                    .addFilterBefore(authenticationFilter,
-                            UsernamePasswordAuthenticationFilter.class);
-        }
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .anyRequest().authenticated())
+                .addFilterBefore(authenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.getOrBuild();
     }
@@ -53,14 +46,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        if ("local".equals(activeProfile)) {
-            configuration.addAllowedOriginPattern("*"); // permite cualquier origen
-        } else {
-            configuration.setAllowedOrigins(List.of(
-                appProperties.getFrontURL(),
-                appProperties.getGatewayURL()));
-        }
-
+        configuration.setAllowedOrigins(List.of(
+            appProperties.getFrontURL(),
+            appProperties.getGatewayURL()));
+        
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "auth-user", "auth-permissions"));
         configuration.setAllowCredentials(true);
