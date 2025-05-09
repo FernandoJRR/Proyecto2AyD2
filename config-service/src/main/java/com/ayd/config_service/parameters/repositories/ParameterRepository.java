@@ -8,4 +8,5 @@ import com.ayd.config_service.parameters.models.Parameter;
 
 public interface ParameterRepository extends JpaRepository<Parameter, String>{
     public Optional<Parameter> findOneByParameterKey(String parameterKey);
+    public boolean existsByParameterKey(String parameterKey);
 }

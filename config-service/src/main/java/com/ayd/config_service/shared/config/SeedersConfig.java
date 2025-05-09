@@ -31,8 +31,11 @@ public class SeedersConfig implements CommandLineRunner {
 		System.out.println("Ejecutando seeders.");
 
         for (ParameterEnum parameterEnum : ParameterEnum.values()) {
-            Parameter currentParameter = new Parameter(parameterEnum.getKey(), parameterEnum.getDefaultValue(), parameterEnum.getName());
-            parameterRepository.save(currentParameter);
+            boolean exists = parameterRepository.existsByParameterKey(parameterEnum.getKey());
+            if (!exists) {
+                Parameter currentParameter = new Parameter(parameterEnum.getKey(), parameterEnum.getDefaultValue(), parameterEnum.getName());
+                parameterRepository.save(currentParameter);
+            }
         }
 	}
 }
