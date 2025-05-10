@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 import com.ayd.config_service.parameters.models.Parameter;
 import com.ayd.config_service.parameters.ports.ForParameterPort;
 import com.ayd.config_service.parameters.repositories.ParameterRepository;
-import com.ayd.config_service.shared.exceptions.InvalidParameterException;
-import com.ayd.config_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

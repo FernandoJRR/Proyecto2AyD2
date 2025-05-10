@@ -1,6 +1,6 @@
 package com.ayd.config_service.parameters.models;
 
-import com.ayd.config_service.shared.models.Auditor;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

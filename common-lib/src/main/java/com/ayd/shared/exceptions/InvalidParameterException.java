@@ -1,4 +1,4 @@
-package com.ayd.config_service.shared.exceptions;
+package com.ayd.shared.exceptions;
 
 public class InvalidParameterException extends Exception{
 
