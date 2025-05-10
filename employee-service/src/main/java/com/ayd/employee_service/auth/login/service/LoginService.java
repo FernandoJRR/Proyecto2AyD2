@@ -13,7 +13,7 @@ import com.ayd.employee_service.employees.dtos.EmployeeResponseDTO;
 import com.ayd.employee_service.employees.mappers.EmployeeMapper;
 import com.ayd.employee_service.permissions.dtos.PermissionResponseDTO;
 import com.ayd.employee_service.permissions.mappers.PermissionMapper;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.shared.utils.PasswordEncoderUtil;
 import com.ayd.employee_service.users.models.User;
 import com.ayd.employee_service.users.ports.ForUsersPort;

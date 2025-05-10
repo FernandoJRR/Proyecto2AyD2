@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.ayd.employee_service.employees.models.Employee;
 import com.ayd.employee_service.employees.ports.ForEmployeesPort;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.users.ports.AuthenticationProviderPort;
 
 import lombok.RequiredArgsConstructor;
