@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ayd.employee_service.auth.login.dtos.LoginRequestDTO;
 import com.ayd.employee_service.auth.login.dtos.LoginResponseDTO;
 import com.ayd.employee_service.auth.login.ports.ForLogin;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.NotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

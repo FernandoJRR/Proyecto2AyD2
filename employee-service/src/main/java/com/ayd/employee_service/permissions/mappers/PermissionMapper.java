@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import com.ayd.employee_service.permissions.dtos.PermissionResponseDTO;
 import com.ayd.employee_service.permissions.models.Permission;
-import com.ayd.employee_service.shared.dtos.IdRequestDTO;
+import com.ayd.shared.dtos.IdRequestDTO;
 
 @Mapper(componentModel = "spring")
 public interface PermissionMapper {

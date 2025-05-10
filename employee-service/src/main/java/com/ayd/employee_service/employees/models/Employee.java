@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.ayd.employee_service.shared.models.Auditor;
 import com.ayd.employee_service.users.models.User;
 import com.ayd.employee_service.vacations.models.Vacations;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
