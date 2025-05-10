@@ -1,9 +1,9 @@
 package com.ayd.inventory_service.stock.services;
 
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
 import com.ayd.inventory_service.stock.models.Stock;
 import com.ayd.inventory_service.stock.repositories.StockRepository;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
+import com.ayd.shared.exceptions.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -14,12 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
 import com.ayd.inventory_service.stock.dtos.ModifyStockRequest;
 import com.ayd.inventory_service.stock.models.Stock;
 import com.ayd.inventory_service.stock.repositories.StockRepository;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
 import com.ayd.inventory_service.warehouse.ports.ForWarehousePort;
+import com.ayd.shared.exceptions.NotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class ModifyStockServiceTest {

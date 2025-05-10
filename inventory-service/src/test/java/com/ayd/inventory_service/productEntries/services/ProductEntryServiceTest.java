@@ -17,13 +17,13 @@ import com.ayd.inventory_service.productEntries.models.ProductEntry;
 import com.ayd.inventory_service.productEntries.models.ProductEntryDetail;
 import com.ayd.inventory_service.productEntries.ports.ForProductEntryDetailPort;
 import com.ayd.inventory_service.productEntries.repositories.ProductEntryRepository;
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
 import com.ayd.inventory_service.stock.ports.ForStockPort;
 import com.ayd.inventory_service.supplier.models.Supplier;
 import com.ayd.inventory_service.supplier.ports.ForSupplierPort;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
 import com.ayd.inventory_service.warehouse.ports.ForWarehousePort;
+import com.ayd.shared.exceptions.DuplicatedEntryException;
+import com.ayd.shared.exceptions.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;

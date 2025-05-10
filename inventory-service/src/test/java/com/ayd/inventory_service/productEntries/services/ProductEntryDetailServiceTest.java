@@ -12,7 +12,7 @@ import com.ayd.inventory_service.productEntries.dtos.ProductEntryDetailRequestDT
 import com.ayd.inventory_service.productEntries.models.ProductEntry;
 import com.ayd.inventory_service.productEntries.models.ProductEntryDetail;
 import com.ayd.inventory_service.productEntries.repositories.ProductEntryDetailRepository;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -26,10 +26,10 @@ import com.ayd.inventory_service.cashRegister.dtos.SpecificationCashRegisterRequ
 import com.ayd.inventory_service.cashRegister.dtos.UpdateCashRegisterRequestDTO;
 import com.ayd.inventory_service.cashRegister.models.CashRegister;
 import com.ayd.inventory_service.cashRegister.repositories.CashRegisterRepository;
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
 import com.ayd.inventory_service.warehouse.ports.ForWarehousePort;
+import com.ayd.shared.exceptions.DuplicatedEntryException;
+import com.ayd.shared.exceptions.NotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class CashRegisterServiceTest {
