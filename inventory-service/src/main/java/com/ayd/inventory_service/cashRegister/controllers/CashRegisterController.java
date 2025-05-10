@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,16 +20,13 @@ import com.ayd.inventory_service.cashRegister.dtos.UpdateCashRegisterRequestDTO;
 import com.ayd.inventory_service.cashRegister.mappers.CashRegisterMapper;
 import com.ayd.inventory_service.cashRegister.models.CashRegister;
 import com.ayd.inventory_service.cashRegister.ports.ForCashRegisterPort;
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
+
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.RequestBody;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController

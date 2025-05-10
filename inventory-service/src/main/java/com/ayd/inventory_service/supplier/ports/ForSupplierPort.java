@@ -2,8 +2,7 @@ package com.ayd.inventory_service.supplier.ports;
 
 import java.util.List;
 
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.inventory_service.supplier.dtos.CreateSupplierRequestDTO;
 import com.ayd.inventory_service.supplier.dtos.SpecificationSupplierRequestDTO;
 import com.ayd.inventory_service.supplier.dtos.UpdateSupplierRequestDTO;

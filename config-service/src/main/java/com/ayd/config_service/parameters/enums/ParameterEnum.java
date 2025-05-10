@@ -6,7 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ParameterEnum {
-    DIAS_VACACIONES ("dias_vacaciones", "15", "Dias de Vacaciones")
+    NOMBRE_EMPRESA ("nombre_empresa", "Golfito Patito", "Nombre de la Empresa"),
+    NIT_EMPRESA ("nit_empresa", "17678426", "NIT de la Empresa"),
+    REGIMEN_EMPRESA ("regimen_empresa", "{name: \"peq\", \"value\": 5}", "Regimen Fiscal de la Empresa"),
+    DIAS_VACACIONES ("dias_vacaciones", "15", "Dias de Vacaciones"),
     ;
 
     private final String key;

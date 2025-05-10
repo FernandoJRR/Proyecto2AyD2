@@ -1,4 +1,4 @@
-package com.ayd.product_service.shared.config;
+package com.ayd.shared.security;
 
 import java.util.List;
 
@@ -24,7 +24,6 @@ public class SecurityConfig {
 
     private final AppProperties appProperties;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
@@ -44,6 +43,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
+        System.out.println(appProperties.getFrontURL() +" "+ appProperties.getGatewayURL());
 
         configuration.setAllowedOrigins(List.of(
                 appProperties.getFrontURL(),

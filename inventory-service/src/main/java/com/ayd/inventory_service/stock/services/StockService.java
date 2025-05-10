@@ -3,12 +3,12 @@ package com.ayd.inventory_service.stock.services;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+
 import com.ayd.inventory_service.stock.models.Stock;
 import com.ayd.inventory_service.stock.ports.ForStockPort;
 import com.ayd.inventory_service.stock.repositories.StockRepository;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
-import com.ayd.inventory_service.warehouse.ports.ForWarehousePort;
+import com.ayd.shared.exceptions.NotFoundException;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

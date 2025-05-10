@@ -2,8 +2,8 @@ package com.ayd.inventory_service.cashRegister.models;
 
 import com.ayd.inventory_service.cashRegister.dtos.CreateCashRegisterRequestDTO;
 import com.ayd.inventory_service.cashRegister.dtos.UpdateCashRegisterRequestDTO;
-import com.ayd.inventory_service.shared.models.Auditor;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

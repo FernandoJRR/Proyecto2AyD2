@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.ayd.inventory_service.productEntries.dtos.ProductEntryRequestDTO;
-import com.ayd.inventory_service.shared.models.Auditor;
 import com.ayd.inventory_service.supplier.models.Supplier;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -9,8 +9,7 @@ import com.ayd.inventory_service.productEntries.models.ProductEntry;
 import com.ayd.inventory_service.productEntries.models.ProductEntryDetail;
 import com.ayd.inventory_service.productEntries.ports.ForProductEntryDetailPort;
 import com.ayd.inventory_service.productEntries.repositories.ProductEntryDetailRepository;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
-
+import com.ayd.shared.exceptions.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 

@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.ayd.inventory_service.productEntries.models.ProductEntry;
-import com.ayd.inventory_service.shared.models.Auditor;
 import com.ayd.inventory_service.supplier.dtos.CreateSupplierRequestDTO;
 import com.ayd.inventory_service.supplier.dtos.UpdateSupplierRequestDTO;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
