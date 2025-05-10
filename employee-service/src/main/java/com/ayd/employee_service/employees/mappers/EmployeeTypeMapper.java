@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.ayd.employee_service.employees.dtos.SaveEmployeeTypeRequestDTO;
 import com.ayd.employee_service.employees.dtos.EmployeeTypeResponseDTO;
+import com.ayd.employee_service.employees.dtos.SaveEmployeeTypeRequestDTO;
 import com.ayd.employee_service.employees.models.EmployeeType;
-import com.ayd.employee_service.shared.dtos.IdRequestDTO;
+import com.ayd.shared.dtos.IdRequestDTO;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeTypeMapper {

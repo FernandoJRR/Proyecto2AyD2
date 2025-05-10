@@ -1,7 +1,7 @@
 package com.ayd.employee_service.parameters.ports;
 
 import com.ayd.employee_service.parameters.models.Parameter;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 public interface ForParameterPort {
 

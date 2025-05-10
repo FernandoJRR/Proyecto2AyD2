@@ -3,8 +3,7 @@ package com.ayd.employee_service.permissions.ports;
 import java.util.List;
 
 import com.ayd.employee_service.permissions.models.Permission;
-import com.ayd.employee_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 public interface ForPermissionsPort {
 

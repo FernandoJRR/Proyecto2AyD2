@@ -2,7 +2,7 @@ package com.ayd.employee_service.employees.dtos;
 
 import java.math.BigDecimal;
 
-import com.ayd.employee_service.shared.dtos.IdRequestDTO;
+import com.ayd.shared.dtos.IdRequestDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMax;

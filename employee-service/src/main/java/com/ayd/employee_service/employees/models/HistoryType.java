@@ -2,7 +2,7 @@ package com.ayd.employee_service.employees.models;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.ayd.employee_service.shared.models.Auditor;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,7 +1,6 @@
 package com.ayd.employee_service.users.ports;
 
-import com.ayd.employee_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.users.models.User;
 
 public interface ForUsersPort {
