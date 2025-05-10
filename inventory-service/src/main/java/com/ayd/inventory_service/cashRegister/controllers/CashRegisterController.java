@@ -104,7 +104,7 @@ public class CashRegisterController {
             @ApiResponse(responseCode = "404", description = "Caja registradora no encontrada"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @PatchMapping("/{id}/toggle")
+    @PatchMapping("/{id}/toogle")
     @ResponseStatus(HttpStatus.OK)
     public CashRegisterResponseDTO toggle(@PathVariable String id) throws NotFoundException {
         CashRegister cashRegister = forCashRegisterPort.toggleActive(id);

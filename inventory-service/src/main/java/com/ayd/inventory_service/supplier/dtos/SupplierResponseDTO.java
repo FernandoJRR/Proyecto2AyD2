@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 @Value
 public class SupplierResponseDTO {
-    Long id;
+    String id;
     String nit;
     String name;
     BigDecimal taxRegime;
