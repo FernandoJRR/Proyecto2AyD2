@@ -1,5 +1,7 @@
 package com.ayd.product_service.product.dtos;
 
+import java.math.BigDecimal;
+
 import com.ayd.product_service.product.emuns.EnumProductState;
 import com.ayd.product_service.product.emuns.EnumProductType;
 
@@ -19,6 +21,9 @@ public class UpdateProductRequestDTO {
     @NotBlank(message = "El código de barras del producto es obligatorio")
     @Size(min = 1, max = 100, message = "El código de barras del producto debe tener entre 1 y 100 caracteres")
     private String barCode;
+    @NotNull(message = "El precio del producto es obligatorio")
+    @Size(min = 1, message = "El precio del producto debe ser mayor a 0")
+    private BigDecimal price;
     @NotNull(message = "El tipo de producto es obligatorio")
     private EnumProductType type;
     @NotNull(message = "El estado del producto es obligatorio")

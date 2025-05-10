@@ -18,4 +18,6 @@ public interface CashRegisterRepository
     public boolean existsByEmployeeIdAndIdNot(String employeeId, String id);
 
     public Optional<CashRegister> findByCode(String code);
+
+    public Optional<CashRegister> findByEmployeeId(String employeeId);
 }
