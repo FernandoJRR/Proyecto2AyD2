@@ -3,6 +3,8 @@ package com.ayd.config_service.parameters.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +45,7 @@ public class ParametersControllers {
                         @ApiResponse(responseCode = "404", description = "Parametro no encontrado", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
-        @PostMapping
+        @GetMapping("/nit")
         @PreAuthorize("hasAuthority('GET_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> getNITEmpresa() throws NotFoundException {
                 Parameter result = parameterPort.findParameterByKey("nit");
@@ -59,7 +61,7 @@ public class ParametersControllers {
                         @ApiResponse(responseCode = "404", description = "Parametro no encontrado", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
-        @PostMapping
+        @PatchMapping("/nit")
         @PreAuthorize("hasAuthority('UPDATE_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> updateNITEmpresa(
             @RequestBody @Valid ParameterNITRequestDTO request
@@ -80,7 +82,7 @@ public class ParametersControllers {
                         @ApiResponse(responseCode = "404", description = "Parametro no encontrado", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
-        @PostMapping
+        @GetMapping("/nombre")
         @PreAuthorize("hasAuthority('GET_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> getNombreEmpresa() throws NotFoundException {
                 Parameter result = parameterPort.findParameterByKey("nombre_empresa");
@@ -90,13 +92,13 @@ public class ParametersControllers {
                 return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
-        @Operation(summary = "Permite obtener el nombre de la empresa", description = "Este endpoint permite la obtencion del nombre de la empresa.")
+        @Operation(summary = "Permite actualizar el nombre de la empresa", description = "Este endpoint permite la actualizacion del nombre de la empresa.")
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "201", description = "Nombre obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParameterResponseDTO.class))),
                         @ApiResponse(responseCode = "404", description = "Parametro no encontrado", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
-        @PostMapping
+        @PatchMapping("/nombre")
         @PreAuthorize("hasAuthority('UPDATE_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> updateNombreEmpresa(
             @RequestBody @Valid ParameterNombreRequestDTO request
@@ -117,7 +119,7 @@ public class ParametersControllers {
                         @ApiResponse(responseCode = "404", description = "Parametro no encontrado", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
-        @PostMapping
+        @GetMapping("/regimen")
         @PreAuthorize("hasAuthority('GET_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> getRegimenEmpresa() throws NotFoundException {
                 Parameter result = parameterPort.findParameterByKey("regimen_empresa");
@@ -134,7 +136,7 @@ public class ParametersControllers {
                         @ApiResponse(responseCode = "404", description = "Parametro no encontrado", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
-        @PostMapping
+        @PatchMapping("/regimen")
         @PreAuthorize("hasAuthority('UPDATE_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> updateRegimenEmpresa(
             @RequestBody @Valid ParameterRegimenRequestDTO request
