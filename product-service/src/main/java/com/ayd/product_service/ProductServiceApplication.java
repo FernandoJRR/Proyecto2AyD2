@@ -5,10 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import com.ayd.shared.SwaggerConfig;
 import com.ayd.shared.handlers.GlobalExceptionHandler;
 
 @SpringBootApplication
-@Import(GlobalExceptionHandler.class)
+@Import({ GlobalExceptionHandler.class, SwaggerConfig.class })
 @EnableJpaAuditing
 public class ProductServiceApplication {
 
