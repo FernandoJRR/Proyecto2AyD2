@@ -1,8 +1,7 @@
 package com.ayd.config_service.parameters.ports;
 
 import com.ayd.config_service.parameters.models.Parameter;
-import com.ayd.config_service.shared.exceptions.InvalidParameterException;
-import com.ayd.config_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 public interface ForParameterPort {
 

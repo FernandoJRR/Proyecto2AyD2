@@ -6,14 +6,17 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import com.ayd.config_service.shared.config.AppProperties;
-import com.ayd.config_service.shared.config.SwaggerConfig;
-import com.ayd.config_service.shared.utils.GlobalExceptionHandler;
+import com.ayd.shared.handlers.GlobalExceptionHandler;
+import com.ayd.shared.security.AppProperties;
+import com.ayd.shared.security.SecurityConfig;
+import com.ayd.shared.swagger.SwaggerConfig;
+
+
 
 @SpringBootApplication
 @EnableJpaAuditing
+@Import({ GlobalExceptionHandler.class, SwaggerConfig.class, SecurityConfig.class })
 @EnableConfigurationProperties(AppProperties.class)
-@Import({ GlobalExceptionHandler.class, SwaggerConfig.class })
 public class ConfigServiceApplication {
 
 	public static void main(String[] args) {

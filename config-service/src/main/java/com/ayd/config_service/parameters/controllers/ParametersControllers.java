@@ -5,22 +5,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.config_service.parameters.dtos.ParameterNombreRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterNITRequestDTO;
+import com.ayd.config_service.parameters.dtos.ParameterNombreRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterRegimenRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterResponseDTO;
 import com.ayd.config_service.parameters.mappers.ParameterMapper;
 import com.ayd.config_service.parameters.models.Parameter;
 import com.ayd.config_service.parameters.ports.ForParameterPort;
-import com.ayd.config_service.parameters.repositories.ParameterRepository;
-import com.ayd.config_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.config_service.shared.exceptions.InvalidParameterException;
-import com.ayd.config_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
+
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
