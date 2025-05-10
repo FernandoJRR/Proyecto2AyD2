@@ -42,6 +42,12 @@ public class StockController {
     private final ForWarehousePort forWarehousePort;
     private final StockMapper stockMapper;
 
+    @Operation(summary = "Obtener productos por bodega", description = "Devuelve una lista de productos almacenados en una bodega específica, identificada por su ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de productos obtenida exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Bodega no encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @GetMapping("/warehouse/{warehouseId}/products")
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponseDTO> getProductsByWarehouse(@PathVariable String warehouseId)
@@ -51,6 +57,11 @@ public class StockController {
         return stockMapper.fromStockListToStockResponseDTOList(stocks);
     }
 
+    @Operation(summary = "Obtener productos con bajo stock", description = "Devuelve una lista de productos cuyo stock actual está por debajo del mínimo definido.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de productos con bajo stock obtenida exitosamente"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @GetMapping("/products/low-stock")
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponseDTO> getProductsLowStock() {
@@ -58,6 +69,12 @@ public class StockController {
         return stockMapper.fromStockListToStockResponseDTOList(stocks);
     }
 
+    @Operation(summary = "Obtener productos con bajo stock por bodega", description = "Devuelve una lista de productos cuyo stock está por debajo del mínimo permitido dentro de una bodega específica.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de productos con bajo stock obtenida exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Bodega no encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @GetMapping("/products/low-stock/warehouse/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponseDTO> getProductsLowStockByWarehouse(@PathVariable String warehouseId)
@@ -66,6 +83,14 @@ public class StockController {
         List<Stock> stocks = forStockPort.getProductsLowStockByWarehouseId(warehouse);
         return stockMapper.fromStockListToStockResponseDTOList(stocks);
     }
+
+    @Operation(summary = "Actualizar stock mínimo de un producto en una bodega", description = "Permite modificar el valor mínimo de stock permitido para un producto dentro de una bodega específica. Requiere el ID del producto y el ID de la bodega.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Stock mínimo actualizado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos en la solicitud"),
+            @ApiResponse(responseCode = "404", description = "Producto o bodega no encontrados"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
 
     @PatchMapping("/products/minimum-stock")
     @ResponseStatus(HttpStatus.OK)
@@ -77,6 +102,14 @@ public class StockController {
         return stockMapper.fromStockToStockResponseDTO(stock);
     }
 
+    @Operation(summary = "Modificar el stock de varios productos", description = "Permite restar stock a varios productos en distintas bodegas. Cada elemento de la lista debe contener el ID del producto, el ID de la bodega y la cantidad a restar.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Stock actualizado exitosamente para todos los productos"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos en la solicitud"),
+            @ApiResponse(responseCode = "404", description = "Algún producto o bodega no fue encontrado"),
+            @ApiResponse(responseCode = "409", description = "Conflicto en la operación de stock (por ejemplo, stock insuficiente)"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @PostMapping("/products/modify")
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponseDTO> substractVariousStockByProductIdAndWarehouseId(
