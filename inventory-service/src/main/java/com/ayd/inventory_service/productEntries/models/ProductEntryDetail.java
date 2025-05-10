@@ -3,7 +3,7 @@ package com.ayd.inventory_service.productEntries.models;
 import java.math.BigDecimal;
 
 import com.ayd.inventory_service.productEntries.dtos.ProductEntryDetailRequestDTO;
-import com.ayd.inventory_service.shared.models.Auditor;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

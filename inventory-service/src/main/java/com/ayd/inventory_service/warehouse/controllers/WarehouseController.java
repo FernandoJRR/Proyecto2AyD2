@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.inventory_service.warehouse.dtos.CreateWarehouseRequestDTO;
 import com.ayd.inventory_service.warehouse.dtos.SpecificationWarehouseDTO;
 import com.ayd.inventory_service.warehouse.dtos.UpdateWarehouseRequestDTO;

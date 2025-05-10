@@ -12,8 +12,7 @@ import com.ayd.inventory_service.cashRegister.models.CashRegister;
 import com.ayd.inventory_service.cashRegister.ports.ForCashRegisterPort;
 import com.ayd.inventory_service.cashRegister.repositories.CashRegisterRepository;
 import com.ayd.inventory_service.cashRegister.specifications.CashRegisterSpecification;
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
 import com.ayd.inventory_service.warehouse.ports.ForWarehousePort;
 

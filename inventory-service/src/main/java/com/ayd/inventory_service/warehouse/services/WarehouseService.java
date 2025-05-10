@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.inventory_service.warehouse.dtos.CreateWarehouseRequestDTO;
 import com.ayd.inventory_service.warehouse.dtos.SpecificationWarehouseDTO;
 import com.ayd.inventory_service.warehouse.dtos.UpdateWarehouseRequestDTO;
