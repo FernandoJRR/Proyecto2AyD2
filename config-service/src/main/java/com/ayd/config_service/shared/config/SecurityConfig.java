@@ -28,23 +28,6 @@ public class SecurityConfig {
 
         private final AppProperties appProperties;
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http.csrf(csrf -> csrf.disable())
-                                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activa CORS
-                                .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/api/v1/login").permitAll()
-                                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                                                // vamos a resguardar las rutas con los permisos necesarios
-                                                .anyRequest().authenticated() // Protege el resto de rutas
-                                )
-                                // sin sesiones
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-                return http.getOrBuild();
-        }
-
         /**
          * Configuración de CORS personalizada
          */
