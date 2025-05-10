@@ -25,8 +25,7 @@ import com.ayd.product_service.product.emuns.EnumProductType;
 import com.ayd.product_service.product.models.Product;
 import com.ayd.product_service.product.repositories.ProductRepository;
 import com.ayd.product_service.product.services.ProductService;
-import com.ayd.product_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.product_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {

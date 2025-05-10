@@ -23,8 +23,7 @@ import com.ayd.product_service.product.dtos.UpdateProductRequestDTO;
 import com.ayd.product_service.product.mappers.ProductMapper;
 import com.ayd.product_service.product.models.Product;
 import com.ayd.product_service.product.ports.ForProductPort;
-import com.ayd.product_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.product_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
