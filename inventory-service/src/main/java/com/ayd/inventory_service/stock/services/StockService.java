@@ -21,7 +21,7 @@ public class StockService implements ForStockPort {
 
     @Override
     public List<Stock> getProductsLowStockByWarehouseId(Warehouse warehouse){
-        List<Stock> stocks = stockRepository.findByWarehouseId(warehouse.getId());
+        List<Stock> stocks = stockRepository.findProductsLowStockByWarehouseId(warehouse.getId());
         return stocks;
     }
 
@@ -104,6 +104,12 @@ public class StockService implements ForStockPort {
         stock.setMinimumStock(minimumStock);
         stock = stockRepository.save(stock);
         return stock;
+    }
+
+    @Override
+    public List<Stock> getProductsByWarehouseId(Warehouse warehouse) {
+        List<Stock> stocks = stockRepository.findByWarehouseId(warehouse.getId());
+        return stocks;
     }
 
 }
