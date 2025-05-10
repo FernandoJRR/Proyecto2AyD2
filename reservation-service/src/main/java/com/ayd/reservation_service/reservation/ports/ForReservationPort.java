@@ -1,0 +1,22 @@
+package com.ayd.reservation_service.reservation.ports;
+
+import java.util.List;
+
+import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.ReservationSpecificationRequestDTO;
+import com.ayd.reservation_service.reservation.models.Reservation;
+import com.ayd.shared.exceptions.DuplicatedEntryException;
+import com.ayd.shared.exceptions.NotFoundException;
+
+public interface ForReservationPort {
+    public Reservation createReservation(CreateReservationRequestDTO createReservationRequestDTO)
+            throws DuplicatedEntryException, IllegalStateException;
+
+    public Reservation cancelReservation(String reservationId) throws IllegalStateException, NotFoundException;
+
+    public Reservation setPaymentReservation(String reservationId) throws IllegalStateException, NotFoundException;
+
+    public boolean deleteReservation(String reservationId) throws IllegalStateException, NotFoundException;
+
+    public List<Reservation> getReservations(ReservationSpecificationRequestDTO reservationSpecificationRequestDTO);
+}
