@@ -18,8 +18,7 @@ import com.ayd.inventory_service.productEntries.dtos.ProductEntrySpecificationDT
 import com.ayd.inventory_service.productEntries.mappers.ProductEntryMapper;
 import com.ayd.inventory_service.productEntries.models.ProductEntry;
 import com.ayd.inventory_service.productEntries.ports.ForProductEntryPort;
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

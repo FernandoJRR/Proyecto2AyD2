@@ -1,7 +1,7 @@
 package com.ayd.inventory_service.stock.models;
 
-import com.ayd.inventory_service.shared.models.Auditor;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

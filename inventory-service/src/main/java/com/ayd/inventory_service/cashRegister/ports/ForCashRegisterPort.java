@@ -6,8 +6,7 @@ import com.ayd.inventory_service.cashRegister.dtos.CreateCashRegisterRequestDTO;
 import com.ayd.inventory_service.cashRegister.dtos.SpecificationCashRegisterRequestDTO;
 import com.ayd.inventory_service.cashRegister.dtos.UpdateCashRegisterRequestDTO;
 import com.ayd.inventory_service.cashRegister.models.CashRegister;
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 public interface ForCashRegisterPort {
     public List<CashRegister> findAll();

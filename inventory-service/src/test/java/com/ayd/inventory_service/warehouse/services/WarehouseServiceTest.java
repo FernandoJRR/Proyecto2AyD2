@@ -21,8 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.ayd.inventory_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.inventory_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.inventory_service.warehouse.dtos.CreateWarehouseRequestDTO;
 import com.ayd.inventory_service.warehouse.dtos.SpecificationWarehouseDTO;
 import com.ayd.inventory_service.warehouse.dtos.UpdateWarehouseRequestDTO;
