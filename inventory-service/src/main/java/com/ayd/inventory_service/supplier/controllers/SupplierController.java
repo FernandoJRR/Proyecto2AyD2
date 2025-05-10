@@ -87,7 +87,7 @@ public class SupplierController {
             @ApiResponse(responseCode = "404", description = "Proveedor no encontrado"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @PatchMapping("/{id}/toggle")
+    @PatchMapping("/{id}/toogle")
     @ResponseStatus(HttpStatus.OK)
     public SupplierResponseDTO toggleSupplierStatus(@PathVariable String id) throws NotFoundException {
         Supplier supplier = forSupplierPort.toogleSupplierStatus(id);
