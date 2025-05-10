@@ -111,4 +111,17 @@ public class CashRegisterController {
         return cashRegisterMapper.fromCashRegisterToCashRegisterResponseDTO(cashRegister);
     }
 
+    @Operation(summary = "Obtener caja registradora por ID de empleado", description = "Devuelve la caja registradora asignada a un empleado específico, identificado por su ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Caja registradora encontrada exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Empleado o caja registradora no encontrados"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
+    @GetMapping("/employee/{employeeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CashRegisterResponseDTO findByEmployeeId(@PathVariable String employeeId) throws NotFoundException {
+        CashRegister cashRegister = forCashRegisterPort.findByEmployeeId(employeeId);
+        return cashRegisterMapper.fromCashRegisterToCashRegisterResponseDTO(cashRegister);
+    }
+
 }

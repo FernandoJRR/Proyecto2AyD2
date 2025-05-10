@@ -26,4 +26,6 @@ public interface ForCashRegisterPort {
             DuplicatedEntryException;
 
     public CashRegister toggleActive(String id) throws NotFoundException;
+
+    public CashRegister findByEmployeeId(String employeeId) throws NotFoundException;
 }

@@ -8,6 +8,9 @@ import com.ayd.inventory_service.stock.models.Stock;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
 
 public interface ForStockPort {
+
+    public List<Stock> getProductsByWarehouseId(Warehouse warehouse);
+
     public List<Stock> getProductsLowStockByWarehouseId(Warehouse warehouse);
 
     public List<Stock> getProductsLowStock();
@@ -21,9 +24,10 @@ public interface ForStockPort {
     public Stock removeStockByProductIdAndWarehouseId(String productId, Warehouse warehouse, Integer quantity)
             throws NotFoundException, IllegalStateException;
 
-    public Stock createStock(String productId, Warehouse warehouse, Integer quantity,Integer minimumStock)
+    public Stock createStock(String productId, Warehouse warehouse, Integer quantity, Integer minimumStock)
             throws NotFoundException, IllegalStateException, DuplicatedEntryException;
 
-    public Stock updateMinumumStockByProductIdAndWarehouseId(String productId, Warehouse warehouse, Integer minimumStock)
+    public Stock updateMinumumStockByProductIdAndWarehouseId(String productId, Warehouse warehouse,
+            Integer minimumStock)
             throws NotFoundException, IllegalStateException;
 }

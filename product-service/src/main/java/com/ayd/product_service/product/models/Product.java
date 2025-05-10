@@ -1,5 +1,7 @@
 package com.ayd.product_service.product.models;
 
+import java.math.BigDecimal;
+
 import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
 import com.ayd.product_service.product.dtos.UpdateProductRequestDTO;
 import com.ayd.product_service.product.emuns.EnumProductState;
@@ -26,6 +28,8 @@ public class Product extends Auditor {
     @Column(unique = true, nullable = true, length = 100)
     private String barCode;
     @Column(nullable = false)
+    private BigDecimal price;
+    @Column(nullable = false)
     private EnumProductType type;
     @Column(nullable = false)
     private EnumProductState state;
@@ -36,6 +40,7 @@ public class Product extends Auditor {
         this.barCode = createProductRequestDTO.getBarCode();
         this.type = createProductRequestDTO.getType();
         this.state = createProductRequestDTO.getState();
+        this.price = createProductRequestDTO.getPrice();
     }
 
     public Product updateProduct(UpdateProductRequestDTO updateProductRequestDTO) {
@@ -53,6 +58,9 @@ public class Product extends Auditor {
         }
         if (updateProductRequestDTO.getState() != null) {
             this.state = updateProductRequestDTO.getState();
+        }
+        if (updateProductRequestDTO.getPrice() != null) {
+            this.price = updateProductRequestDTO.getPrice();
         }
         return this;
     }
