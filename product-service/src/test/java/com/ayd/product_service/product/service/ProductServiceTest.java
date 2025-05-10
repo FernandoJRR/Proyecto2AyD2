@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -40,12 +41,14 @@ public class ProductServiceTest {
     private static final String NAME = "Paracetamol";
     private static final String CODE = "MED-001";
     private static final String BAR_CODE = "1234567890123";
+    private static final BigDecimal PRICE = BigDecimal.valueOf(10.99);
     private static final EnumProductType TYPE = EnumProductType.GOOD;
     private static final EnumProductState STATE = EnumProductState.ACTIVE;
 
     private static final String UPDATED_NAME = "Ibuprofeno";
     private static final String UPDATED_CODE = "MED-002";
     private static final String UPDATED_BAR_CODE = "9876543210987";
+    private static final BigDecimal UPDATED_PRICE = BigDecimal.valueOf(12.99);
     private static final EnumProductType UPDATED_TYPE = EnumProductType.SERVICE;
     private static final EnumProductState UPDATED_STATE = EnumProductState.INACTIVE;
 
@@ -55,10 +58,10 @@ public class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        createProductRequestDTO = new CreateProductRequestDTO(NAME, CODE, BAR_CODE, TYPE, STATE);
+        createProductRequestDTO = new CreateProductRequestDTO(NAME, CODE, BAR_CODE, PRICE, TYPE, STATE);
         updateProductRequestDTO = new UpdateProductRequestDTO(UPDATED_NAME, UPDATED_CODE, UPDATED_BAR_CODE,
-                UPDATED_TYPE, UPDATED_STATE);
-        product = new Product(NAME, CODE, BAR_CODE, TYPE, STATE);
+                UPDATED_PRICE, UPDATED_TYPE, UPDATED_STATE);
+        product = new Product(NAME, CODE, BAR_CODE, PRICE, TYPE, STATE);
         product.setId(PRODUCT_ID);
     }
 

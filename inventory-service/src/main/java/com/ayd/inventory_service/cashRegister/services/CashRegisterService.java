@@ -61,7 +61,7 @@ public class CashRegisterService implements ForCashRegisterPort {
 
     @Override
     public CashRegister save(CreateCashRegisterRequestDTO createCashRegisterRequestDTO)
-            throws DuplicatedEntryException,NotFoundException {
+            throws DuplicatedEntryException, NotFoundException {
         Warehouse warehouse = forWarehousePort.getWarehouse(createCashRegisterRequestDTO.getWarehouseId());
         if (cashRegisterRepository.existsByCode(createCashRegisterRequestDTO.getCode())) {
             throw new DuplicatedEntryException("Ya existe un registro de caja con el código: "
@@ -71,7 +71,7 @@ public class CashRegisterService implements ForCashRegisterPort {
             if (cashRegisterRepository.existsByEmployeeId(createCashRegisterRequestDTO.getEmployeeId())) {
                 throw new DuplicatedEntryException("Ya existe un registro de caja con el empleado: "
                         + createCashRegisterRequestDTO.getEmployeeId());
-            }    
+            }
         }
         CashRegister cashRegister = new CashRegister(createCashRegisterRequestDTO, warehouse);
         cashRegister = cashRegisterRepository.save(cashRegister);
@@ -82,7 +82,7 @@ public class CashRegisterService implements ForCashRegisterPort {
     public CashRegister update(String id, UpdateCashRegisterRequestDTO updateCashRegisterRequestDTO)
             throws NotFoundException, DuplicatedEntryException {
         CashRegister cashRegister = findById(id);
-        if(cashRegisterRepository.existsByCodeAndIdNot(updateCashRegisterRequestDTO.getCode(), id)){
+        if (cashRegisterRepository.existsByCodeAndIdNot(updateCashRegisterRequestDTO.getCode(), id)) {
             throw new DuplicatedEntryException("Ya existe un registro de caja con el código: "
                     + updateCashRegisterRequestDTO.getCode());
         }
@@ -103,5 +103,12 @@ public class CashRegisterService implements ForCashRegisterPort {
         cashRegister.toogleActive();
         cashRegister = cashRegisterRepository.save(cashRegister);
         return cashRegister;
+    }
+
+    @Override
+    public CashRegister findByEmployeeId(String employeeId) throws NotFoundException {
+        return cashRegisterRepository.findByEmployeeId(employeeId)
+                .orElseThrow(
+                        () -> new NotFoundException("No se encontró el registro de caja con empleado: " + employeeId));
     }
 }
