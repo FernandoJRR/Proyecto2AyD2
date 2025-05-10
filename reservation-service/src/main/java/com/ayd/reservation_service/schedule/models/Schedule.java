@@ -1,6 +1,6 @@
-package com.ayd.reservation_service.reservation.models;
+package com.ayd.reservation_service.schedule.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import com.ayd.shared.models.Auditor;
 
@@ -16,14 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Reservation extends Auditor {
+public class Schedule extends Auditor {
     @Column(nullable = false)
-    private LocalDateTime reservationDateTime;
-
+    private LocalTime startTime;
     @Column(nullable = false)
-    private String userId;
-
-    private boolean paid = false; 
-
-    private boolean cancelled = false; 
+    private LocalTime endTime;
 }
