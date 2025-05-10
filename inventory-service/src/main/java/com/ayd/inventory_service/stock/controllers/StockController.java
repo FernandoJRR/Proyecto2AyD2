@@ -48,7 +48,7 @@ public class StockController {
             @ApiResponse(responseCode = "404", description = "Bodega no encontrada"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @GetMapping("/warehouse/{warehouseId}/products")
+    @GetMapping("/warehouse/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponseDTO> getProductsByWarehouse(@PathVariable String warehouseId)
             throws NotFoundException {
@@ -62,7 +62,7 @@ public class StockController {
             @ApiResponse(responseCode = "200", description = "Lista de productos con bajo stock obtenida exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @GetMapping("/products/low-stock")
+    @GetMapping("/low-stock")
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponseDTO> getProductsLowStock() {
         List<Stock> stocks = forStockPort.getProductsLowStock();
@@ -75,7 +75,7 @@ public class StockController {
             @ApiResponse(responseCode = "404", description = "Bodega no encontrada"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @GetMapping("/products/low-stock/warehouse/{warehouseId}")
+    @GetMapping("/low-stock/warehouse/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponseDTO> getProductsLowStockByWarehouse(@PathVariable String warehouseId)
             throws NotFoundException {
@@ -92,7 +92,7 @@ public class StockController {
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
 
-    @PatchMapping("/products/minimum-stock")
+    @PatchMapping("/minimum-stock")
     @ResponseStatus(HttpStatus.OK)
     public StockResponseDTO updateMinumumStockByProductIdAndWarehouseId(
             @RequestBody @Valid UpdateMinStockRequestDTO updateMinStockRequestDTO) throws NotFoundException {
@@ -110,7 +110,7 @@ public class StockController {
             @ApiResponse(responseCode = "409", description = "Conflicto en la operación de stock (por ejemplo, stock insuficiente)"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @PostMapping("/products/modify")
+    @PostMapping("/modify-stock")
     @ResponseStatus(HttpStatus.OK)
     public List<StockResponseDTO> substractVariousStockByProductIdAndWarehouseId(
             @RequestBody @Valid List<ModifyStockRequest> modifyStockRequest)

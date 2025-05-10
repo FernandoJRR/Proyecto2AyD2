@@ -25,7 +25,7 @@ spring:
         - id: inventory-service
           uri: lb://INVENTORY-SERVICE
           predicates:
-            - Path=/api/v1/warehouses,/api/v1/warehouses/**,/api/v1/suppliers,/api/v1/suppliers/**,/api/v1/cash-registers,/api/v1/cash-registers/**,/api/v1/product-entries,/api/v1/product-entries/**
+            - Path=/api/v1/warehouses,/api/v1/warehouses/**,/api/v1/suppliers,/api/v1/suppliers/**,/api/v1/cash-registers,/api/v1/cash-registers/**,/api/v1/product-entries,/api/v1/product-entries/**,/api/v1/stocks/**
 
 eureka:
   instance:
