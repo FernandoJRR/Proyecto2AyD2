@@ -1,0 +1,114 @@
+pipeline {
+    agent any
+
+    environment {
+        
+        DEPLOY_BACKEND_DIR = "/var/api/project2AyD2-backend"
+        
+        MICRO_SERVICE_API_GATEWAY = "api-gateway"
+        SERVICE_API_GATEWAY_NAME_JAR = "api-gateway.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_CONFIG = "config-service"
+        SERVICE_CONFIG_NAME_JAR = "config-service.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_EMPLOYEE = "employee-service"
+        SERVICE_EMPLOYEE_NAME_JAR = "employee-service.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_EUREKA = "eureka-server"
+        SERVICE_EUREKA_NAME_JAR = "eureka-server.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_GAME = "game-service"
+        SERVICE_GAME_NAME_JAR = "game-service.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_INVENTORY = "inventory-service"
+        SERVICE_INVENTORY_NAME_JAR = "inventory-service.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_INVOICE = "invoice-service"
+        SERVICE_INVOICE_NAME_JAR = "invoice-service.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_PACKAGE = "package-service"
+        SERVICE_PACKAGE_NAME_JAR = "package-service.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_PRODUCT = "product-service"
+        SERVICE_PRODUCT_NAME_JAR = "product-service.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+        MICRO_SERVICE_RESERVATION = "reservation-service"
+        SERVICE_RESERVATION_NAME_JAR = "reservation-service.jar"
+        DEPLOY_BACKEND_JAR = false
+        
+    }
+
+    stages {
+        
+        stage('Checkout') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/FernandoJRR/Proyecto2AyD2-Back.git'
+            }
+        }
+        
+        stage ('Build Common Lib'){
+            
+        }
+
+        stage('Build Backend') {
+            steps {
+                script {
+                    echo "🚀 Compilando backend y ejecutando pruebas..."
+                    dir('hospitalApi') {
+                        sh 'mvn clean verify' // Compila, ejecuta tests y genera Jacoco
+            
+                        // Publicar resultados de pruebas
+                        junit 'target/surefire-reports/*.xml'
+            
+                        // Publicar cobertura Jacoco (plugin Jacoco instalado)
+                        jacoco execPattern: 'target/jacoco.exec'
+            
+                        // Publicar reporte HTML Jacoco (plugin HTML Publisher instalado)
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage'
+                        ])
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Backend') {
+            steps {
+                script {
+                    dir('hospitalApi') {
+                        echo "🧹 Eliminando JAR anterior..."
+                        sh "rm -f $DEPLOY_BACKEND_DIR/$DEPLOY_BACKEND_JAR"
+        
+                        echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                        sh """
+                            rsync -av target/hospitalApi-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$DEPLOY_BACKEND_JAR
+                        """
+        
+                        echo "🔄 Reiniciando servicio hospital-api.service..."
+                        sh 'sudo systemctl restart hospital-api.service'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "🎉 Pipeline completado con éxito."
+        }
+        failure {
+            echo "❌ Algo falló en el pipeline."
+        }
+    }
+}
