@@ -5,7 +5,7 @@ pipeline {
         
         PROJECT_REPO_PATH = "/var/lib/jenkins/workspace/Proyecto2AyD2-dev"
 
-        DEPLOY_BACKEND_DIR = "/var/api/project2AyD2-backend"
+        DEPLOY_BACKEND_DIR = "/var/api/project2AyD2"
 
         COMMON_LIB_IS_DEPLOYED = false
 
@@ -484,6 +484,31 @@ pipeline {
                         echo "🚀 No hay cambios en el Package Service, no se compila."
                         // Marcamos DEPLOY_PACKAGE_JAR como falso ya que no se ha compilado
                         DEPLOY_PACKAGE_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Deploy de los servicios
+        stage('Deploy Services'){
+            steps{
+                script{
+                    echo "🚀 Desplegando servicios..."
+                    // Desplegamos el servicio Eureka
+                    if (DEPLOY_EUREKA_JAR) {
+                        echo "🚀 Desplegando Eureka Server"
+                        dir('eureka-server') {
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/eureka-server-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR
+                                
+                                echo "🔄 Reiniciando servicio eureka-server.service..."
+                                sudo systemctl restart eureka-server.service
+                            """
+                        }
                     }
                 }
             }
