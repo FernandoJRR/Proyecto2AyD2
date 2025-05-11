@@ -1,0 +1,127 @@
+pipeline {
+    agent any
+
+    environment {
+        NVM_DIR = "/var/lib/jenkins/.nvm"
+        DEPLOY_BACKEND_DIR = "/var/api/hospitalApi"
+        DEPLOY_BACKEND_JAR = "hospitalApi.jar"
+        DEPLOY_FRONTEND_DIR = "/var/www/app_proyecto1_ayd2"
+        NODE_VERSION = "22.14.0"
+    }
+
+    stages {
+        
+        stage('Checkout') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/FernandoJRR/Proyecto1AyD2.git'
+            }
+        }
+        
+        stage('Build Backend') {
+            steps {
+                script {
+                    echo "🚀 Compilando backend y ejecutando pruebas..."
+                    dir('hospitalApi') {
+                        sh 'mvn clean verify' // Compila, ejecuta tests y genera Jacoco
+            
+                        // Publicar resultados de pruebas
+                        junit 'target/surefire-reports/*.xml'
+            
+                        // Publicar cobertura Jacoco (plugin Jacoco instalado)
+                        jacoco execPattern: 'target/jacoco.exec'
+            
+                        // Publicar reporte HTML Jacoco (plugin HTML Publisher instalado)
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage'
+                        ])
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Backend') {
+            steps {
+                script {
+                    dir('hospitalApi') {
+                        echo "🧹 Eliminando JAR anterior..."
+                        sh "rm -f $DEPLOY_BACKEND_DIR/$DEPLOY_BACKEND_JAR"
+        
+                        echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                        sh """
+                            rsync -av target/hospitalApi-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$DEPLOY_BACKEND_JAR
+                        """
+        
+                        echo "🔄 Reiniciando servicio hospital-api.service..."
+                        sh 'sudo systemctl restart hospital-api.service'
+                    }
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                script {
+                    echo "🚀 Compilando frontend..."
+                    dir('app_proyecto1_ayd2') {
+
+                        echo "🔧 Cargando NVM y usando Node.js $NODE_VERSION..."
+                        sh """
+                            export NVM_DIR="$NVM_DIR"
+                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                            nvm use $NODE_VERSION
+
+                            echo "📦 Instalando dependencias frontend..."
+                            #npm install --legacy-peer-deps
+                            rm -rf node_modules package-lock.json
+                            npm install
+
+                            echo "🏗️ Ejecutando build frontend..."
+                            npm run build
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Frontend') {
+            steps {
+                script {
+                    dir('app_proyecto1_ayd2') {
+                        
+                        sh """
+                            export NVM_DIR="$NVM_DIR"
+                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                            nvm use $NODE_VERSION
+
+                            echo "🛑 Deteniendo PM2 frontend si existe..."
+                            pm2 stop frontend || true
+    
+                            echo "🧹 Limpiando el deploy anterior de frontend en $DEPLOY_FRONTEND_DIR ..."
+                            rm -rf $DEPLOY_FRONTEND_DIR/*
+    
+                            echo "🚚 Copiando build a $DEPLOY_FRONTEND_DIR ..."
+                            rsync -av --delete .output/ $DEPLOY_FRONTEND_DIR/
+    
+                            echo "✅ Reiniciando PM2 frontend..."
+                            pm2 start frontend || pm2 restart frontend
+    
+                            echo "📝 Logs de PM2 frontend..."
+                            pm2 logs frontend --lines 20 --nostream
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "🎉 Pipeline completado con éxito."
+        }
+        failure {
+            echo "❌ Algo falló en el pipeline."
+        }
+    }
+}
