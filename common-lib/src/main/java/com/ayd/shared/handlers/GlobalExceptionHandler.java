@@ -33,6 +33,12 @@ public class GlobalExceptionHandler {
         return new ErrorResponseDTO(ex.getMessage());
     }
 
+    @ExceptionHandler(ReportGenerationExeption.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponseDTO handleConstraintViolationException(ReportGenerationExeption ex) {
+        return new ErrorResponseDTO("Error inesperado al generar el reporte. " + ex.getMessage());
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleConstraintViolationException(ConstraintViolationException ex) {
@@ -47,7 +53,6 @@ public class GlobalExceptionHandler {
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             menssage = menssage + String.format("-%s ", error.getDefaultMessage());
         }
-
         return new ErrorResponseDTO(menssage);
     }
 
