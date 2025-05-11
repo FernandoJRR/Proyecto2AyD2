@@ -169,7 +169,7 @@ pipeline {
                             echo "🚀 La carpeta target no existe, se compila el Config Service"
                         }
                     }
-                    if (changes || shouldBuild) {
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Config Service"
                         dir('config-service') {
                             sh 'mvn clean verify'
@@ -211,7 +211,7 @@ pipeline {
                             echo "🚀 La carpeta target no existe, se compila el Employee Service"
                         }
                     }
-                    if (changes || shouldBuild) {
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Employee Service"
                         dir('employee-service') {
                             sh 'mvn clean verify'
@@ -253,7 +253,7 @@ pipeline {
                             echo "🚀 La carpeta target no existe, se compila el Product Service"
                         }
                     }
-                    if (changes || shouldBuild) {
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Product Service"
                         dir('product-service') {
                             sh 'mvn clean verify'
@@ -295,7 +295,7 @@ pipeline {
                             echo "🚀 La carpeta target no existe, se compila el Reservation Service"
                         }
                     }
-                    if (changes || shouldBuild) {
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Reservation Service"
                         dir('reservation-service') {
                             sh 'mvn clean verify'
@@ -337,7 +337,7 @@ pipeline {
                             echo "🚀 La carpeta target no existe, se compila el Inventory Service"
                         }
                     }
-                    if (changes || shouldBuild) {
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Inventory Service"
                         dir('inventory-service') {
                             sh 'mvn clean verify'
@@ -379,7 +379,7 @@ pipeline {
                             echo "🚀 La carpeta target no existe, se compila el Invoice Service"
                         }
                     }
-                    if (changes || shouldBuild) {
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Invoice Service"
                         dir('invoice-service') {
                             sh 'mvn clean verify'
@@ -400,6 +400,90 @@ pipeline {
                         echo "🚀 No hay cambios en el Invoice Service, no se compila."
                         // Marcamos DEPLOY_INVOICE_JAR como falso ya que no se ha compilado
                         DEPLOY_INVOICE_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Game
+        stage('Build Game Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Game Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('game-service') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Game Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Game Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Game Service"
+                        dir('game-service') {
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Game Service'
+                            ])
+                        }
+                        DEPLOY_GAME_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Game Service, no se compila."
+                        // Marcamos DEPLOY_GAME_JAR como falso ya que no se ha compilado
+                        DEPLOY_GAME_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Package
+        stage('Build Package Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Package Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('package-service') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Package Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Package Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Package Service"
+                        dir('package-service') {
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Package Service'
+                            ])
+                        }
+                        DEPLOY_PACKAGE_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Package Service, no se compila."
+                        // Marcamos DEPLOY_PACKAGE_JAR como falso ya que no se ha compilado
+                        DEPLOY_PACKAGE_JAR = false
                     }
                 }
             }
