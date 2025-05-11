@@ -58,6 +58,7 @@ pipeline {
                 git branch: 'dev', url: 'https://github.com/FernandoJRR/Proyecto2AyD2-Back.git'
             }
         }
+
         // Construccion de la librería común
         stage ('Build Common Lib'){
             steps {
@@ -89,6 +90,7 @@ pipeline {
                 }
             }
         }
+
         // Construccion del servicio Eureka
         stage('Build Eureka Server'){
             steps{
@@ -119,6 +121,7 @@ pipeline {
                 }
             }
         }
+
         // Construccion del servicio API Gateway
         stage('Build API Gateway'){
             steps{
@@ -145,6 +148,258 @@ pipeline {
                         echo "🚀 No hay cambios en el API Gateway, no se compila."
                         // Marcamos DEPLOY_API_GATEWAY_JAR como falso ya que no se ha compilado
                         DEPLOY_API_GATEWAY_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Config
+        stage('Build Config Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Config Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('config-service') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Config Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Config Service"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando Config Service"
+                        dir('config-service') {
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Config Service'
+                            ])
+                        }
+                        DEPLOY_CONFIG_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Config Service, no se compila."
+                        // Marcamos DEPLOY_CONFIG_JAR como falso ya que no se ha compilado
+                        DEPLOY_CONFIG_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Employee
+        stage('Build Employee Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Employee Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('employee-service') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Employee Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Employee Service"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando Employee Service"
+                        dir('employee-service') {
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Employee Service'
+                            ])
+                        }
+                        DEPLOY_EMPLOYEE_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Employee Service, no se compila."
+                        // Marcamos DEPLOY_EMPLOYEE_JAR como falso ya que no se ha compilado
+                        DEPLOY_EMPLOYEE_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Product
+        stage('Build Product Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Product Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('product-service') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Product Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Product Service"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando Product Service"
+                        dir('product-service') {
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Product Service'
+                            ])
+                        }
+                        DEPLOY_PRODUCT_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Product Service, no se compila."
+                        // Marcamos DEPLOY_PRODUCT_JAR como falso ya que no se ha compilado
+                        DEPLOY_PRODUCT_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Reservation
+        stage('Build Reservation Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Reservation Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('reservation-service') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Reservation Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Reservation Service"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando Reservation Service"
+                        dir('reservation-service') {
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Reservation Service'
+                            ])
+                        }
+                        DEPLOY_RESERVATION_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Reservation Service, no se compila."
+                        // Marcamos DEPLOY_RESERVATION_JAR como falso ya que no se ha compilado
+                        DEPLOY_RESERVATION_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Inventory
+        stage('Build Inventory Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Inventory Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('inventory-service') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Inventory Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Inventory Service"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando Inventory Service"
+                        dir('inventory-service') {
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Inventory Service'
+                            ])
+                        }
+                        DEPLOY_INVENTORY_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Inventory Service, no se compila."
+                        // Marcamos DEPLOY_INVENTORY_JAR como falso ya que no se ha compilado
+                        DEPLOY_INVENTORY_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Invoice
+        stage('Build Invoice Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Invoice Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('invoice-service') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Invoice Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Invoice Service"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando Invoice Service"
+                        dir('invoice-service') {
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Invoice Service'
+                            ])
+                        }
+                        DEPLOY_INVOICE_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Invoice Service, no se compila."
+                        // Marcamos DEPLOY_INVOICE_JAR como falso ya que no se ha compilado
+                        DEPLOY_INVOICE_JAR = false
                     }
                 }
             }
