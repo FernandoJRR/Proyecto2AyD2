@@ -3,6 +3,7 @@ package com.ayd.inventory_service.supplier.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +59,7 @@ public class SupplierController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('CREATE_SUPPLIER')")
     public SupplierResponseDTO saveSupplier(@RequestBody @Valid CreateSupplierRequestDTO supplierRequestDTO)
             throws DuplicatedEntryException {
         Supplier supplier = forSupplierPort.saveSupplier(supplierRequestDTO);
@@ -74,6 +76,7 @@ public class SupplierController {
     })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('EDIT_SUPPLIER')")
     public SupplierResponseDTO updateSupplier(@RequestBody @Valid UpdateSupplierRequestDTO supplierRequestDTO,
             @PathVariable String id) throws NotFoundException, IllegalStateException {
         Supplier supplier = forSupplierPort.updateSupplier(supplierRequestDTO, id);
@@ -88,6 +91,7 @@ public class SupplierController {
     })
     @PatchMapping("/{id}/toogle")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('TOOGLE_SUPPLIER')")
     public SupplierResponseDTO toggleSupplierStatus(@PathVariable String id) throws NotFoundException {
         Supplier supplier = forSupplierPort.toogleSupplierStatus(id);
         return supplierMapper.fromSupplierToSupplierResponseDTO(supplier);

@@ -3,6 +3,7 @@ package com.ayd.inventory_service.cashRegister.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,6 @@ import com.ayd.inventory_service.cashRegister.mappers.CashRegisterMapper;
 import com.ayd.inventory_service.cashRegister.models.CashRegister;
 import com.ayd.inventory_service.cashRegister.ports.ForCashRegisterPort;
 import com.ayd.shared.exceptions.*;
-
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -73,6 +73,7 @@ public class CashRegisterController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyAuthority('CREATE_CASH_REGISTER')")
     public CashRegisterResponseDTO create(@RequestBody @Valid CreateCashRegisterRequestDTO createCashRegisterRequestDTO)
             throws NotFoundException, DuplicatedEntryException {
         CashRegister cashRegister = forCashRegisterPort.save(createCashRegisterRequestDTO);
@@ -89,6 +90,7 @@ public class CashRegisterController {
     })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('EDIT_CASH_REGISTER')")
     public CashRegisterResponseDTO update(@PathVariable String id,
             @RequestBody @Valid UpdateCashRegisterRequestDTO updateCashRegisterRequestDTO)
             throws NotFoundException, DuplicatedEntryException {
@@ -104,6 +106,7 @@ public class CashRegisterController {
     })
     @PatchMapping("/{id}/toogle")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('TOOGLE_CASH_REGISTER')")
     public CashRegisterResponseDTO toggle(@PathVariable String id) throws NotFoundException {
         CashRegister cashRegister = forCashRegisterPort.toggleActive(id);
         return cashRegisterMapper.fromCashRegisterToCashRegisterResponseDTO(cashRegister);

@@ -3,6 +3,7 @@ package com.ayd.inventory_service.warehouse.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +60,7 @@ public class WarehouseController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('CREATE_WAREHOUSE')")
     public WarehouseResponseDTO createWarehouse(
             @RequestBody @Valid CreateWarehouseRequestDTO createWarehouseRequestDTO)
             throws DuplicatedEntryException {
@@ -76,6 +78,7 @@ public class WarehouseController {
     })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('EDIT_WAREHOUSE')")
     public WarehouseResponseDTO updateWarehouse(@PathVariable String id,
             @RequestBody @Valid UpdateWarehouseRequestDTO updateWarehouseRequestDTO)
             throws DuplicatedEntryException, NotFoundException {
@@ -91,6 +94,7 @@ public class WarehouseController {
     })
     @PatchMapping("/{id}/toogle")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('TOOGLE_WAREHOUSE')")
     public WarehouseResponseDTO tootgleActive(@PathVariable String id) throws NotFoundException {
         Warehouse warehouse = forWarehousePort.tootgleActive(id);
         return warehouseMapper.fromWarehouseToWarehouseResponseDTO(warehouse);
