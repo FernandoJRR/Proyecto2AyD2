@@ -3,6 +3,7 @@ package com.ayd.product_service.product.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +50,7 @@ public class ProductController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('CREATE_PRODUCT')")
     public ProductResponseDTO createProduct(@Valid @RequestBody CreateProductRequestDTO createProductRequestDTO)
             throws DuplicatedEntryException, NotFoundException {
         Product product = forProductPort.createProduct(createProductRequestDTO);
@@ -65,6 +67,7 @@ public class ProductController {
     })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('EDIT_PRODUCT')")
     public ProductResponseDTO updateProduct(
             @PathVariable String id,
             @Valid @RequestBody UpdateProductRequestDTO updateProductRequestDTO)
@@ -81,9 +84,10 @@ public class ProductController {
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('DELETE_PRODUCT')")
     public DeleteProductResponseDTO deleteProduct(@PathVariable String id) throws NotFoundException {
         boolean rssult = forProductPort.deleteProduct(id);
-        return new DeleteProductResponseDTO(id, rssult, "Producto con id: " + id+" eliminado correctamente");
+        return new DeleteProductResponseDTO(id, rssult, "Producto con id: " + id + " eliminado correctamente");
     }
 
     @Operation(summary = "Obtener un producto por ID", description = "Devuelve la información de un producto a partir de su identificador único.")

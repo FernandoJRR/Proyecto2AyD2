@@ -3,6 +3,7 @@ package com.ayd.reservation_service.schedule.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -72,6 +73,7 @@ public class ScheduleController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyAuthority('CREATE_SCHEDULE')")
     public ScheduleResponseDTO createSchedule(@Valid @RequestBody CreateScheduleRequestDTO createScheduleRequest)
             throws DuplicatedEntryException, IllegalStateException {
         Schedule schedule = forSchedulePort.createSchedule(createScheduleRequest);
@@ -88,6 +90,7 @@ public class ScheduleController {
     })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('EDIT_SCHEDULE')")
     public ScheduleResponseDTO updateSchedule(@PathVariable String id,
             @Valid @RequestBody UpdateScheduleRequestDTO updateScheduleRequest)
             throws NotFoundException, DuplicatedEntryException, IllegalStateException {
@@ -103,6 +106,7 @@ public class ScheduleController {
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyAuthority('DELETE_SCHEDULE')")
     public void deleteSchedule(@PathVariable String id) throws NotFoundException {
         forSchedulePort.deleteSchedule(id);
     }

@@ -3,6 +3,7 @@ package com.ayd.reservation_service.reservation.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,7 @@ public class ReservationController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('CREATE_RESERVATION')")
     public ReservationResponseDTO createReservation(
             @Valid @RequestBody CreateReservationRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException, NotFoundException {
@@ -60,6 +62,7 @@ public class ReservationController {
     })
     @PostMapping("/cancel/{reservationId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('CANCEL_RESERVATION')")
     public ReservationResponseDTO cancelReservation(@PathVariable String reservationId)
             throws IllegalStateException, NotFoundException {
         Reservation reservation = forReservationPort.cancelReservation(reservationId);
@@ -75,6 +78,7 @@ public class ReservationController {
     })
     @PostMapping("/pay/{reservationId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('PAY_RESERVATION')")
     public ReservationResponseDTO setPaymentReservation(@PathVariable String reservationId)
             throws IllegalStateException, NotFoundException {
         Reservation reservation = forReservationPort.setPaymentReservation(reservationId);
@@ -117,6 +121,7 @@ public class ReservationController {
     })
     @DeleteMapping("/{reservationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyAuthority('DELETE_RESERVATION')")
     public void deleteReservation(@PathVariable String reservationId)
             throws IllegalStateException, NotFoundException {
         forReservationPort.deleteReservation(reservationId);
