@@ -9,6 +9,9 @@ import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
 
 public interface ForReservationPort {
+
+    public Reservation getReservation(String reservationId) throws NotFoundException;
+
     public Reservation createReservation(CreateReservationRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException, IllegalStateException;
 

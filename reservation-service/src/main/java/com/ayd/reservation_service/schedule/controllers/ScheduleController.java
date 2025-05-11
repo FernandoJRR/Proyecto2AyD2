@@ -63,9 +63,11 @@ public class ScheduleController {
         return scheduleMapper.formScheduleListToScheduleResponseDTOList(schedules);
     }
 
-    @Operation(summary = "Obtener horarios por modalidad (en línea o presencial)", description = "Devuelve una lista de horarios según la modalidad especificada: en línea (`true`) o presencial (`false`).")
+    @Operation(summary = "Crear un nuevo horario", description = "Registra un nuevo horario en el sistema. Valida que no exista un duplicado y que los datos sean consistentes.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de horarios obtenida exitosamente"),
+            @ApiResponse(responseCode = "201", description = "Horario creado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos en la solicitud"),
+            @ApiResponse(responseCode = "409", description = "Conflicto: horario duplicado o estado inválido"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
     @PostMapping

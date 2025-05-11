@@ -97,4 +97,10 @@ public class ReservationService implements ForReservationPort {
         return reservationRepository.findAll(spec);
     }
 
+    @Override
+    public Reservation getReservation(String reservationId) throws NotFoundException {
+        return reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new NotFoundException("No se encontró la reserva con el ID: " + reservationId));
+    }
+
 }
