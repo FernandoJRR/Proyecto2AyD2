@@ -29,6 +29,11 @@ public enum SystemPermissionEnum {
         CHANGE_VACATION_DAYS(new Permission("Cambiar dias de vacaciones", "CHANGE_VACATION_DAYS")),
         GET_ALL_INVOICES(new Permission("Obtener a todos los empleados que pueden sacar finiquito", "GET_ALL_INVOICES")),
 
+        // Permisos de productos
+        CREATE_PRODUCT(new Permission("Crear producto", "CREATE_PRODUCT")),
+        EDIT_PRODUCT(new Permission("Editar producto", "EDIT_PRODUCT")),
+        DELETE_PRODUCT(new Permission("Eliminar producto", "DELETE_PRODUCT")),
+
         ;
 
         private final Permission permission;
