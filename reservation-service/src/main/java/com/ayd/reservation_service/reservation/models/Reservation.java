@@ -1,8 +1,11 @@
 package com.ayd.reservation_service.reservation.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-import com.ayd.reservation_service.shared.models.Auditor;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,15 +21,31 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Reservation extends Auditor {
     @Column(nullable = false)
-    private LocalDateTime reservationDateTime;
+    private LocalTime startTime;
 
     @Column(nullable = false)
-    private String clientDocument; // CUI o NIT del cliente que reservó
+    private LocalTime endTime;
 
     @Column(nullable = false)
-    private String packageId; // UUID del paquete de juego
+    private LocalDate date;
 
-    private boolean paid = false; 
+    @Column(nullable = false)
+    private String userId;
 
-    private boolean cancelled = false; 
+    @Column(nullable = false)
+    private boolean online;
+
+    private boolean paid = false;
+
+    private boolean cancelled = false;
+
+    public Reservation(CreateReservationRequestDTO createReservationRequestDTO) {
+        this.startTime = createReservationRequestDTO.getStartTime();
+        this.endTime = createReservationRequestDTO.getEndTime();
+        this.date = createReservationRequestDTO.getDate();
+        this.userId = createReservationRequestDTO.getUserId();
+        this.online = createReservationRequestDTO.isOnline();
+        this.paid = false;
+        this.cancelled = false;
+    }
 }
