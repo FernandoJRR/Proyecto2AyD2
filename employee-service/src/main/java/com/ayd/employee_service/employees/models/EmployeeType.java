@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.ayd.employee_service.permissions.models.Permission;
-import com.ayd.employee_service.shared.models.Auditor;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

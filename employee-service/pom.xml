@@ -78,6 +78,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!--Libreria
+		comun-->
+        <dependency>
+            <groupId>com.ayd</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!--Client
         de eureka-->
         <dependency>

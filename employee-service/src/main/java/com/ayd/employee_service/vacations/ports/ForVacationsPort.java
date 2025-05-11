@@ -3,10 +3,9 @@ package com.ayd.employee_service.vacations.ports;
 import java.util.List;
 import java.util.Map;
 
-import com.ayd.employee_service.shared.exceptions.InvalidPeriodException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
-import com.ayd.employee_service.vacations.dtos.ChangeVacationDaysRequestDTO;
 import com.ayd.employee_service.vacations.models.Vacations;
+import com.ayd.shared.exceptions.InvalidPeriodException;
+import com.ayd.shared.exceptions.NotFoundException;
 
 public interface ForVacationsPort {
     public List<Vacations> getAllVacationsForEmployeeOnPeriod(String employeeId, Integer period) throws NotFoundException;

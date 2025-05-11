@@ -3,6 +3,7 @@ package com.ayd.inventory_service.stock.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -91,9 +92,9 @@ public class StockController {
             @ApiResponse(responseCode = "404", description = "Producto o bodega no encontrados"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-
     @PatchMapping("/minimum-stock")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('MODIFY_MINIMUN_STOCK')")
     public StockResponseDTO updateMinumumStockByProductIdAndWarehouseId(
             @RequestBody @Valid UpdateMinStockRequestDTO updateMinStockRequestDTO) throws NotFoundException {
         Warehouse warehouse = forWarehousePort.getWarehouse(updateMinStockRequestDTO.getWarehouseId());
@@ -110,8 +111,9 @@ public class StockController {
             @ApiResponse(responseCode = "409", description = "Conflicto en la operación de stock (por ejemplo, stock insuficiente)"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @PostMapping("/modify-stock")
+    @PatchMapping("/modify-stock")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('MODIFY_STOCK','CREATE_INVOICE')")
     public List<StockResponseDTO> substractVariousStockByProductIdAndWarehouseId(
             @RequestBody @Valid List<ModifyStockRequest> modifyStockRequest)
             throws NotFoundException, IllegalStateException {

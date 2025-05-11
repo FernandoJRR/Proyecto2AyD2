@@ -3,8 +3,7 @@ package com.ayd.employee_service.auth.login.ports;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import com.ayd.employee_service.auth.login.dtos.LoginResponseDTO;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
-
+import com.ayd.shared.exceptions.*;
 public interface ForLogin {
     /**
      * Autentica al usuario con sus credenciales.

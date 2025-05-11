@@ -3,9 +3,8 @@ package com.ayd.employee_service.vacations.models;
 import java.time.LocalDate;
 
 import com.ayd.employee_service.employees.models.Employee;
-import com.ayd.employee_service.shared.models.Auditor;
+import com.ayd.shared.models.Auditor;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
