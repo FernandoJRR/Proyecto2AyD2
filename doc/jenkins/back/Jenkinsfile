@@ -3,7 +3,15 @@ pipeline {
 
     environment {
         
+        PROJECT_REPO_PATH = "/var/lib/jenkins/workspace/Proyecto2AyD2-dev"
+
         DEPLOY_BACKEND_DIR = "/var/api/project2AyD2-backend"
+
+        COMMON_LIB_IS_DEPLOYED = false
+
+        MICRO_SERVICE_EUREKA = "eureka-server"
+        SERVICE_EUREKA_NAME_JAR = "eureka-server.jar"
+        DEPLOY_EUREKA_JAR = false
         
         MICRO_SERVICE_API_GATEWAY = "api-gateway"
         SERVICE_API_GATEWAY_NAME_JAR = "api-gateway.jar"
@@ -16,10 +24,6 @@ pipeline {
         MICRO_SERVICE_EMPLOYEE = "employee-service"
         SERVICE_EMPLOYEE_NAME_JAR = "employee-service.jar"
         DEPLOY_EMPLOYEE_JAR = false
-        
-        MICRO_SERVICE_EUREKA = "eureka-server"
-        SERVICE_EUREKA_NAME_JAR = "eureka-server.jar"
-        DEPLOY_EUREKA_JAR = false
         
         MICRO_SERVICE_GAME = "game-service"
         SERVICE_GAME_NAME_JAR = "game-service.jar"
@@ -54,15 +58,98 @@ pipeline {
                 git branch: 'dev', url: 'https://github.com/FernandoJRR/Proyecto2AyD2-Back.git'
             }
         }
-        
+        // Construccion de la librería común
         stage ('Build Common Lib'){
             steps {
                 script {
                     // La libreria común se encuentra en la raíz del proyecto y no tiene pruebas
                     echo "🚀 Compilando librería común"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('common-lib') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en la librería común: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila la librería común"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando librería común"
+                        dir('common-lib') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                        COMMON_LIB_IS_DEPLOYED = true
+                    } else {
+                        echo "🚀 No hay cambios en la librería común, no se compila."
+                        // Marcamos COMMON_LIB_IS_DEPLOYED como falso ya que no se ha compilado
+                        COMMON_LIB_IS_DEPLOYED = false
+                    }
                 }
             }
         }
+        // Construccion del servicio Eureka
+        stage('Build Eureka Server'){
+            steps{
+                script{
+                    echo "🚀 Compilando Eureka Server"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('eureka-server') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Eureka Server: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Eureka Server"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando Eureka Server"
+                        dir('eureka-server') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                        DEPLOY_EUREKA_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Eureka Server, no se compila."
+                        // Marcamos DEPLOY_EUREKA_JAR como falso ya que no se ha compilado
+                        DEPLOY_EUREKA_JAR = false
+                    }
+                }
+            }
+        }
+        // Construccion del servicio API Gateway
+        stage('Build API Gateway'){
+            steps{
+                script{
+                    echo "🚀 Compilando API Gateway"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('api-gateway') {
+                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el API Gateway: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el API Gateway"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando API Gateway"
+                        dir('api-gateway') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                        DEPLOY_API_GATEWAY_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el API Gateway, no se compila."
+                        // Marcamos DEPLOY_API_GATEWAY_JAR como falso ya que no se ha compilado
+                        DEPLOY_API_GATEWAY_JAR = false
+                    }
+                }
+            }
+        }
+
     }
 
     post {
