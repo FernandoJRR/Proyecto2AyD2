@@ -34,6 +34,21 @@ public enum SystemPermissionEnum {
         EDIT_PRODUCT(new Permission("Editar producto", "EDIT_PRODUCT")),
         DELETE_PRODUCT(new Permission("Eliminar producto", "DELETE_PRODUCT")),
 
+        // Permisos de facturacion
+        CREATE_INVOICE(new Permission("Crear factura", "CREATE_INVOICE")),
+
+        //Permisos de reservas
+        CREATE_RESERVATION(new Permission("Crear reserva", "CREATE_RESERVATION")),
+        CANCEL_RESERVATION(new Permission("Cancelar reserva", "CANCEL_RESERVATION")),
+        PAY_RESERVATION(new Permission("Pagar reserva", "PAY_RESERVATION")),
+        DELETE_RESERVATION(new Permission("Eliminar reserva", "DELETE_RESERVATION")),
+
+        // Permisos de horarios
+        CREATE_SCHEDULE(new Permission("Crear horario", "CREATE_SCHEDULE")),
+        EDIT_SCHEDULE(new Permission("Editar horario", "EDIT_SCHEDULE")),
+        DELETE_SCHEDULE(new Permission("Eliminar horario", "DELETE_SCHEDULE")),
+
+
         ;
 
         private final Permission permission;

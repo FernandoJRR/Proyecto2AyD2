@@ -3,6 +3,7 @@ package com.ayd.invoice_service.Invoice.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,7 @@ public class InvoiceController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('CREATE_INVOICE')")
     public InvoiceResponseDTO createInvoice(@Valid @RequestBody CreateInvoiceRequestDTO createInvoiceRequestDTO)
             throws IllegalArgumentException, NotFoundException {
         Invoice invoice = forInvoicePort.createInvoice(createInvoiceRequestDTO);
