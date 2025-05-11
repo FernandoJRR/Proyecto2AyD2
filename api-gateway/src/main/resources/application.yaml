@@ -26,6 +26,10 @@ spring:
           uri: lb://INVENTORY-SERVICE
           predicates:
             - Path=/api/v1/warehouses,/api/v1/warehouses/**,/api/v1/suppliers,/api/v1/suppliers/**,/api/v1/cash-registers,/api/v1/cash-registers/**,/api/v1/product-entries,/api/v1/product-entries/**,/api/v1/stocks/**
+        - id: reservation-service
+          uri: lb://RESERVATION-SERVICE
+          predicates:
+            - Path=/api/v1/reservations/,/api/v1/reservations/**,/api/v1/schedules,/api/v1/schedules/**
 
 eureka:
   instance:
