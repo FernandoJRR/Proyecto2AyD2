@@ -48,7 +48,7 @@ public class InvoiceService implements ForInvoicePort {
 
         Invoice saveInvoice = invoiceRepository.save(invoice);
 
-        List<InvoiceDetail> invoiceDetails = List.of();
+        List<InvoiceDetail> invoiceDetails = new java.util.ArrayList<>();
         for (var detail : createInvoiceRequestDTO.getDetails()) {
             invoiceDetails.add(forInvoiceDetailPort.createInvoiceDetail(detail, invoice));
         }
