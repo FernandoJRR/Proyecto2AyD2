@@ -35,6 +35,13 @@ public class InvoiceController {
     private final ForInvoicePort forInvoicePort;
     private final InvoiceMapper invoiceMapper;
 
+    @Operation(summary = "Crear una nueva factura", description = "Registra una nueva factura en el sistema. Valida la existencia de entidades relacionadas y la estructura de los datos proporcionados.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Factura creada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos en la solicitud"),
+            @ApiResponse(responseCode = "404", description = "Entidad relacionada no encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public InvoiceResponseDTO createInvoice(@Valid @RequestBody CreateInvoiceRequestDTO createInvoiceRequestDTO)
@@ -43,6 +50,12 @@ public class InvoiceController {
         return invoiceMapper.fromInvoiceToInvoiceResponseDTO(invoice);
     }
 
+    @Operation(summary = "Obtener factura por ID", description = "Devuelve la información de una factura específica a partir de su identificador único.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Factura encontrada exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Factura no encontrada"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public InvoiceResponseDTO getInvoiceById(@PathVariable String id) throws NotFoundException {
@@ -50,6 +63,12 @@ public class InvoiceController {
         return invoiceMapper.fromInvoiceToInvoiceResponseDTO(invoice);
     }
 
+    @Operation(summary = "Obtener facturas por documento de cliente", description = "Devuelve una lista de facturas asociadas al documento de identificación de un cliente.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de facturas obtenida exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Cliente o facturas no encontradas"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @GetMapping("/client/{clientDocument}")
     @ResponseStatus(HttpStatus.OK)
     public List<InvoiceResponseDTO> getInvoicesByClientDocument(@PathVariable String clientDocument)
@@ -58,6 +77,12 @@ public class InvoiceController {
         return invoiceMapper.fromInvoicesToInvoiceResponseDTOs(invoices);
     }
 
+    @Operation(summary = "Obtener lista de facturas", description = "Devuelve todas las facturas registradas en el sistema. Se pueden aplicar filtros opcionales mediante el cuerpo de la solicitud.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de facturas obtenida exitosamente"),
+            @ApiResponse(responseCode = "404", description = "No se encontraron facturas con los filtros aplicados"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<InvoiceResponseDTO> getAllInvoices(
