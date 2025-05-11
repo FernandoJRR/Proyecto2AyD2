@@ -68,7 +68,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('common-lib') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en la librería común: ${changes}"
                         if(!fileExists('target')) {
@@ -99,7 +99,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('eureka-server') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Eureka Server: ${changes}"
                         if(!fileExists('target')) {
@@ -130,7 +130,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('api-gateway') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el API Gateway: ${changes}"
                         if(!fileExists('target')) {
@@ -161,7 +161,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('config-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Config Service: ${changes}"
                         if(!fileExists('target')) {
@@ -203,7 +203,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('employee-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Employee Service: ${changes}"
                         if(!fileExists('target')) {
@@ -245,7 +245,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('product-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Product Service: ${changes}"
                         if(!fileExists('target')) {
@@ -287,7 +287,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('reservation-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Reservation Service: ${changes}"
                         if(!fileExists('target')) {
@@ -329,7 +329,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('inventory-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Inventory Service: ${changes}"
                         if(!fileExists('target')) {
@@ -371,7 +371,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('invoice-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Invoice Service: ${changes}"
                         if(!fileExists('target')) {
@@ -413,7 +413,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('game-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Game Service: ${changes}"
                         if(!fileExists('target')) {
@@ -455,7 +455,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('package-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Package Service: ${changes}"
                         if(!fileExists('target')) {
