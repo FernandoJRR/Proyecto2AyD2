@@ -2,8 +2,6 @@
 
 Este documento describe cómo configurar servicios de tipo `systemd` para ejecutar microservicios Spring Boot en formato `.jar`.
 
-
-
 ## 📁 Ubicación de los archivos de servicio
 
 Todos los archivos `.service` deben guardarse en:
@@ -27,7 +25,7 @@ After=network.target
 
 [Service]
 User=usuario_instancia
-ExecStart=/usr/bin/java -jar /var/api/project2AyD2/nombre-del-archivo.jar
+ExecStart=/usr/bin/java -jar /var/api/project2AyD2/nombre-del-archivo.jar --spring.profiles.active=entrono-de-trabajo
 SuccessExitStatus=143
 Restart=always
 RestartSec=5
