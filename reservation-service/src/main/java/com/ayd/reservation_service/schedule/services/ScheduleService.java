@@ -36,6 +36,10 @@ public class ScheduleService implements ForSchedulePort {
     @Override
     public Schedule createSchedule(CreateScheduleRequestDTO createScheduleRequest)
             throws DuplicatedEntryException, IllegalStateException {
+        // Verificamos que la hora de inicio sea menor a la hora de fin
+        if (createScheduleRequest.getStartTime().isAfter(createScheduleRequest.getEndTime())) {
+            throw new IllegalStateException("La hora de inicio debe ser menor a la hora de fin.");
+        }
         if (scheduleRepository.existsByOnlineAndStartTimeBetween(createScheduleRequest.isOnline(),
                 createScheduleRequest.getStartTime(),
                 createScheduleRequest.getEndTime())) {
@@ -50,6 +54,10 @@ public class ScheduleService implements ForSchedulePort {
             throws NotFoundException, DuplicatedEntryException, IllegalStateException {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new NotFoundException("No se encontró la programación con el ID: " + scheduleId));
+        // Verificamos que la hora de inicio sea menor a la hora de fin
+        if (updateScheduleRequest.getStartTime().isAfter(updateScheduleRequest.getEndTime())) {
+            throw new IllegalStateException("La hora de inicio debe ser menor a la hora de fin.");
+        }
         if (scheduleRepository.existsByOnlineAndStartTimeBetweenAndIdNot(updateScheduleRequest.isOnline(),
                 updateScheduleRequest.getStartTime(),
                 updateScheduleRequest.getEndTime(), scheduleId)) {
