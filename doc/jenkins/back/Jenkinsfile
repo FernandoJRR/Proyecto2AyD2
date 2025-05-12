@@ -501,6 +501,12 @@ pipeline {
                     if (DEPLOY_EUREKA_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR")) {
                         echo "🚀 Desplegando Eureka Server"
                         dir('eureka-server') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio eureka-server.service..."
+                                sudo systemctl stop eureka-server.service
+                            """
+
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR
@@ -515,6 +521,11 @@ pipeline {
                     if(true){
                         echo "🚀 Desplegando API Gateway"
                         dir('api-gateway') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio api-gateway.service..."
+                                sudo systemctl stop api-gateway.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_API_GATEWAY_NAME_JAR
@@ -528,6 +539,11 @@ pipeline {
                     if (DEPLOY_CONFIG_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_CONFIG_NAME_JAR")) {
                         echo "🚀 Desplegando Config Service"
                         dir('config-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio config-service.service..."
+                                sudo systemctl stop config-service.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_CONFIG_NAME_JAR
@@ -541,6 +557,11 @@ pipeline {
                     if (DEPLOY_EMPLOYEE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_EMPLOYEE_NAME_JAR")) {
                         echo "🚀 Desplegando Employee Service"
                         dir('employee-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio employee-service.service..."
+                                sudo systemctl stop employee-service.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_EMPLOYEE_NAME_JAR
@@ -554,6 +575,11 @@ pipeline {
                     if (DEPLOY_GAME_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_GAME_NAME_JAR")) {
                         echo "🚀 Desplegando Game Service"
                         dir('game-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio game-service.service..."
+                                sudo systemctl stop game-service.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_GAME_NAME_JAR
@@ -567,6 +593,11 @@ pipeline {
                     if (DEPLOY_INVENTORY_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_INVENTORY_NAME_JAR")) {
                         echo "🚀 Desplegando Inventory Service"
                         dir('inventory-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio inventory-service.service..."
+                                sudo systemctl stop inventory-service.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_INVENTORY_NAME_JAR
@@ -581,6 +612,11 @@ pipeline {
                     if (DEPLOY_INVOICE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_INVOICE_NAME_JAR")) {
                         echo "🚀 Desplegando Invoice Service"
                         dir('invoice-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio invoice-service.service..."
+                                sudo systemctl stop invoice-service.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_INVOICE_NAME_JAR
@@ -594,6 +630,11 @@ pipeline {
                     if (DEPLOY_PACKAGE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_PACKAGE_NAME_JAR")) {
                         echo "🚀 Desplegando Package Service"
                         dir('package-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio package-service.service..."
+                                sudo systemctl stop package-service.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_PACKAGE_NAME_JAR
@@ -608,6 +649,11 @@ pipeline {
                     if (DEPLOY_PRODUCT_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR")) {
                         echo "🚀 Desplegando Product Service"
                         dir('product-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio product-service.service..."
+                                sudo systemctl stop product-service.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR
@@ -622,6 +668,11 @@ pipeline {
                     if (DEPLOY_RESERVATION_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_RESERVATION_NAME_JAR")) {
                         echo "🚀 Desplegando Reservation Service"
                         dir('reservation-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio reservation-service.service..."
+                                sudo systemctl stop reservation-service.service
+                            """
                             sh """
                                 echo "🧹 Eliminando JAR anterior..."
                                 rm -f $DEPLOY_BACKEND_DIR/$SERVICE_RESERVATION_NAME_JAR
@@ -635,6 +686,54 @@ pipeline {
             }
         }
 
+        stage('Reboot Services'){
+            steps {
+                script {
+                    // Los iniciamos si es que estubieran apagados los servicios
+                    if(DEPLOY_EUREKA_JAR || sh(script: 'sudo systemctl is-active --quiet eureka-server.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Eureka Server"
+                        sh 'sudo systemctl restart eureka-server.service'
+                    }
+                    //Si no funciona este lo debemos de reiniciar siempre
+                    if(DEPLOY_EUREKA_JAR || sh(script: 'sudo systemctl is-active --quiet api-gateway.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando API Gateway"
+                        sh 'sudo systemctl restart api-gateway.service'
+                    }
+                    if(DEPLOY_CONFIG_JAR || sh(script: 'sudo systemctl is-active --quiet config-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Config Service"
+                        sh 'sudo systemctl restart config-service.service'
+                    }
+                    if(DEPLOY_EMPLOYEE_JAR || sh(script: 'sudo systemctl is-active --quiet employee-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Employee Service"
+                        sh 'sudo systemctl restart employee-service.service'
+                    }
+                    if(DEPLOY_GAME_JAR || sh(script: 'sudo systemctl is-active --quiet game-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Game Service"
+                        sh 'sudo systemctl restart game-service.service'
+                    }
+                    if(DEPLOY_INVENTORY_JAR || sh(script: 'sudo systemctl is-active --quiet inventory-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Inventory Service"
+                        sh 'sudo systemctl restart inventory-service.service'
+                    }
+                    if(DEPLOY_INVOICE_JAR || sh(script: 'sudo systemctl is-active --quiet invoice-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Invoice Service"
+                        sh 'sudo systemctl restart invoice-service.service'
+                    }
+                    if(DEPLOY_PACKAGE_JAR || sh(script: 'sudo systemctl is-active --quiet package-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Package Service"
+                        sh 'sudo systemctl restart package-service.service'
+                    }
+                    if(DEPLOY_PRODUCT_JAR || sh(script: 'sudo systemctl is-active --quiet product-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Product Service"
+                        sh 'sudo systemctl restart product-service.service'
+                    }
+                    if(DEPLOY_RESERVATION_JAR || sh(script: 'sudo systemctl is-active --quiet reservation-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Reservation Service"
+                        sh 'sudo systemctl restart reservation-service.service'
+                    }
+                }
+            }
+        }
     }
 
     post {
