@@ -79,7 +79,7 @@ pipeline {
                     if (changes || shouldBuild) {
                         echo "🚀 Compilando librería común"
                         dir('common-lib') {
-                            sh 'mvn clean install -DskipTests'
+                            sh 'mvn clean install'
                         }
                         COMMON_LIB_IS_DEPLOYED = true
                     } else {
@@ -172,6 +172,11 @@ pipeline {
                     if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Config Service"
                         dir('config-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+
                             sh 'mvn clean verify'
                             // Publicamos las pruebas de jacoco
                             junit 'target/surefire-reports/*.xml'
@@ -214,6 +219,11 @@ pipeline {
                     if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Employee Service"
                         dir('employee-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+
                             sh 'mvn clean verify'
                             // Publicamos las pruebas de jacoco
                             junit 'target/surefire-reports/*.xml'
@@ -256,6 +266,10 @@ pipeline {
                     if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Product Service"
                         dir('product-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
                             sh 'mvn clean verify'
                             // Publicamos las pruebas de jacoco
                             junit 'target/surefire-reports/*.xml'
@@ -298,6 +312,10 @@ pipeline {
                     if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Reservation Service"
                         dir('reservation-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
                             sh 'mvn clean verify'
                             // Publicamos las pruebas de jacoco
                             junit 'target/surefire-reports/*.xml'
@@ -340,6 +358,10 @@ pipeline {
                     if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Inventory Service"
                         dir('inventory-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
                             sh 'mvn clean verify'
                             // Publicamos las pruebas de jacoco
                             junit 'target/surefire-reports/*.xml'
@@ -382,6 +404,10 @@ pipeline {
                     if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Invoice Service"
                         dir('invoice-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
                             sh 'mvn clean verify'
                             // Publicamos las pruebas de jacoco
                             junit 'target/surefire-reports/*.xml'
@@ -424,6 +450,10 @@ pipeline {
                     if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Game Service"
                         dir('game-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
                             sh 'mvn clean verify'
                             // Publicamos las pruebas de jacoco
                             junit 'target/surefire-reports/*.xml'
@@ -466,6 +496,10 @@ pipeline {
                     if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
                         echo "🚀 Compilando Package Service"
                         dir('package-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
                             sh 'mvn clean verify'
                             // Publicamos las pruebas de jacoco
                             junit 'target/surefire-reports/*.xml'
