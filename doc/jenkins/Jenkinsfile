@@ -5,7 +5,7 @@ pipeline {
         
         PROJECT_REPO_PATH = "/var/lib/jenkins/workspace/Proyecto2AyD2-dev"
 
-        DEPLOY_BACKEND_DIR = "/var/api/project2AyD2-backend"
+        DEPLOY_BACKEND_DIR = "/var/api/project2AyD2"
 
         COMMON_LIB_IS_DEPLOYED = false
 
@@ -68,7 +68,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('common-lib') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en la librería común: ${changes}"
                         if(!fileExists('target')) {
@@ -99,7 +99,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('eureka-server') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Eureka Server: ${changes}"
                         if(!fileExists('target')) {
@@ -130,7 +130,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('api-gateway') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el API Gateway: ${changes}"
                         if(!fileExists('target')) {
@@ -161,7 +161,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('config-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Config Service: ${changes}"
                         if(!fileExists('target')) {
@@ -203,7 +203,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('employee-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Employee Service: ${changes}"
                         if(!fileExists('target')) {
@@ -245,7 +245,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('product-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Product Service: ${changes}"
                         if(!fileExists('target')) {
@@ -287,7 +287,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('reservation-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Reservation Service: ${changes}"
                         if(!fileExists('target')) {
@@ -329,7 +329,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('inventory-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Inventory Service: ${changes}"
                         if(!fileExists('target')) {
@@ -371,7 +371,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('invoice-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Invoice Service: ${changes}"
                         if(!fileExists('target')) {
@@ -413,7 +413,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('game-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Game Service: ${changes}"
                         if(!fileExists('target')) {
@@ -455,7 +455,7 @@ pipeline {
                     def changes = ""
                     def shouldBuild = false
                     dir('package-service') {
-                        changes = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true).trim()
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
                         // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
                         echo "🚀 Cambios en el Package Service: ${changes}"
                         if(!fileExists('target')) {
@@ -489,6 +489,251 @@ pipeline {
             }
         }
 
+        // Deploy de los servicios
+        stage('Deploy Services'){
+            steps{
+                script{
+                    echo "🚀 Desplegando servicios..."
+                    // Desplegamos el servicio Eureka
+                    // Por medio de la bandera DEPLOY_EUREKA_JAR verificamos si se ha compilado
+                    // Pero tambien desplegamos si no existe el JAR en la carpeta de despliegue
+
+                    if (DEPLOY_EUREKA_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR")) {
+                        echo "🚀 Desplegando Eureka Server"
+                        dir('eureka-server') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio eureka-server.service..."
+                                sudo systemctl stop eureka-server.service
+                            """
+
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/eureka-server-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio API Gateway
+                    // Este se despliega siempre ya que si algun servicio cambia, el API Gateway cambia
+                    if(true){
+                        echo "🚀 Desplegando API Gateway"
+                        dir('api-gateway') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio api-gateway.service..."
+                                sudo systemctl stop api-gateway.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_API_GATEWAY_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/api-gateway-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_API_GATEWAY_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Config
+                    if (DEPLOY_CONFIG_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_CONFIG_NAME_JAR")) {
+                        echo "🚀 Desplegando Config Service"
+                        dir('config-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio config-service.service..."
+                                sudo systemctl stop config-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_CONFIG_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/config-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_CONFIG_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Employee
+                    if (DEPLOY_EMPLOYEE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_EMPLOYEE_NAME_JAR")) {
+                        echo "🚀 Desplegando Employee Service"
+                        dir('employee-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio employee-service.service..."
+                                sudo systemctl stop employee-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_EMPLOYEE_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/employee-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_EMPLOYEE_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Game
+                    if (DEPLOY_GAME_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_GAME_NAME_JAR")) {
+                        echo "🚀 Desplegando Game Service"
+                        dir('game-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio game-service.service..."
+                                sudo systemctl stop game-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_GAME_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/game-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_GAME_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Inventory
+                    if (DEPLOY_INVENTORY_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_INVENTORY_NAME_JAR")) {
+                        echo "🚀 Desplegando Inventory Service"
+                        dir('inventory-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio inventory-service.service..."
+                                sudo systemctl stop inventory-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_INVENTORY_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/inventory-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_INVENTORY_NAME_JAR
+                            """
+                        }
+                    }
+
+                    // Desplegamos el servicio Invoice
+                    if (DEPLOY_INVOICE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_INVOICE_NAME_JAR")) {
+                        echo "🚀 Desplegando Invoice Service"
+                        dir('invoice-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio invoice-service.service..."
+                                sudo systemctl stop invoice-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_INVOICE_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/invoice-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_INVOICE_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Package
+                    if (DEPLOY_PACKAGE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_PACKAGE_NAME_JAR")) {
+                        echo "🚀 Desplegando Package Service"
+                        dir('package-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio package-service.service..."
+                                sudo systemctl stop package-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_PACKAGE_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/package-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_PACKAGE_NAME_JAR
+                            """
+                        }
+                    }
+
+                    // Desplegamos el servicio Product
+                    if (DEPLOY_PRODUCT_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR")) {
+                        echo "🚀 Desplegando Product Service"
+                        dir('product-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio product-service.service..."
+                                sudo systemctl stop product-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/product-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR
+                            """
+                        }
+                    }
+
+                    // Desplegamos el servicio Reservation
+                    if (DEPLOY_RESERVATION_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_RESERVATION_NAME_JAR")) {
+                        echo "🚀 Desplegando Reservation Service"
+                        dir('reservation-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio reservation-service.service..."
+                                sudo systemctl stop reservation-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_RESERVATION_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/reservation-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_RESERVATION_NAME_JAR
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Reboot Services'){
+            steps {
+                script {
+                    // Los iniciamos si es que estubieran apagados los servicios
+                    if(DEPLOY_EUREKA_JAR || sh(script: 'sudo systemctl is-active --quiet eureka-server.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Eureka Server"
+                        sh 'sudo systemctl restart eureka-server.service'
+                    }
+                    //Si no funciona este lo debemos de reiniciar siempre
+                    if(DEPLOY_EUREKA_JAR || sh(script: 'sudo systemctl is-active --quiet api-gateway.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando API Gateway"
+                        sh 'sudo systemctl restart api-gateway.service'
+                    }
+                    if(DEPLOY_CONFIG_JAR || sh(script: 'sudo systemctl is-active --quiet config-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Config Service"
+                        sh 'sudo systemctl restart config-service.service'
+                    }
+                    if(DEPLOY_EMPLOYEE_JAR || sh(script: 'sudo systemctl is-active --quiet employee-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Employee Service"
+                        sh 'sudo systemctl restart employee-service.service'
+                    }
+                    if(DEPLOY_GAME_JAR || sh(script: 'sudo systemctl is-active --quiet game-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Game Service"
+                        sh 'sudo systemctl restart game-service.service'
+                    }
+                    if(DEPLOY_INVENTORY_JAR || sh(script: 'sudo systemctl is-active --quiet inventory-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Inventory Service"
+                        sh 'sudo systemctl restart inventory-service.service'
+                    }
+                    if(DEPLOY_INVOICE_JAR || sh(script: 'sudo systemctl is-active --quiet invoice-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Invoice Service"
+                        sh 'sudo systemctl restart invoice-service.service'
+                    }
+                    if(DEPLOY_PACKAGE_JAR || sh(script: 'sudo systemctl is-active --quiet package-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Package Service"
+                        sh 'sudo systemctl restart package-service.service'
+                    }
+                    if(DEPLOY_PRODUCT_JAR || sh(script: 'sudo systemctl is-active --quiet product-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Product Service"
+                        sh 'sudo systemctl restart product-service.service'
+                    }
+                    if(DEPLOY_RESERVATION_JAR || sh(script: 'sudo systemctl is-active --quiet reservation-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Reservation Service"
+                        sh 'sudo systemctl restart reservation-service.service'
+                    }
+                }
+            }
+        }
     }
 
     post {

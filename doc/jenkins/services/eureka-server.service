@@ -1,0 +1,13 @@
+[Unit]
+Description=Eureka Server
+After=network.target
+
+[Service]
+User=carlosbpac
+ExecStart=/usr/bin/java -jar /var/api/project2AyD2/eureka-server.jar --spring.profiles.active=dev
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
