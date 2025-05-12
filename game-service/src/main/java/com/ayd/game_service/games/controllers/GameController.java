@@ -93,7 +93,7 @@ public class GameController {
 
         @Operation(summary = "Actualizar el punteo de un juego", description = "Este endpoint permite la actualizacion del punteo de un juego del sistema.")
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "201", description = "Juego obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GameResponseDTO.class))),
+                        @ApiResponse(responseCode = "201", description = "Punteo actualizado exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GameResponseDTO.class))),
                         @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "404", description = "Juego no encontrado.", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
@@ -112,7 +112,7 @@ public class GameController {
 
         @Operation(summary = "Obtener el punteo actual de un juego", description = "Este endpoint permite la obtencion del punteo actual de un juego.")
         @ApiResponses(value = {
-                        @ApiResponse(responseCode = "201", description = "Juego obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GameResponseDTO.class))),
+                        @ApiResponse(responseCode = "201", description = "Punteo obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GameResponseDTO.class))),
                         @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "404", description = "Juego no encontrado.", content = @Content(mediaType = "application/json")),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
