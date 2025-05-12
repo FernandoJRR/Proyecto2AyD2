@@ -54,6 +54,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
             ServerHttpRequest mutatedRequest = request.mutate()
                     .header("auth-user", jwtManager.extractUsername(token))
                     .header("auth-permissions", jwtManager.extractPermissons(token))
+                    .header("jwt", token)
                     .build();
 
             return chain.filter(exchange.mutate().request(mutatedRequest).build());
@@ -84,6 +85,5 @@ public class JwtAuthenticationFilter implements GlobalFilter {
 
         return Optional.empty();
     }
-
 
 }

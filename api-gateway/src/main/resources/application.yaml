@@ -30,6 +30,11 @@ spring:
           uri: lb://RESERVATION-SERVICE
           predicates:
             - Path=/api/v1/reservations/,/api/v1/reservations/**,/api/v1/schedules,/api/v1/schedules/**
+        - id: reports-service
+          uri: lb://REPORTS-SERVICE
+          predicates:
+            - Path=/api/v1/reservation-reports,/api/v1/reservation-reports/**
+
 
 eureka:
   instance:

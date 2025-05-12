@@ -8,24 +8,26 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
-import com.ayd.reservation_service.reservation.dtos.ReservationResponseDTO;
-import com.ayd.reservation_service.reservation.dtos.ReservationSpecificationRequestDTO;
+import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 import com.ayd.reservation_service.reservation.mappers.ReservationMapper;
 import com.ayd.reservation_service.reservation.models.Reservation;
 import com.ayd.reservation_service.reservation.ports.ForReservationPort;
-import com.ayd.shared.exceptions.*;
+import com.ayd.shared.dtos.PeriodRequestDTO;
+import com.ayd.shared.exceptions.DuplicatedEntryException;
+import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -109,6 +111,20 @@ public class ReservationController {
     public List<ReservationResponseDTO> getReservations(
             @RequestBody(required = false) ReservationSpecificationRequestDTO reservationSpecificationRequestDTO) {
         List<Reservation> reservations = forReservationPort.getReservations(reservationSpecificationRequestDTO);
+        return reservationMapper.fromReservationsToReservationResponseDTOs(reservations);
+    }
+
+    @Operation(summary = "Obtener lista de reservaciones ne dos fechas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de reservaciones obtenida exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Error de validación en los filtros"),
+            @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
+    })
+    @GetMapping("/getReservationsBetweenDates")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReservationResponseDTO> getReservationsBetweenDates(
+            @RequestBody PeriodRequestDTO periodRequestDTO) {
+        List<Reservation> reservations = forReservationPort.getReservationsBetweenDates(periodRequestDTO);
         return reservationMapper.fromReservationsToReservationResponseDTOs(reservations);
     }
 

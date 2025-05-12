@@ -10,4 +10,8 @@ class EurekaServerApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	void mainMethodRunsWithoutException() {
+		EurekaServerApplication.main(new String[] {});
+	}
 }

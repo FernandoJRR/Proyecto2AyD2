@@ -1,4 +1,4 @@
-package com.ayd.reservation_service.reservation.dtos;
+package com.ayd.sharedReservationService.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
