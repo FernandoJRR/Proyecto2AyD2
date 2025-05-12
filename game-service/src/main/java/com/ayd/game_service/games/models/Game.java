@@ -33,7 +33,7 @@ public class Game extends Auditor {
     private List<Player> players;
 
     @Column(nullable = false)
-    private boolean hasFinished;
+    private Boolean hasFinished;
 
     @Column(nullable = true)
     private Integer currentHole;

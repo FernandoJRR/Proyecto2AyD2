@@ -6,11 +6,12 @@ import com.ayd.game_service.players.dtos.CreatePlayerRequestDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Getter
+@Data
 public class CreateGameRequestDTO {
     @NotBlank(message = "El id del paquete es obligatorio")
     private String packageId;
