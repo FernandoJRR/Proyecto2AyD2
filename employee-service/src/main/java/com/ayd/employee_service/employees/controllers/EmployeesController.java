@@ -234,27 +234,6 @@ public class EmployeesController {
                 return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
-        @Operation(summary = "Obtener todos los empleados para generar finiquito por periodo",
-            description = "Se obtienen todos los empleados a los que se puede generar su finiquito en un periodo dado")
-        @ApiResponses(value = {
-                        @ApiResponse(responseCode = "200", description = "Empleados encontrados exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeResponseDTO.class))),
-                        @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
-                        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-        })
-        @GetMapping("/{periodYear}/vacationsInvoice")
-        @PreAuthorize("hasAuthority('GET_ALL_INVOICES')")
-        public ResponseEntity<List<EmployeeResponseDTO>> findVacationInvoiceEmployeesForPeriod(
-                        @PathVariable("periodYear") Integer periodYear)
-        {
-                // mandar a crear el employee al port
-                List<Employee> result = employeesPort.findEmployeesInvoiceForPeriod(periodYear);
-
-                // convertir el Employee al dto
-                List<EmployeeResponseDTO> response = employeeMapper.fromEmployeesToResponse(result);
-
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
-
         @Operation(summary = "Obtener todos los empleados de tipo doctor", description = "Este endpoint permite la busqueda de todos los empleados de tipo doctor.")
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Empleados encontrados exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = EmployeeResponseDTO.class))),

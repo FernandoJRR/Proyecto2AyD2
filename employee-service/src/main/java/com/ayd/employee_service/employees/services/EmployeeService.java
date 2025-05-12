@@ -247,13 +247,6 @@ public class EmployeeService implements ForEmployeesPort {
     }
 
     @Override
-    public List<Employee> findEmployeesInvoiceForPeriod(Integer periodYear) {
-        List<Employee> employees = employeeRepository.findEmployeesWithAllVacationsUsed(periodYear);
-
-        return employees;
-    }
-
-    @Override
     public List<Employee> getEmployeesByType(String employeeTypeId, String search) throws NotFoundException {
         // Verificamos si existe el tipo de empleado
         EmployeeType employeeType = forEmployeeTypePort.findEmployeeTypeById(employeeTypeId);
