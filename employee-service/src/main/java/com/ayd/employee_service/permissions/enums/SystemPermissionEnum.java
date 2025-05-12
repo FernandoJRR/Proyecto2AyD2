@@ -65,6 +65,10 @@ public enum SystemPermissionEnum {
     CREATE_WAREHOUSE(new Permission("Crear bodega", "CREATE_WAREHOUSE")),
     EDIT_WAREHOUSE(new Permission("Editar bodega", "EDIT_WAREHOUSE")),
     TOOGLE_WAREHOUSE(new Permission("Activar o desactivar bodega", "TOGGLE_WAREHOUSE")),
+
+    // permisos de paquetes
+    CREATE_GOLF_PACKAGE(new Permission("Crear pacquetes", "CREATE_GOLF_PACKAGE")),
+    EDIT_GOLF_PACKAGE(new Permission("Editar pacquetes", "EDIT_GOLF_PACKAGE")),
     ;
 
     private final Permission permission;
