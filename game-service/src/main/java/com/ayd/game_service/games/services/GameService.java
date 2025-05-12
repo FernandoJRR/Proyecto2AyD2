@@ -19,6 +19,7 @@ import com.ayd.game_service.players.models.PlayerHoleScore;
 import com.ayd.game_service.players.repositories.PlayerHoleScoreRepository;
 import com.ayd.game_service.players.repositories.PlayerRepository;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.IllegalArgumentException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -69,7 +70,7 @@ public class GameService implements ForGamesPort {
             .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id de reservacion"));
     }
 
-    public Game scoreGame(String gameId, ScoreGameRequestDTO request) throws NotFoundException {
+    public Game scoreGame(String gameId, ScoreGameRequestDTO request) throws NotFoundException, IllegalArgumentException {
         Game currentGame = gameRepository.findByReservationId(gameId)
             .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id"));
 
@@ -80,7 +81,7 @@ public class GameService implements ForGamesPort {
         List<ScorePlayerRequestDTO> scorePlayerRequest = request.getScorePlayers();
 
         if (currentGame.getCurrentHole() >= scoreHoleNumber) {
-            //Error por hoyo mas atrasado que deberia
+            throw new IllegalArgumentException("El hoyo ingresado es menor al progreso actual");
         }
         currentGame.setCurrentHole(scoreHoleNumber);
 
