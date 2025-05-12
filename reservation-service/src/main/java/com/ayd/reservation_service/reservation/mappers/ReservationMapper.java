@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.ayd.reservation_service.reservation.dtos.ReservationResponseDTO;
 import com.ayd.reservation_service.reservation.models.Reservation;
+import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {

@@ -3,12 +3,15 @@ package com.ayd.reservation_service.reservation.ports;
 import java.util.List;
 
 import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
-import com.ayd.reservation_service.reservation.dtos.ReservationSpecificationRequestDTO;
 import com.ayd.reservation_service.reservation.models.Reservation;
+import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
 
 public interface ForReservationPort {
+
+    List<Reservation> getReservationsBetweenDates(PeriodRequestDTO periodRequestDTO);
 
     public Reservation getReservation(String reservationId) throws NotFoundException;
 

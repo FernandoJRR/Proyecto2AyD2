@@ -1,11 +1,21 @@
 package com.ayd.reservation_service.reservation.services;
 
-import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
-import com.ayd.reservation_service.reservation.dtos.ReservationSpecificationRequestDTO;
-import com.ayd.reservation_service.reservation.models.Reservation;
-import com.ayd.reservation_service.reservation.repositories.ReservationRepository;
-import com.ayd.shared.exceptions.DuplicatedEntryException;
-import com.ayd.shared.exceptions.NotFoundException;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,14 +24,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Optional;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
+import com.ayd.reservation_service.reservation.models.Reservation;
+import com.ayd.reservation_service.reservation.repositories.ReservationRepository;
+import com.ayd.shared.dtos.PeriodRequestDTO;
+import com.ayd.shared.exceptions.DuplicatedEntryException;
+import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
@@ -312,6 +321,31 @@ class ReservationServiceTest {
         assertEquals(1, result.size());
         assertEquals(USER_ID, result.get(0).getUserId());
         verify(reservationRepository).findAll(any(Specification.class));
+    }
+
+    /**
+     * dado: DTO con fechas válidas
+     * cuando: se llama getReservationsBetweenDates
+     * entonces: retorna lista con las reservas en ese rango
+     */
+    @Test
+    void getReservationsBetweenDatesReturnsMatchingReservations() {
+        // arrange
+        LocalDate startDate = LocalDate.of(2025, 5, 10);
+        LocalDate endDate = LocalDate.of(2025, 5, 12);
+        PeriodRequestDTO dto = new PeriodRequestDTO(startDate, endDate);
+
+        when(reservationRepository.findReservationByDateBetween(any(), any()))
+                .thenReturn(List.of(reservation));
+
+        // act
+        List<Reservation> result = reservationService.getReservationsBetweenDates(dto);
+
+        // assert
+        assertAll(
+                () -> assertEquals(1, result.size()),
+                () -> verify(reservationRepository, times(1))
+                        .findReservationByDateBetween(any(), any()));
     }
 
 }

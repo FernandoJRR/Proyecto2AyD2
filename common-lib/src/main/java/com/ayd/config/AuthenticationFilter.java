@@ -30,14 +30,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         String username = request.getHeader("auth-user");
         String rolesHeader = request.getHeader("auth-permissions");
+        String jwt = request.getHeader("jwt");
 
-        if (username != null && rolesHeader != null && !rolesHeader.isEmpty()) {
+        if (username != null && rolesHeader != null && !rolesHeader.isEmpty() && jwt != null && !jwt.isEmpty()) {
             List<GrantedAuthority> authorities = Stream.of(rolesHeader.split(","))
                     .map(permisson -> permisson.trim())
                     .map(permisson -> new SimpleGrantedAuthority(permisson))
                     .collect(Collectors.toList());
 
-            Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            Authentication auth = new UsernamePasswordAuthenticationToken(username, jwt, authorities);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 

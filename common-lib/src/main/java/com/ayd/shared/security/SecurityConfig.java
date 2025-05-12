@@ -32,7 +32,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/v1/login").permitAll()
                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);
@@ -44,14 +44,15 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        System.out.println(appProperties.getFrontURL() +" "+ appProperties.getGatewayURL());
+        System.out.println(appProperties.getFrontURL() + " " + appProperties.getGatewayURL());
 
         configuration.setAllowedOrigins(List.of(
                 appProperties.getFrontURL(),
                 appProperties.getGatewayURL()));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "auth-user", "auth-permissions"));
+        configuration
+                .setAllowedHeaders(List.of("Authorization", "Content-Type", "auth-user", "auth-permissions", "jwt"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -51,6 +51,9 @@ public class PdfPrintService implements PdfPrinterPort {
      * @throws Exception
      */
     private JasperPrint setParametersToReport(String reportPath, Map<String, Object> parameters) throws Exception {
+        parameters.put("imagen_pasarela",
+                getClass().getResourceAsStream("/img/logo.png"));
+
         URL resourceUrl = getClass().getResource("/static/reports" + reportPath + ".jasper");
 
         if (resourceUrl == null) {

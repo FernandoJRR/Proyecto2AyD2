@@ -6,13 +6,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
-import com.ayd.reservation_service.reservation.dtos.ReservationSpecificationRequestDTO;
 import com.ayd.reservation_service.reservation.models.Reservation;
 import com.ayd.reservation_service.reservation.ports.ForReservationPort;
 import com.ayd.reservation_service.reservation.repositories.ReservationRepository;
 import com.ayd.reservation_service.reservation.specifications.ReservationSpecification;
+import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -95,6 +96,11 @@ public class ReservationService implements ForReservationPort {
                 .and(ReservationSpecification.isPaid(reservationSpecificationRequestDTO.isPaid()))
                 .and(ReservationSpecification.isCancelled(reservationSpecificationRequestDTO.isCancelled()));
         return reservationRepository.findAll(spec);
+    }
+
+    @Override
+    public List<Reservation> getReservationsBetweenDates(PeriodRequestDTO periodRequestDTO) {
+        return reservationRepository.findReservationByDateBetween(periodRequestDTO.getStartDate(), periodRequestDTO.getEndDate());
     }
 
     @Override
