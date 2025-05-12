@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,7 +45,7 @@ public class CashRegisterController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<CashRegisterResponseDTO> findAll(
-            @RequestBody(required = false) SpecificationCashRegisterRequestDTO specificationCashRegisterRequestDTO) {
+            @ModelAttribute SpecificationCashRegisterRequestDTO specificationCashRegisterRequestDTO) {
         List<CashRegister> cashRegisters = forCashRegisterPort
                 .findAllBySpecification(specificationCashRegisterRequestDTO);
         return cashRegisterMapper.fromCashRegisterListToCashRegisterResponseDTOList(cashRegisters);
