@@ -23,7 +23,6 @@ import com.ayd.game_service.players.models.PlayerHoleScore;
 import com.ayd.game_service.players.repositories.PlayerHoleScoreRepository;
 import com.ayd.game_service.players.repositories.PlayerRepository;
 import com.ayd.shared.exceptions.NotFoundException;
-import com.ayd.shared.exceptions.IllegalArgumentException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
