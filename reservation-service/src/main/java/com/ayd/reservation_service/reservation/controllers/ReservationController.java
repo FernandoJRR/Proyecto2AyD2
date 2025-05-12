@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -109,7 +110,7 @@ public class ReservationController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponseDTO> getReservations(
-            @RequestBody(required = false) ReservationSpecificationRequestDTO reservationSpecificationRequestDTO) {
+            @ModelAttribute ReservationSpecificationRequestDTO reservationSpecificationRequestDTO) {
         List<Reservation> reservations = forReservationPort.getReservations(reservationSpecificationRequestDTO);
         return reservationMapper.fromReservationsToReservationResponseDTOs(reservations);
     }
