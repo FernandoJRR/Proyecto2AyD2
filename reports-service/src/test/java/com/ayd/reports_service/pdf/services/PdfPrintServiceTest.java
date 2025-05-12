@@ -1,9 +1,6 @@
 package com.ayd.reports_service.pdf.services;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
@@ -18,8 +15,9 @@ import com.ayd.shared.exceptions.ReportGenerationExeption;
 @ExtendWith(MockitoExtension.class)
 public class PdfPrintServiceTest {
 
-    private static final String TEST_REPORT_PATH = "/test";
+    private static final String TEST_REPORT_PATH = "/ReservationsReport";
     private Map<String, Object> parameters;
+    private static final byte[] PDF_BYTES = new byte[] { 1, 2, 3 };
 
     @InjectMocks
     private PdfPrintService pdfPrintService;
@@ -27,24 +25,6 @@ public class PdfPrintServiceTest {
     @BeforeEach
     void setUp() {
         parameters = Map.of();
-    }
-
-    /**
-     * dado: path valido
-     * cuando: se llama exportarPdf
-     * entonces: retorna pdf no vacio
-     */
-    @Test
-    void exportPdfReturnsNonEmptyByteArray() throws Exception {
-        // // arrange
-
-        // // act
-        // byte[] pdfBytes = pdfPrintService.exportarPdf(TEST_REPORT_PATH, parameters);
-
-        // // assert
-        // assertAll(
-        //         () -> assertNotNull(pdfBytes),
-        //         () -> assertTrue(pdfBytes.length > 0));
     }
 
     /**
