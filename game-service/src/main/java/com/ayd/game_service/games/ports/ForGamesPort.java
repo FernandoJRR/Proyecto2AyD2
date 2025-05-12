@@ -4,7 +4,6 @@ import com.ayd.game_service.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
 import com.ayd.game_service.games.models.Game;
-import com.ayd.shared.exceptions.IllegalArgumentException;
 import com.ayd.shared.exceptions.NotFoundException;
 
 public interface ForGamesPort {

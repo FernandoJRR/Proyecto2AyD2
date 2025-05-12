@@ -18,8 +18,6 @@ import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
 import com.ayd.game_service.games.mappers.GamesMapper;
 import com.ayd.game_service.games.models.Game;
 import com.ayd.game_service.games.ports.ForGamesPort;
-import com.ayd.shared.exceptions.DuplicatedEntryException;
-import com.ayd.shared.exceptions.IllegalArgumentException;
 import com.ayd.shared.exceptions.NotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
