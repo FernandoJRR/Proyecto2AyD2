@@ -69,6 +69,13 @@ public enum SystemPermissionEnum {
     // permisos de paquetes
     CREATE_GOLF_PACKAGE(new Permission("Crear pacquetes", "CREATE_GOLF_PACKAGE")),
     EDIT_GOLF_PACKAGE(new Permission("Editar pacquetes", "EDIT_GOLF_PACKAGE")),
+
+    // Permisos de Config
+    UPDATE_CONFIG(new Permission("Actualizar las configuraciones", "UPDATE_CONFIG")),
+
+    // Permisos de Juegos
+    CREATE_GAME(new Permission("Crear juegos", "CREATE_GAME")),
+    UPDATE_SCORE(new Permission("Actualizar punteos", "UPDATE_SCORE")),
     ;
 
     private final Permission permission;

@@ -97,6 +97,7 @@ public class GameController {
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
         @PatchMapping("/score/{gameId}")
+        @PreAuthorize("hasAuthority('CREATE_GAME')")
         public ResponseEntity<GameResponseDTO> updateScore(
                         @PathVariable("gameId") String gameId,
                         @RequestBody @Valid ScoreGameRequestDTO request)
