@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ayd.config_service.parameters.dtos.ParameterDiasRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterNITRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterNombreRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterRegimenRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterResponseDTO;
+import com.ayd.config_service.parameters.enums.ParameterEnum;
 import com.ayd.config_service.parameters.mappers.ParameterMapper;
 import com.ayd.config_service.parameters.models.Parameter;
 import com.ayd.config_service.parameters.ports.ForParameterPort;
@@ -43,9 +45,8 @@ public class ParametersControllers {
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
         @GetMapping("/nit")
-        @PreAuthorize("hasAuthority('GET_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> getNITEmpresa() throws NotFoundException {
-                Parameter result = parameterPort.findParameterByKey("nit");
+                Parameter result = parameterPort.findParameterByKey(ParameterEnum.NIT_EMPRESA.getKey());
 
                 ParameterResponseDTO response = parameterMapper.fromParameterToResponse(result);
 
@@ -80,9 +81,8 @@ public class ParametersControllers {
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
         @GetMapping("/nombre")
-        @PreAuthorize("hasAuthority('GET_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> getNombreEmpresa() throws NotFoundException {
-                Parameter result = parameterPort.findParameterByKey("nombre_empresa");
+                Parameter result = parameterPort.findParameterByKey(ParameterEnum.NOMBRE_EMPRESA.getKey());
 
                 ParameterResponseDTO response = parameterMapper.fromParameterToResponse(result);
 
@@ -117,9 +117,8 @@ public class ParametersControllers {
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
         @GetMapping("/regimen")
-        @PreAuthorize("hasAuthority('GET_CONFIG')")
         public ResponseEntity<ParameterResponseDTO> getRegimenEmpresa() throws NotFoundException {
-                Parameter result = parameterPort.findParameterByKey("regimen_empresa");
+                Parameter result = parameterPort.findParameterByKey(ParameterEnum.REGIMEN_EMPRESA.getKey());
 
                 ParameterResponseDTO response = parameterMapper.fromParameterToResponse(result);
 
@@ -141,6 +140,42 @@ public class ParametersControllers {
                 String newRegimen = parameterMapper.fromRegimenRequestToString(request);
 
                 Parameter result = parameterPort.updateRegimenEmpresa(newRegimen);
+
+                ParameterResponseDTO response = parameterMapper.fromParameterToResponse(result);
+
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+
+        @Operation(summary = "Permite obtener los dias de vacaciones de la empresa", description = "Este endpoint permite la obtencion los dias de vacaciones de la empresa.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "201", description = "Regimen obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParameterResponseDTO.class))),
+                        @ApiResponse(responseCode = "404", description = "Parametro no encontrado", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        })
+        @GetMapping("/dias-vacaciones")
+        public ResponseEntity<ParameterResponseDTO> getDiasVacaciones() throws NotFoundException {
+                Parameter result = parameterPort.findParameterByKey(ParameterEnum.DIAS_VACACIONES.getKey());
+
+                ParameterResponseDTO response = parameterMapper.fromParameterToResponse(result);
+
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+
+        @Operation(summary = "Permite actualizar los dias de vacaciones de la empresa", description = "Este endpoint permite la actualizacion de los dias de vacaciones de la empresa.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "201", description = "Dias actualizados exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ParameterResponseDTO.class))),
+                        @ApiResponse(responseCode = "400", description = "Peticion invalida, revisa los parametros enviados", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "404", description = "Parametro no encontrado", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        })
+        @PatchMapping("/dias-vacaciones")
+        @PreAuthorize("hasAuthority('UPDATE_CONFIG')")
+        public ResponseEntity<ParameterResponseDTO> updateDiasVacaciones(
+            @RequestBody @Valid ParameterDiasRequestDTO request
+        ) throws NotFoundException, InvalidParameterException {
+                String newDays = parameterMapper.fromDiasRequestToString(request);
+
+                Parameter result = parameterPort.updateRegimenEmpresa(newDays);
 
                 ParameterResponseDTO response = parameterMapper.fromParameterToResponse(result);
 

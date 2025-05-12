@@ -10,4 +10,5 @@ public interface ForParameterPort {
     public Parameter updateRegimenEmpresa(String newRegimen) throws NotFoundException, InvalidParameterException;
     public Parameter updateNITEmpresa(String newNIT) throws NotFoundException, InvalidParameterException;
     public Parameter updateNombreEmpresa(String newNombre) throws NotFoundException, InvalidParameterException;
+    public Parameter updateDiasVacaciones(String newDays) throws NotFoundException, InvalidParameterException;
 }

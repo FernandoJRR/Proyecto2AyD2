@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.ayd.config_service.parameters.enums.ParameterEnum;
 import com.ayd.config_service.parameters.models.Parameter;
 import com.ayd.config_service.parameters.ports.ForParameterPort;
 import com.ayd.config_service.parameters.repositories.ParameterRepository;
@@ -30,7 +31,7 @@ public class ParameterService implements ForParameterPort {
     }
 
     public Parameter updateRegimenEmpresa(String newRegimen) throws NotFoundException, InvalidParameterException {
-        Parameter parameterRegimen = parameterRepository.findOneByParameterKey("regimen_empresa")
+        Parameter parameterRegimen = parameterRepository.findOneByParameterKey(ParameterEnum.REGIMEN_EMPRESA.getKey())
             .orElseThrow(() -> new NotFoundException("El parametro con la llave ingresada no existe"));
 
         switch (newRegimen) {
@@ -48,7 +49,7 @@ public class ParameterService implements ForParameterPort {
     }
 
     public Parameter updateNITEmpresa(String newNIT) throws NotFoundException, InvalidParameterException {
-        Parameter parameterNIT = parameterRepository.findOneByParameterKey("nit")
+        Parameter parameterNIT = parameterRepository.findOneByParameterKey(ParameterEnum.NIT_EMPRESA.getKey())
             .orElseThrow(() -> new NotFoundException("El parametro con la llave ingresada no existe"));
 
         parameterNIT.setValue(newNIT);
@@ -57,11 +58,20 @@ public class ParameterService implements ForParameterPort {
     }
 
     public Parameter updateNombreEmpresa(String newNombre) throws NotFoundException, InvalidParameterException {
-        Parameter parameterNombre = parameterRepository.findOneByParameterKey("nombre_empresa")
+        Parameter parameterNombre = parameterRepository.findOneByParameterKey(ParameterEnum.NOMBRE_EMPRESA.getKey())
             .orElseThrow(() -> new NotFoundException("El parametro con la llave ingresada no existe"));
 
         parameterNombre.setValue(newNombre);
 
         return parameterRepository.save(parameterNombre);
+    }
+
+    public Parameter updateDiasVacaciones(String newDays) throws NotFoundException, InvalidParameterException {
+        Parameter parameterDias = parameterRepository.findOneByParameterKey(ParameterEnum.DIAS_VACACIONES.getKey())
+            .orElseThrow(() -> new NotFoundException("El parametro con la llave ingresada no existe"));
+
+        parameterDias.setValue(newDays);
+
+        return parameterRepository.save(parameterDias);
     }
 }

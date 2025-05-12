@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,14 +32,21 @@ public class ParameterServiceTest {
     private ParameterService parameterService;
 
     private Parameter parameter;
+    private Parameter nitParameter;
 
     private String PARAMETER_ID = "fdsc-kcdo-ncds-mcds";
+    private String PARAMETER_NIT_ID = "csdm-fdsc-fetr-mcwc";
     private String PARAMETER_KEY = "llave_test";
     private String INVALID_PARAMETER_KEY = "llave_test_invalida";
 
     private String PARAMETER_REGIMEN_KEY = "regimen_empresa";
-    private String PARAMETER_NIT_KEY = "nit";
+    private String PARAMETER_NIT_KEY = "nit_empresa";
     private String PARAMETER_NOMBRE_KEY = "nombre_empresa";
+    private String PARAMETER_DIAS_KEY = "dias_vacaciones";
+
+    private String PARAMETER_VALUE = "test";
+    private String PARAMETER_NIT_VALUE = "1234567";
+    private String PARAMETER_NEW_NIT_VALUE = "654321";
 
     private String VALUE_REGIMEN_GENERAL = "gen";
     private String VALUE_REGIMEN_PEQUENO = "peq";
@@ -49,7 +57,12 @@ public class ParameterServiceTest {
         parameter = new Parameter();
         parameter.setId(PARAMETER_ID);
         parameter.setParameterKey(PARAMETER_KEY);
-        parameter.setValue("original");
+        parameter.setValue(PARAMETER_VALUE);
+
+        nitParameter = new Parameter();
+        nitParameter.setId(PARAMETER_NIT_ID);
+        nitParameter.setParameterKey(PARAMETER_NIT_KEY);
+        nitParameter.setValue(PARAMETER_NIT_VALUE);
     }
 
     @Test
@@ -59,7 +72,7 @@ public class ParameterServiceTest {
         Parameter result = parameterService.findParameterByKey(PARAMETER_KEY);
 
         assertNotNull(result);
-        assertEquals("original", result.getValue());
+        assertEquals(PARAMETER_VALUE, result.getValue());
         verify(parameterRepository).findOneByParameterKey(PARAMETER_KEY);
     }
 
@@ -115,14 +128,12 @@ public class ParameterServiceTest {
 
     @Test
     void updateNITEmpresa_Success() throws Exception {
-        parameter.setParameterKey(PARAMETER_NIT_KEY);
-
-        when(parameterRepository.findOneByParameterKey(PARAMETER_NIT_KEY)).thenReturn(Optional.of(parameter));
+        when(parameterRepository.findOneByParameterKey(PARAMETER_NIT_KEY)).thenReturn(Optional.of(nitParameter));
         when(parameterRepository.save(any(Parameter.class))).thenAnswer(i -> i.getArgument(0));
 
-        Parameter result = parameterService.updateNITEmpresa("123456-7");
+        Parameter result = parameterService.updateNITEmpresa(PARAMETER_NEW_NIT_VALUE);
 
-        assertEquals("123456-7", result.getValue());
+        assertEquals(PARAMETER_NEW_NIT_VALUE, result.getValue());
     }
 
     @Test
@@ -151,5 +162,25 @@ public class ParameterServiceTest {
 
         assertThrows(NotFoundException.class, () ->
                 parameterService.updateNombreEmpresa("Nombre"));
+    }
+
+    @Test
+    void updateDiasVacaciones_Success() throws Exception {
+        parameter.setParameterKey(PARAMETER_DIAS_KEY);
+
+        when(parameterRepository.findOneByParameterKey(PARAMETER_DIAS_KEY)).thenReturn(Optional.of(parameter));
+        when(parameterRepository.save(any(Parameter.class))).thenAnswer(i -> i.getArgument(0));
+
+        Parameter result = parameterService.updateDiasVacaciones("20");
+
+        assertEquals("20", result.getValue());
+    }
+
+    @Test
+    void updateDiasVacaciones_NotFound() {
+        when(parameterRepository.findOneByParameterKey(PARAMETER_DIAS_KEY)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () ->
+                parameterService.updateDiasVacaciones("20"));
     }
 }
