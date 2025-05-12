@@ -2,12 +2,16 @@ package com.ayd.game_service.games.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.ayd.game_service.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
+import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
 import com.ayd.game_service.games.dtos.ScorePlayerRequestDTO;
+import com.ayd.game_service.games.dtos.ScorePlayerResponseDTO;
 import com.ayd.game_service.games.models.Game;
 import com.ayd.game_service.games.ports.ForGamesPort;
 import com.ayd.game_service.games.repositories.GameRepository;
@@ -70,7 +74,7 @@ public class GameService implements ForGamesPort {
             .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id de reservacion"));
     }
 
-    public Game scoreGame(String gameId, ScoreGameRequestDTO request) throws NotFoundException, IllegalArgumentException {
+    public Game updateScore(String gameId, ScoreGameRequestDTO request) throws NotFoundException, IllegalArgumentException {
         Game currentGame = gameRepository.findByReservationId(gameId)
             .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id"));
 
@@ -106,5 +110,35 @@ public class GameService implements ForGamesPort {
 
 
         return gameRepository.save(currentGame);
+    }
+
+    public ScoreGameResponseDTO getScore(String gameId) throws NotFoundException {
+        List<PlayerHoleScore> scores = playerHoleScoreRepository.findByGame_Id(gameId);
+
+        Map<String, List<PlayerHoleScore>> groupedScores = scores.stream()
+            .collect(Collectors.groupingBy(s -> s.getPlayer().getId()));
+
+            List<ScorePlayerResponseDTO> playerScoresList = groupedScores.entrySet().stream()
+            .map(entry -> {
+                String playerId = entry.getKey();
+                List<PlayerHoleScore> playerScores = entry.getValue();
+
+                String playerName = playerScores.get(0).getPlayer().getName();
+                int totalShots = playerScores.stream()
+                    .mapToInt(PlayerHoleScore::getShots)
+                    .sum();
+
+                ScorePlayerResponseDTO dto = new ScorePlayerResponseDTO();
+                dto.setId(playerId);
+                dto.setName(playerName);
+                dto.setTotalShots(totalShots);
+
+                return dto;
+            })
+            .collect(Collectors.toList());
+
+            ScoreGameResponseDTO response = new ScoreGameResponseDTO();
+            response.setPlayerScores(playerScoresList);
+            return response;
     }
 }

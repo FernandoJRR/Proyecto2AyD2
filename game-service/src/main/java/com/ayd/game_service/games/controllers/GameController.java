@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ayd.game_service.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service.games.dtos.GameResponseDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
+import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
 import com.ayd.game_service.games.mappers.GamesMapper;
 import com.ayd.game_service.games.models.Game;
 import com.ayd.game_service.games.ports.ForGamesPort;
@@ -69,7 +70,7 @@ public class GameController {
 
                 GameResponseDTO response = gamesMapper.fromGameToResponseDTO(result);
 
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
         @Operation(summary = "Obtener un juego por el id de la reservacion", description = "Este endpoint permite la obtencion un juego por reservacion en el sistema.")
@@ -87,10 +88,10 @@ public class GameController {
 
                 GameResponseDTO response = gamesMapper.fromGameToResponseDTO(result);
 
-                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
         }
 
-        @Operation(summary = "Obtener un juego por su id", description = "Este endpoint permite la obtencion un juego en el sistema.")
+        @Operation(summary = "Actualizar el punteo de un juego", description = "Este endpoint permite la actualizacion del punteo de un juego del sistema.")
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "201", description = "Juego obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GameResponseDTO.class))),
                         @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
@@ -98,14 +99,29 @@ public class GameController {
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
         @PatchMapping("/score/{gameId}")
-        public ResponseEntity<GameResponseDTO> getProgressById(
+        public ResponseEntity<GameResponseDTO> updateScore(
                         @PathVariable("gameId") String gameId,
                         @RequestBody @Valid ScoreGameRequestDTO request)
                         throws NotFoundException, IllegalArgumentException {
-                Game result = forGamesPort.scoreGame(gameId, request);
+                Game result = forGamesPort.updateScore(gameId, request);
 
                 GameResponseDTO response = gamesMapper.fromGameToResponseDTO(result);
 
                 return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }
+
+        @Operation(summary = "Obtener el punteo actual de un juego", description = "Este endpoint permite la obtencion del punteo actual de un juego.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "201", description = "Juego obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GameResponseDTO.class))),
+                        @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "404", description = "Juego no encontrado.", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        })
+        @GetMapping("/score/{gameId}")
+        public ResponseEntity<ScoreGameResponseDTO> getScore(
+                        @PathVariable("gameId") String gameId)
+                        throws NotFoundException, IllegalArgumentException {
+                ScoreGameResponseDTO result = forGamesPort.getScore(gameId);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
         }
 }
