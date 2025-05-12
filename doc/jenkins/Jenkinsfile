@@ -48,6 +48,10 @@ pipeline {
         MICRO_SERVICE_RESERVATION = "reservation-service"
         SERVICE_RESERVATION_NAME_JAR = "reservation-service.jar"
         DEPLOY_RESERVATION_JAR = false
+
+        MICRO_SERVICE_REPORTS = "reports-service"
+        SERVICE_REPORTS_NAME_JAR = "reports-service.jar"
+        DEPLOY_REPORTS_JAR = false
         
     }
 
@@ -523,6 +527,52 @@ pipeline {
             }
         }
 
+        // Construccion del servicio Reports
+        stage('Build Reports Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Reports Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('reports-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Reports Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Reports Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Reports Service"
+                        dir('reports-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Reports Service'
+                            ])
+                        }
+                        DEPLOY_REPORTS_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Reports Service, no se compila."
+                        // Marcamos DEPLOY_REPORTS_JAR como falso ya que no se ha compilado
+                        DEPLOY_REPORTS_JAR = false
+                    }
+                }
+            }
+        }
+
         // Deploy de los servicios
         stage('Deploy Services'){
             steps{
@@ -716,6 +766,25 @@ pipeline {
                             """
                         }
                     }
+
+                    // Desplegamos el servicio Reports
+                    if (DEPLOY_REPORTS_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_REPORTS_NAME_JAR")) {
+                        echo "🚀 Desplegando Reports Service"
+                        dir('reports-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio reports-service.service..."
+                                sudo systemctl stop reports-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_REPORTS_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/reports-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_REPORTS_NAME_JAR
+                            """
+                        }
+                    }
                 }
             }
         }
@@ -764,6 +833,10 @@ pipeline {
                     if(DEPLOY_RESERVATION_JAR || sh(script: 'sudo systemctl is-active --quiet reservation-service.service', returnStatus: true) != 0){
                         echo "🔄 Reiniciando Reservation Service"
                         sh 'sudo systemctl restart reservation-service.service'
+                    }
+                    if(DEPLOY_REPORTS_JAR || sh(script: 'sudo systemctl is-active --quiet reports-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Reports Service"
+                        sh 'sudo systemctl restart reports-service.service'
                     }
                 }
             }
