@@ -1,0 +1,110 @@
+package com.ayd.game_service.games.services;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.ayd.game_service.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
+import com.ayd.game_service.games.dtos.ScorePlayerRequestDTO;
+import com.ayd.game_service.games.models.Game;
+import com.ayd.game_service.games.ports.ForGamesPort;
+import com.ayd.game_service.games.repositories.GameRepository;
+import com.ayd.game_service.holes.models.Hole;
+import com.ayd.game_service.holes.repositories.HoleRepository;
+import com.ayd.game_service.players.dtos.CreatePlayerRequestDTO;
+import com.ayd.game_service.players.models.Player;
+import com.ayd.game_service.players.models.PlayerHoleScore;
+import com.ayd.game_service.players.repositories.PlayerHoleScoreRepository;
+import com.ayd.game_service.players.repositories.PlayerRepository;
+import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.IllegalArgumentException;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(rollbackOn = Exception.class)
+public class GameService implements ForGamesPort {
+
+    private final GameRepository gameRepository;
+    private final PlayerRepository playerRepository;
+    private final PlayerHoleScoreRepository playerHoleScoreRepository;
+    private final HoleRepository holeRepository;
+
+    public Game createGame(CreateGameRequestDTO request) {
+        String packageId = request.getPackageId();
+        String reservationId = request.getReservationId();
+        List<CreatePlayerRequestDTO> playersRequest = request.getPlayers();
+
+        Game game = new Game();
+        game.setPackageId(packageId);
+        game.setReservationId(reservationId);
+        game.setHasFinished(false);
+
+        List<Player> createdPlayers = new ArrayList<>();
+
+        for (CreatePlayerRequestDTO playerDTO : playersRequest) {
+            Player createPlayer = new Player();
+            createPlayer.setName(playerDTO.getName());
+            createPlayer.setPlayerNumber(playerDTO.getPlayerNumber());
+            createPlayer.setGame(game);
+
+            createdPlayers.add(createPlayer);
+        }
+
+        game.setPlayers(createdPlayers);
+
+        return gameRepository.save(game);
+    }
+
+    public Game getGameById(String gameId) throws NotFoundException {
+        return gameRepository.findById(gameId)
+            .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id"));
+    }
+
+    public Game getGameByReservationId(String reservationId) throws NotFoundException {
+        return gameRepository.findByReservationId(reservationId)
+            .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id de reservacion"));
+    }
+
+    public Game scoreGame(String gameId, ScoreGameRequestDTO request) throws NotFoundException, IllegalArgumentException {
+        Game currentGame = gameRepository.findByReservationId(gameId)
+            .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id"));
+
+        Hole currentHole = holeRepository.findByNumber(request.getHoleNumber())
+            .orElseThrow(() -> new NotFoundException("Hoyo no encontrado"));
+
+        Integer scoreHoleNumber = request.getHoleNumber();
+        List<ScorePlayerRequestDTO> scorePlayerRequest = request.getScorePlayers();
+
+        if (currentGame.getCurrentHole() >= scoreHoleNumber) {
+            throw new IllegalArgumentException("El hoyo ingresado es menor al progreso actual");
+        }
+        currentGame.setCurrentHole(scoreHoleNumber);
+
+        //Si este hoyo es el ultimo el juego es completado
+        if (scoreHoleNumber == 18) {
+            currentGame.setHasFinished(true);
+        }
+
+        //Se da el punteo para cada jugador
+        for (ScorePlayerRequestDTO playerScore : scorePlayerRequest) {
+            Player currentPlayer = playerRepository.findById(playerScore.getPlayerId())
+                .orElseThrow(() -> new NotFoundException("El jugador no fue encontrado"));
+
+            PlayerHoleScore score = new PlayerHoleScore();
+            score.setPlayer(currentPlayer);
+            score.setHole(currentHole);
+            score.setGame(currentGame);
+            score.setShots(playerScore.getShotsPlayer());
+
+            playerHoleScoreRepository.save(score);
+        }
+
+
+        return gameRepository.save(currentGame);
+    }
+}
