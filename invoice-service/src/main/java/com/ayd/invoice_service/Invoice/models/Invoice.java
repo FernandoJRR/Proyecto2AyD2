@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.ayd.invoice_service.Invoice.enums.PaymentMethod;
-import com.ayd.invoice_service.Invoice.enums.TaxRegime;
 import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.CascadeType;
@@ -22,8 +21,6 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Invoice extends Auditor {
 
-    private TaxRegime taxRegime;
-
     private PaymentMethod paymentMethod;
 
     private BigDecimal subtotal;
@@ -32,7 +29,7 @@ public class Invoice extends Auditor {
 
     private BigDecimal total;
 
-    private String clientDocument; // CUI/NIT
+    private String clientDocument; // CUI/NIT // ID del cliente
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     private List<InvoiceDetail> details;
