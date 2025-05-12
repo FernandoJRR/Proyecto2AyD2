@@ -24,9 +24,6 @@ import lombok.NoArgsConstructor;
 @DynamicUpdate
 public class Game extends Auditor {
     @Column(nullable = false)
-    private String packageId;
-
-    @Column(nullable = false)
     private String reservationId;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)

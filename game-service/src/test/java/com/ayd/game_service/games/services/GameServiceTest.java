@@ -109,7 +109,6 @@ public class GameServiceTest {
         player2Request.setPlayerNumber(2);
 
         creationRequest = new CreateGameRequestDTO();
-        creationRequest.setPackageId(PACKAGE_ID);
         creationRequest.setReservationId(RESERVATION_ID);
         creationRequest.setPlayers(Arrays.asList(player1Request, player2Request));
 
@@ -186,7 +185,6 @@ public class GameServiceTest {
             List<Player> players = capturedGame.getPlayers();
 
             assertAll(
-                () -> assertEquals(PACKAGE_ID, capturedGame.getPackageId()),
                 () -> assertEquals(RESERVATION_ID, capturedGame.getReservationId()),
                 () -> assertFalse(capturedGame.getHasFinished()),
                 () -> assertNotNull(capturedGame.getPlayers()),

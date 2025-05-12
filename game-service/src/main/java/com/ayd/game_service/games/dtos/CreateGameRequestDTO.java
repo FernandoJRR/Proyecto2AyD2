@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class CreateGameRequestDTO {
-    @NotBlank(message = "El id del paquete es obligatorio")
-    private String packageId;
-
     @NotBlank(message = "El id de la reservacion es obligatorio")
     private String reservationId;
 
