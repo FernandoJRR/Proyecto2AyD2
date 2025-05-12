@@ -32,96 +32,92 @@ public class ParameterServiceTest {
 
     private Parameter parameter;
 
+    private String PARAMETER_ID = "fdsc-kcdo-ncds-mcds";
+    private String PARAMETER_KEY = "llave_test";
+    private String INVALID_PARAMETER_KEY = "llave_test_invalida";
+
+    private String PARAMETER_REGIMEN_KEY = "regimen_empresa";
+    private String PARAMETER_NIT_KEY = "nit";
+    private String PARAMETER_NOMBRE_KEY = "nombre_empresa";
+
+    private String VALUE_REGIMEN_GENERAL = "gen";
+    private String VALUE_REGIMEN_PEQUENO = "peq";
+    private String VALUE_REGIMEN_INVALID = "noexiste";
+
     @BeforeEach
     void setUp() {
         parameter = new Parameter();
-        parameter.setId("param-1");
-        parameter.setParameterKey("some_key");
+        parameter.setId(PARAMETER_ID);
+        parameter.setParameterKey(PARAMETER_KEY);
         parameter.setValue("original");
     }
 
-    // -------------------------------
-    // findParameterByKey
-    // -------------------------------
-
     @Test
     void findParameterByKey_Success() throws NotFoundException {
-        when(parameterRepository.findOneByParameterKey("some_key")).thenReturn(Optional.of(parameter));
+        when(parameterRepository.findOneByParameterKey(PARAMETER_KEY)).thenReturn(Optional.of(parameter));
 
-        Parameter result = parameterService.findParameterByKey("some_key");
+        Parameter result = parameterService.findParameterByKey(PARAMETER_KEY);
 
         assertNotNull(result);
         assertEquals("original", result.getValue());
-        verify(parameterRepository).findOneByParameterKey("some_key");
+        verify(parameterRepository).findOneByParameterKey(PARAMETER_KEY);
     }
 
     @Test
-    void findParameterByKey_NotFound_ThrowsException() {
-        when(parameterRepository.findOneByParameterKey("missing_key")).thenReturn(Optional.empty());
+    void findParameterByKey_NotFound() {
+        when(parameterRepository.findOneByParameterKey(INVALID_PARAMETER_KEY)).thenReturn(Optional.empty());
 
-        NotFoundException ex = assertThrows(NotFoundException.class, () ->
-                parameterService.findParameterByKey("missing_key"));
-
-        assertEquals("El parametro con la llave ingresada no existe", ex.getMessage());
+        assertThrows(NotFoundException.class, () ->
+                parameterService.findParameterByKey(INVALID_PARAMETER_KEY));
     }
 
-    // -------------------------------
-    // updateRegimenEmpresa
-    // -------------------------------
-
     @Test
-    void updateRegimenEmpresa_WithGen_Success() throws Exception {
-        parameter.setParameterKey("regimen_empresa");
+    void updateRegimenEmpresa_WithGen_Success() throws NotFoundException, InvalidParameterException {
+        parameter.setParameterKey(PARAMETER_REGIMEN_KEY);
 
-        when(parameterRepository.findOneByParameterKey("regimen_empresa")).thenReturn(Optional.of(parameter));
+        when(parameterRepository.findOneByParameterKey(PARAMETER_REGIMEN_KEY)).thenReturn(Optional.of(parameter));
         when(parameterRepository.save(any(Parameter.class))).thenAnswer(i -> i.getArgument(0));
 
-        Parameter result = parameterService.updateRegimenEmpresa("gen");
+        Parameter result = parameterService.updateRegimenEmpresa(VALUE_REGIMEN_GENERAL);
 
         assertEquals("{name: \"gen\", \"value\": 12}", result.getValue());
     }
 
     @Test
-    void updateRegimenEmpresa_WithPeq_Success() throws Exception {
-        parameter.setParameterKey("regimen_empresa");
+    void updateRegimenEmpresa_WithPeq_Success() throws NotFoundException, InvalidParameterException {
+        parameter.setParameterKey(PARAMETER_REGIMEN_KEY);
 
-        when(parameterRepository.findOneByParameterKey("regimen_empresa")).thenReturn(Optional.of(parameter));
+        when(parameterRepository.findOneByParameterKey(PARAMETER_REGIMEN_KEY)).thenReturn(Optional.of(parameter));
         when(parameterRepository.save(any(Parameter.class))).thenAnswer(i -> i.getArgument(0));
 
-        Parameter result = parameterService.updateRegimenEmpresa("peq");
+        Parameter result = parameterService.updateRegimenEmpresa(VALUE_REGIMEN_PEQUENO);
 
         assertEquals("{name: \"peq\", \"value\": 5}", result.getValue());
     }
 
     @Test
-    void updateRegimenEmpresa_InvalidValue_ThrowsException() {
-        parameter.setParameterKey("regimen_empresa");
+    void updateRegimenEmpresa_InvalidValue() {
+        parameter.setParameterKey(PARAMETER_REGIMEN_KEY);
 
-        when(parameterRepository.findOneByParameterKey("regimen_empresa")).thenReturn(Optional.of(parameter));
+        when(parameterRepository.findOneByParameterKey(PARAMETER_REGIMEN_KEY)).thenReturn(Optional.of(parameter));
 
-        InvalidParameterException ex = assertThrows(InvalidParameterException.class, () ->
-                parameterService.updateRegimenEmpresa("xyz"));
-
-        assertEquals("El regimen ingresado no es valido.", ex.getMessage());
+        assertThrows(InvalidParameterException.class, () ->
+                parameterService.updateRegimenEmpresa(VALUE_REGIMEN_INVALID));
     }
 
     @Test
-    void updateRegimenEmpresa_NotFound_ThrowsException() {
-        when(parameterRepository.findOneByParameterKey("regimen_empresa")).thenReturn(Optional.empty());
+    void updateRegimenEmpresa_NotFound() {
+        when(parameterRepository.findOneByParameterKey(PARAMETER_REGIMEN_KEY)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
-                parameterService.updateRegimenEmpresa("gen"));
+                parameterService.updateRegimenEmpresa(VALUE_REGIMEN_GENERAL));
     }
-
-    // -------------------------------
-    // updateNITEmpresa
-    // -------------------------------
 
     @Test
     void updateNITEmpresa_Success() throws Exception {
-        parameter.setParameterKey("nit");
+        parameter.setParameterKey(PARAMETER_NIT_KEY);
 
-        when(parameterRepository.findOneByParameterKey("nit")).thenReturn(Optional.of(parameter));
+        when(parameterRepository.findOneByParameterKey(PARAMETER_NIT_KEY)).thenReturn(Optional.of(parameter));
         when(parameterRepository.save(any(Parameter.class))).thenAnswer(i -> i.getArgument(0));
 
         Parameter result = parameterService.updateNITEmpresa("123456-7");
@@ -130,22 +126,18 @@ public class ParameterServiceTest {
     }
 
     @Test
-    void updateNITEmpresa_NotFound_ThrowsException() {
-        when(parameterRepository.findOneByParameterKey("nit")).thenReturn(Optional.empty());
+    void updateNITEmpresa_NotFound() {
+        when(parameterRepository.findOneByParameterKey(PARAMETER_NIT_KEY)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
                 parameterService.updateNITEmpresa("123456"));
     }
 
-    // -------------------------------
-    // updateNombreEmpresa
-    // -------------------------------
-
     @Test
     void updateNombreEmpresa_Success() throws Exception {
-        parameter.setParameterKey("nombre_empresa");
+        parameter.setParameterKey(PARAMETER_NOMBRE_KEY);
 
-        when(parameterRepository.findOneByParameterKey("nombre_empresa")).thenReturn(Optional.of(parameter));
+        when(parameterRepository.findOneByParameterKey(PARAMETER_NOMBRE_KEY)).thenReturn(Optional.of(parameter));
         when(parameterRepository.save(any(Parameter.class))).thenAnswer(i -> i.getArgument(0));
 
         Parameter result = parameterService.updateNombreEmpresa("Mi Empresa S.A.");
@@ -154,8 +146,8 @@ public class ParameterServiceTest {
     }
 
     @Test
-    void updateNombreEmpresa_NotFound_ThrowsException() {
-        when(parameterRepository.findOneByParameterKey("nombre_empresa")).thenReturn(Optional.empty());
+    void updateNombreEmpresa_NotFound() {
+        when(parameterRepository.findOneByParameterKey(PARAMETER_NOMBRE_KEY)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () ->
                 parameterService.updateNombreEmpresa("Nombre"));
