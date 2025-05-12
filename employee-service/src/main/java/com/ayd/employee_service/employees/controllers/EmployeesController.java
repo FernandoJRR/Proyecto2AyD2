@@ -36,10 +36,6 @@ import com.ayd.employee_service.employees.ports.ForEmployeesPort;
 import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.users.mappers.UserMapper;
 import com.ayd.employee_service.users.models.User;
-import com.ayd.employee_service.vacations.dtos.VacationsResponseDTO;
-import com.ayd.employee_service.vacations.mappers.VacationsMapper;
-import com.ayd.employee_service.vacations.models.Vacations;
-import com.ayd.employee_service.vacations.ports.ForVacationsPort;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -58,11 +54,9 @@ public class EmployeesController {
 
         private final ForEmployeesPort employeesPort;
         private final ForEmployeeHistoryPort employeeHistoryPort;
-        private final ForVacationsPort vacationsPort;
 
         private final EmployeeTypeMapper employeeTypeMapper;
         private final EmployeeMapper employeeMapper;
-        private final VacationsMapper vacationsMapper;
         private final UserMapper userMapper;
         private final HistoryTypeMapper historyTypeMapper;
         private final EmployeeHistoryMapper employeeHistoryMapper;
@@ -215,17 +209,12 @@ public class EmployeesController {
                 List<EmployeeHistoryResponseDTO> employeeHistories = employeeHistoryMapper
                                 .fromEmployeeHistoriesToEmployeeHistoryDtoList(historyEmployee);
 
-                // se obtienen las vacaciones del empleado
-                Map<Integer, List<Vacations>> vacations = vacationsPort.getAllVacationsForEmployee(employeeId);
-                Map<Integer, List<VacationsResponseDTO>> response = vacationsMapper
-                            .fromVacationMapToVacationMapResponse(vacations);
-
                 // convertir el Employee al dto
                 EmployeeResponseDTO employeeResponseDTO = employeeMapper.fromEmployeeToResponse(result);
 
                 return ResponseEntity.status(HttpStatus.OK).body(
                                 new CompoundEmployeeResponseDTO(employeeResponseDTO, result.getUser().getUsername(),
-                                                employeeHistories, response));
+                                                employeeHistories));
         }
 
         @Operation(summary = "Obtener todos los empleados", description = "Este endpoint permite la busqueda de todos los empleados.")
