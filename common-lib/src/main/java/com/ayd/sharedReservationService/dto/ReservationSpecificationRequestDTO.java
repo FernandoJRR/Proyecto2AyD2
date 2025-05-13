@@ -11,7 +11,7 @@ public class ReservationSpecificationRequestDTO {
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate date;
-    private boolean online;
-    private boolean paid;
-    private boolean cancelled;
+    private Boolean online;
+    private Boolean paid;
+    private Boolean cancelled;
 }
