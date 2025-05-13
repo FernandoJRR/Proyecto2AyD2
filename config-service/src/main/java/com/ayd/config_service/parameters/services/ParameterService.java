@@ -36,10 +36,10 @@ public class ParameterService implements ForParameterPort {
 
         switch (newRegimen) {
             case "gen":
-                parameterRegimen.setValue("{name: \"gen\", \"value\": 12}");
+                parameterRegimen.setValue("{\"name\": \"gen\", \"value\": 12}");
                 break;
             case "peq":
-                parameterRegimen.setValue("{name: \"peq\", \"value\": 5}");
+                parameterRegimen.setValue("{\"name\": \"peq\", \"value\": 5}");
                 break;
             default:
                 throw new InvalidParameterException("El regimen ingresado no es valido.");
