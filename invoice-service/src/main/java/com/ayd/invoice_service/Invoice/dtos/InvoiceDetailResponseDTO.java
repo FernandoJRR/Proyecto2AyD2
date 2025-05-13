@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Value
 public class InvoiceDetailResponseDTO {
-    Long id;
+    String id;
     String itemId;
     String itemName;
     ItemType itemType;
