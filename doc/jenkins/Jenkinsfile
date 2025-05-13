@@ -37,10 +37,6 @@ pipeline {
         SERVICE_INVOICE_NAME_JAR = "invoice-service.jar"
         DEPLOY_INVOICE_JAR = false
         
-        MICRO_SERVICE_PACKAGE = "package-service"
-        SERVICE_PACKAGE_NAME_JAR = "package-service.jar"
-        DEPLOY_PACKAGE_JAR = false
-        
         MICRO_SERVICE_PRODUCT = "product-service"
         SERVICE_PRODUCT_NAME_JAR = "product-service.jar"
         DEPLOY_PRODUCT_JAR = false
@@ -481,52 +477,6 @@ pipeline {
             }
         }
 
-        // Construccion del servicio Package
-        stage('Build Package Service'){
-            steps{
-                script{
-                    echo "🚀 Compilando Package Service"
-                    def changes = ""
-                    def shouldBuild = false
-                    dir('package-service') {
-                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
-                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
-                        echo "🚀 Cambios en el Package Service: ${changes}"
-                        if(!fileExists('target')) {
-                            shouldBuild = true
-                            echo "🚀 La carpeta target no existe, se compila el Package Service"
-                        }
-                    }
-                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
-                        echo "🚀 Compilando Package Service"
-                        dir('package-service') {
-                            if(COMMON_LIB_IS_DEPLOYED) {
-                                sh 'mvn clean compile -DskipTests'
-                                sh 'mvn clean install -DskipTests'
-                            }
-                            sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Package Service'
-                            ])
-                        }
-                        DEPLOY_PACKAGE_JAR = true
-                    } else {
-                        echo "🚀 No hay cambios en el Package Service, no se compila."
-                        // Marcamos DEPLOY_PACKAGE_JAR como falso ya que no se ha compilado
-                        DEPLOY_PACKAGE_JAR = false
-                    }
-                }
-            }
-        }
-
         // Construccion del servicio Reports
         stage('Build Reports Service'){
             steps{
@@ -710,24 +660,6 @@ pipeline {
                             """
                         }
                     }
-                    // Desplegamos el servicio Package
-                    if (DEPLOY_PACKAGE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_PACKAGE_NAME_JAR")) {
-                        echo "🚀 Desplegando Package Service"
-                        dir('package-service') {
-                            // Apagamos el servicio si es que esta corriendo
-                            sh """
-                                echo "🔄 Apagando servicio package-service.service..."
-                                sudo systemctl stop package-service.service
-                            """
-                            sh """
-                                echo "🧹 Eliminando JAR anterior..."
-                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_PACKAGE_NAME_JAR
-                                
-                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
-                                rsync -av target/package-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_PACKAGE_NAME_JAR
-                            """
-                        }
-                    }
 
                     // Desplegamos el servicio Product
                     if (DEPLOY_PRODUCT_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR")) {
@@ -821,10 +753,6 @@ pipeline {
                     if(DEPLOY_INVOICE_JAR || sh(script: 'sudo systemctl is-active --quiet invoice-service.service', returnStatus: true) != 0){
                         echo "🔄 Reiniciando Invoice Service"
                         sh 'sudo systemctl restart invoice-service.service'
-                    }
-                    if(DEPLOY_PACKAGE_JAR || sh(script: 'sudo systemctl is-active --quiet package-service.service', returnStatus: true) != 0){
-                        echo "🔄 Reiniciando Package Service"
-                        sh 'sudo systemctl restart package-service.service'
                     }
                     if(DEPLOY_PRODUCT_JAR || sh(script: 'sudo systemctl is-active --quiet product-service.service', returnStatus: true) != 0){
                         echo "🔄 Reiniciando Product Service"
