@@ -43,7 +43,7 @@ public enum SystemPermissionEnum {
     // Permisos sobre cajas
     CREATE_CASH_REGISTER(new Permission("Crear caja", "CREATE_CASH_REGISTER")),
     EDIT_CASH_REGISTER(new Permission("Editar caja", "EDIT_CASH_REGISTER")),
-    TOOGLE_CASH_REGISTER(new Permission("Activar o desactivar caja", "TOGGLE_CASH_REGISTER")),
+    TOOGLE_CASH_REGISTER(new Permission("Activar o desactivar caja", "TOOGLE_CASH_REGISTER")),
 
     // Permisos de Entradas de productos
     CREATE_PRODUCT_ENTRY(new Permission("Crear entrada de producto", "CREATE_PRODUCT_ENTRY")),
@@ -55,12 +55,12 @@ public enum SystemPermissionEnum {
     // Permisos de proveedores
     CREATE_SUPPLIER(new Permission("Crear proveedor", "CREATE_SUPPLIER")),
     EDIT_SUPPLIER(new Permission("Editar proveedor", "EDIT_SUPPLIER")),
-    TOOGLE_SUPPLIER(new Permission("Activar o desactivar proveedor", "TOGGLE_SUPPLIER")),
+    TOOGLE_SUPPLIER(new Permission("Activar o desactivar proveedor", "TOOGLE_SUPPLIER")),
 
     // Permisos de bodegas
     CREATE_WAREHOUSE(new Permission("Crear bodega", "CREATE_WAREHOUSE")),
     EDIT_WAREHOUSE(new Permission("Editar bodega", "EDIT_WAREHOUSE")),
-    TOOGLE_WAREHOUSE(new Permission("Activar o desactivar bodega", "TOGGLE_WAREHOUSE")),
+    TOOGLE_WAREHOUSE(new Permission("Activar o desactivar bodega", "TOOGLE_WAREHOUSE")),
 
     // permisos de paquetes
     CREATE_GOLF_PACKAGE(new Permission("Crear pacquetes", "CREATE_GOLF_PACKAGE")),
