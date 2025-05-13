@@ -92,9 +92,9 @@ public class ReservationService implements ForReservationPort {
                 .and(ReservationSpecification.hasEndTime(reservationSpecificationRequestDTO.getEndTime()))
                 .and(ReservationSpecification.hasDate(reservationSpecificationRequestDTO.getDate()))
                 .and(ReservationSpecification.hasUserId(reservationSpecificationRequestDTO.getUserId()))
-                .and(ReservationSpecification.isOnline(reservationSpecificationRequestDTO.isOnline()))
-                .and(ReservationSpecification.isPaid(reservationSpecificationRequestDTO.isPaid()))
-                .and(ReservationSpecification.isCancelled(reservationSpecificationRequestDTO.isCancelled()));
+                .and(ReservationSpecification.isOnline(reservationSpecificationRequestDTO.getOnline()))
+                .and(ReservationSpecification.isPaid(reservationSpecificationRequestDTO.getPaid()))
+                .and(ReservationSpecification.isCancelled(reservationSpecificationRequestDTO.getCancelled()));
         return reservationRepository.findAll(spec);
     }
 
