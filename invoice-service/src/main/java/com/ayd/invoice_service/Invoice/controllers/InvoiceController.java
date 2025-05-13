@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.invoice_service.Invoice.dtos.CreateInvoiceRequestDTO;
 import com.ayd.invoice_service.Invoice.dtos.InvoiceResponseDTO;
+import com.ayd.invoice_service.Invoice.dtos.ItemTypeResponseDTO;
+import com.ayd.invoice_service.Invoice.dtos.PaymentMethodResponse;
 import com.ayd.invoice_service.Invoice.dtos.SpecificationInvoiceRequestDTO;
 import com.ayd.invoice_service.Invoice.mappers.InvoiceMapper;
 import com.ayd.invoice_service.Invoice.models.Invoice;
@@ -91,5 +93,17 @@ public class InvoiceController {
             throws NotFoundException {
         List<Invoice> invoices = forInvoicePort.getAllInvoices(specificationInvoiceRequestDTO);
         return invoiceMapper.fromInvoicesToInvoiceResponseDTOs(invoices);
+    }
+
+    @GetMapping("/payment-methods")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PaymentMethodResponse> getPaymentMethods() {
+        return forInvoicePort.getPaymentMethods();
+    }
+
+    @GetMapping("/item-types")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemTypeResponseDTO> getItemTypes() {
+        return forInvoicePort.getItemTypes();
     }
 }
