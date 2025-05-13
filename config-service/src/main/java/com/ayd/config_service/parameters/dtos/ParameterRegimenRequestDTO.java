@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class ParameterRegimenRequestDTO {
     @NotBlank(message = "El nuevo tipo de regimen es obligatorio")
     @Pattern(regexp = "gen|peq", message = "El valor del nuevo regimen debe ser 'gen' o 'peq'")
-    private String nuevoRegimen;
+    private String newRegime;
 }

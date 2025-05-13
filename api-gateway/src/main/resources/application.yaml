@@ -34,6 +34,10 @@ spring:
           uri: lb://REPORTS-SERVICE
           predicates:
             - Path=/api/v1/reservation-reports,/api/v1/reservation-reports/**
+        - id: config-service
+          uri: lb://CONFIG-SERVICE
+          predicates:
+            - Path=/api/v1/config,/api/v1/config/**
 
 
 eureka:
@@ -43,4 +47,3 @@ eureka:
 
 server:
   port: 8080
-
