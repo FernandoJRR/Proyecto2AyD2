@@ -8,7 +8,6 @@ import java.util.List;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.ayd.employee_service.users.models.User;
-import com.ayd.employee_service.vacations.models.Vacations;
 import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.CascadeType;
@@ -55,10 +54,6 @@ public class Employee extends Auditor {
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     private List<EmployeeHistory> employeeHistories;
-
-
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Vacations> vacations;
 
     /**
      * Para la creacion de nuevos empleados

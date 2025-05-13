@@ -24,16 +24,13 @@ import lombok.NoArgsConstructor;
 @DynamicUpdate
 public class Game extends Auditor {
     @Column(nullable = false)
-    private String packageId;
-
-    @Column(nullable = false)
     private String reservationId;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Player> players;
 
     @Column(nullable = false)
-    private boolean hasFinished;
+    private Boolean hasFinished;
 
     @Column(nullable = true)
     private Integer currentHole;

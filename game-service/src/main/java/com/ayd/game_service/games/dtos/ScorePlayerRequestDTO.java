@@ -2,11 +2,12 @@ package com.ayd.game_service.games.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Getter
+@Data
 public class ScorePlayerRequestDTO {
     @NotBlank(message = "El id del jugador es obligatorio")
     private String playerId;

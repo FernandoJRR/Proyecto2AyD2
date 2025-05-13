@@ -34,8 +34,6 @@ public interface ForEmployeesPort {
 
         public List<Employee> findEmployees();
 
-        public List<Employee> findEmployeesInvoiceForPeriod(Integer periodYear);
-
         public Employee desactivateEmployee(String currentId, LocalDate deactivationDate, HistoryType historyTypeReason)
                         throws NotFoundException, IllegalStateException, InvalidPeriodException;
 

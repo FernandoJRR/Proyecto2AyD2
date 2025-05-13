@@ -23,7 +23,6 @@ import com.ayd.employee_service.shared.enums.EmployeeTypeEnum;
 import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.users.models.User;
 import com.ayd.employee_service.users.ports.ForUsersPort;
-import com.ayd.employee_service.vacations.ports.ForVacationsPort;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +36,6 @@ public class EmployeeService implements ForEmployeesPort {
     private final ForEmployeeTypePort forEmployeeTypePort;
     private final ForEmployeeHistoryPort forEmployeeHistoryPort;
     private final ForUsersPort userService;
-
-    private final @Lazy ForVacationsPort vacationsPort;
 
     @Override
     public Employee createEmployee(Employee newEmployee, EmployeeType employeeType, User newUser,
@@ -62,8 +59,6 @@ public class EmployeeService implements ForEmployeesPort {
         user.setEmployee(newEmployee);
 
         Employee createdEmployee = employeeRepository.save(newEmployee);
-
-        vacationsPort.createRandomVacationsForEmployee(createdEmployee.getId());
 
         // guardar el historial del empleado inicial
         return createdEmployee;
@@ -247,13 +242,6 @@ public class EmployeeService implements ForEmployeesPort {
         // manda a traer el employee si el optional esta vacio entonces retorna un
         // notfound exception
         List<Employee> employees = employeeRepository.findAll();
-
-        return employees;
-    }
-
-    @Override
-    public List<Employee> findEmployeesInvoiceForPeriod(Integer periodYear) {
-        List<Employee> employees = employeeRepository.findEmployeesWithAllVacationsUsed(periodYear);
 
         return employees;
     }

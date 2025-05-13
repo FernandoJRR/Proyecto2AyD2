@@ -38,12 +38,10 @@ public class GameService implements ForGamesPort {
     private final HoleRepository holeRepository;
 
     public Game createGame(CreateGameRequestDTO request) {
-        String packageId = request.getPackageId();
         String reservationId = request.getReservationId();
         List<CreatePlayerRequestDTO> playersRequest = request.getPlayers();
 
         Game game = new Game();
-        game.setPackageId(packageId);
         game.setReservationId(reservationId);
         game.setHasFinished(false);
 
@@ -140,4 +138,5 @@ public class GameService implements ForGamesPort {
             response.setPlayerScores(playerScoresList);
             return response;
     }
+
 }

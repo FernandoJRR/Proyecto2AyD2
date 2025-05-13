@@ -32,8 +32,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,29 +76,12 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Libreria
-		comun-->
-        <dependency>
-            <groupId>com.ayd</groupId>
-            <artifactId>common-lib</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
 
-        <!--Client
-        de eureka-->
+        <!--cliente
+		de eureka-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-
-
-        <!--Dev
-        tools recarga rapida del server-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
         </dependency>
 
         <!-- Lombok-->
@@ -139,6 +120,12 @@
             <artifactId>jjwt</artifactId>
             <version>0.12.6</version>
         </dependency>
+        <!--Libreria comun-->
+		<dependency>
+			<groupId>com.ayd</groupId>
+			<artifactId>common-lib</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
     </dependencies>
     <build>
         <plugins>

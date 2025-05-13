@@ -21,10 +21,6 @@ public enum SystemPermissionEnum {
     EDIT_EMPLOYEE_TYPE(new Permission("Editar tipo de empleado", "EDIT_EMPLOYEE_TYPE")),
     DELETE_EMPLOYEE_TYPE(new Permission("Eliminar tipo de empleado", "DELETE_EMPLOYEE_TYPE")),
 
-    // para las vacaciones
-    CHANGE_VACATION_DAYS(new Permission("Cambiar dias de vacaciones", "CHANGE_VACATION_DAYS")),
-    GET_ALL_INVOICES(new Permission("Obtener a todos los empleados que pueden sacar finiquito", "GET_ALL_INVOICES")),
-
     // Permisos de productos
     CREATE_PRODUCT(new Permission("Crear producto", "CREATE_PRODUCT")),
     EDIT_PRODUCT(new Permission("Editar producto", "EDIT_PRODUCT")),
@@ -65,6 +61,17 @@ public enum SystemPermissionEnum {
     CREATE_WAREHOUSE(new Permission("Crear bodega", "CREATE_WAREHOUSE")),
     EDIT_WAREHOUSE(new Permission("Editar bodega", "EDIT_WAREHOUSE")),
     TOOGLE_WAREHOUSE(new Permission("Activar o desactivar bodega", "TOGGLE_WAREHOUSE")),
+
+    // permisos de paquetes
+    CREATE_GOLF_PACKAGE(new Permission("Crear pacquetes", "CREATE_GOLF_PACKAGE")),
+    EDIT_GOLF_PACKAGE(new Permission("Editar pacquetes", "EDIT_GOLF_PACKAGE")),
+
+    // Permisos de Config
+    UPDATE_CONFIG(new Permission("Actualizar las configuraciones", "UPDATE_CONFIG")),
+
+    // Permisos de Juegos
+    CREATE_GAME(new Permission("Crear juegos", "CREATE_GAME")),
+    UPDATE_SCORE(new Permission("Actualizar punteos", "UPDATE_SCORE")),
     ;
 
     private final Permission permission;
