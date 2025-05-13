@@ -58,9 +58,11 @@ public class ScheduleService implements ForSchedulePort {
         if (updateScheduleRequest.getStartTime().isAfter(updateScheduleRequest.getEndTime())) {
             throw new IllegalStateException("La hora de inicio debe ser menor a la hora de fin.");
         }
-        if (scheduleRepository.existsByOnlineAndStartTimeBetweenAndIdNot(updateScheduleRequest.isOnline(),
+        if (scheduleRepository.existsByStartTimeAndEndTimeAndOnlineNotAndIdNot(
                 updateScheduleRequest.getStartTime(),
-                updateScheduleRequest.getEndTime(), scheduleId)) {
+                updateScheduleRequest.getEndTime(),
+                updateScheduleRequest.isOnline(),
+                scheduleId)) {
             throw new DuplicatedEntryException("Ya existe una programación con el mismo horario.");
         }
         schedule = schedule.update(updateScheduleRequest);

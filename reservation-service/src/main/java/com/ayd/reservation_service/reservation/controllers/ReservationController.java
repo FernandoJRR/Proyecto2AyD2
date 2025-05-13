@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +64,7 @@ public class ReservationController {
             @ApiResponse(responseCode = "409", description = "No se puede cancelar la reservación por su estado actual"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @PostMapping("/cancel/{reservationId}")
+    @PatchMapping("/cancel/{reservationId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyAuthority('CANCEL_RESERVATION')")
     public ReservationResponseDTO cancelReservation(@PathVariable String reservationId)
@@ -79,7 +80,7 @@ public class ReservationController {
             @ApiResponse(responseCode = "409", description = "No se puede marcar como pagada por su estado actual"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @PostMapping("/pay/{reservationId}")
+    @PatchMapping("/pay/{reservationId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyAuthority('PAY_RESERVATION')")
     public ReservationResponseDTO setPaymentReservation(@PathVariable String reservationId)
