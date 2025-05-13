@@ -1,13 +1,18 @@
 package com.ayd.invoice_service.Invoice.services;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ayd.invoice_service.Invoice.dtos.CreateInvoiceRequestDTO;
+import com.ayd.invoice_service.Invoice.dtos.ItemTypeResponseDTO;
+import com.ayd.invoice_service.Invoice.dtos.PaymentMethodResponse;
 import com.ayd.invoice_service.Invoice.dtos.SpecificationInvoiceRequestDTO;
+import com.ayd.invoice_service.Invoice.enums.ItemType;
+import com.ayd.invoice_service.Invoice.enums.PaymentMethod;
 import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
 import com.ayd.invoice_service.Invoice.ports.ForInvoiceDetailPort;
@@ -77,6 +82,23 @@ public class InvoiceService implements ForInvoicePort {
                 .where(InvoiceSpecification.hasClientDocument(specificationInvoiceRequestDTO.getClientDocument()))
                 .and(InvoiceSpecification.hasPaymentMethod(specificationInvoiceRequestDTO.getPaymentMethod()));
         return invoiceRepository.findAll(spec);
+    }
+
+    @Override
+    public List<PaymentMethodResponse> getPaymentMethods() {
+        List<PaymentMethodResponse> paymentMethods = new ArrayList<>();
+        paymentMethods.add(new PaymentMethodResponse(PaymentMethod.CARD, "Tarjeta"));
+        paymentMethods.add(new PaymentMethodResponse(PaymentMethod.CASH, "Efectivo"));
+        paymentMethods.add(new PaymentMethodResponse(PaymentMethod.ONLINE, "Online"));
+        return paymentMethods;
+    }
+
+    @Override
+    public List<ItemTypeResponseDTO> getItemTypes() {
+        List<ItemTypeResponseDTO> itemTypes = new ArrayList<>();
+        itemTypes.add(new ItemTypeResponseDTO(ItemType.GOOD, "Bienes"));
+        itemTypes.add(new ItemTypeResponseDTO(ItemType.SERVICE, "Servicios"));
+        return itemTypes;
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Value
 public class InvoiceResponseDTO {
-    Long id;
+    String id;
     PaymentMethod paymentMethod;
     BigDecimal subtotal;
     BigDecimal tax;
