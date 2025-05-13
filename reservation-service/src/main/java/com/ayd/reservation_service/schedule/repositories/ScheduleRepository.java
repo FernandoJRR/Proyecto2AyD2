@@ -16,4 +16,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, String> {
 
     boolean existsByOnlineAndStartTimeBetweenAndIdNot(boolean online, LocalTime startTime, LocalTime endTime,
             String id);
+
+    boolean existsByStartTimeAndEndTimeAndOnlineNotAndIdNot(
+            LocalTime startTime, LocalTime endTime, boolean online, String id);
 }

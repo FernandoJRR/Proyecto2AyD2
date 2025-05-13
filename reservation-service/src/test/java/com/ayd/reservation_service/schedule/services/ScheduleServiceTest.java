@@ -85,7 +85,7 @@ class ScheduleServiceTest {
         Schedule updated = new Schedule(dto.getStartTime(), dto.getEndTime(), dto.isOnline());
 
         when(scheduleRepository.findById(id)).thenReturn(Optional.of(existing));
-        when(scheduleRepository.existsByOnlineAndStartTimeBetweenAndIdNot(true, dto.getStartTime(), dto.getEndTime(), id)).thenReturn(false);
+        when(scheduleRepository.existsByStartTimeAndEndTimeAndOnlineNotAndIdNot(dto.getStartTime(), dto.getEndTime(), true, id)).thenReturn(false);
         when(scheduleRepository.save(existing)).thenReturn(updated);
 
         Schedule result = scheduleService.updateSchedule(id, dto);
@@ -100,7 +100,7 @@ class ScheduleServiceTest {
         String id = "schedule-123";
         UpdateScheduleRequestDTO dto = new UpdateScheduleRequestDTO(LocalTime.of(12, 0), LocalTime.of(13, 0), true);
         when(scheduleRepository.findById(id)).thenReturn(Optional.of(new Schedule()));
-        when(scheduleRepository.existsByOnlineAndStartTimeBetweenAndIdNot(true, dto.getStartTime(), dto.getEndTime(),
+        when(scheduleRepository.existsByStartTimeAndEndTimeAndOnlineNotAndIdNot(dto.getStartTime(), dto.getEndTime(), true,
                 id)).thenReturn(true);
 
         assertThrows(DuplicatedEntryException.class, () -> scheduleService.updateSchedule(id, dto));
