@@ -93,7 +93,7 @@ public class ParameterServiceTest {
 
         Parameter result = parameterService.updateRegimenEmpresa(VALUE_REGIMEN_GENERAL);
 
-        assertEquals("{name: \"gen\", \"value\": 12}", result.getValue());
+        assertEquals("{\"name\": \"gen\", \"value\": 12}", result.getValue());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ParameterServiceTest {
 
         Parameter result = parameterService.updateRegimenEmpresa(VALUE_REGIMEN_PEQUENO);
 
-        assertEquals("{name: \"peq\", \"value\": 5}", result.getValue());
+        assertEquals("{\"name\": \"peq\", \"value\": 5}", result.getValue());
     }
 
     @Test

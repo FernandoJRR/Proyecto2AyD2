@@ -65,7 +65,7 @@ public class ParametersControllers {
             @RequestBody @Valid ParameterNITRequestDTO request
         )
             throws NotFoundException, InvalidParameterException {
-                String newNIT = parameterMapper.fromNITRequestToString(request);
+                String newNIT = request.getNit();
 
                 Parameter result = parameterPort.updateNITEmpresa(newNIT);
 
@@ -101,9 +101,9 @@ public class ParametersControllers {
             @RequestBody @Valid ParameterNombreRequestDTO request
         )
             throws NotFoundException, InvalidParameterException {
-                String newNIT = parameterMapper.fromNombreRequestToString(request);
+                String newName = request.getNewName();
 
-                Parameter result = parameterPort.updateNombreEmpresa(newNIT);
+                Parameter result = parameterPort.updateNombreEmpresa(newName);
 
                 ParameterResponseDTO response = parameterMapper.fromParameterToResponse(result);
 
@@ -137,7 +137,7 @@ public class ParametersControllers {
         public ResponseEntity<ParameterResponseDTO> updateRegimenEmpresa(
             @RequestBody @Valid ParameterRegimenRequestDTO request
         ) throws NotFoundException, InvalidParameterException {
-                String newRegimen = parameterMapper.fromRegimenRequestToString(request);
+                String newRegimen = request.getNewRegime();
 
                 Parameter result = parameterPort.updateRegimenEmpresa(newRegimen);
 
@@ -173,7 +173,7 @@ public class ParametersControllers {
         public ResponseEntity<ParameterResponseDTO> updateDiasVacaciones(
             @RequestBody @Valid ParameterDiasRequestDTO request
         ) throws NotFoundException, InvalidParameterException {
-                String newDays = parameterMapper.fromDiasRequestToString(request);
+                String newDays = request.getNewDays();
 
                 Parameter result = parameterPort.updateRegimenEmpresa(newDays);
 
