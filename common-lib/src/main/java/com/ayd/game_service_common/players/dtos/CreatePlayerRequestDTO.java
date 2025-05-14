@@ -1,4 +1,4 @@
-package com.ayd.game_service.players.dtos;
+package com.ayd.game_service_common.players.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
