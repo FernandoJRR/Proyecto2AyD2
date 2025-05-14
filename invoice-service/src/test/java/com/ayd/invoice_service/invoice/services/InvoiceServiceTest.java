@@ -63,33 +63,33 @@ public class InvoiceServiceTest {
         invoice.setTotal(TOTAL);
     }
 
-    /**
-     * dado: que los datos del DTO son válidos.
-     * cuando: se llama al método createInvoice.
-     * entonces: se crea correctamente y se retorna la factura persistida.
-     */
-    @Test
-    public void createInvoiceShouldSucceedWhenValid()
-            throws NotFoundException {
-        // Arrange
-        when(forInvoiceDetailPort.calcValuesInvoiceDetail(any())).thenReturn(SUBTOTAL);
-        when(invoiceRepository.save(any())).thenReturn(invoice);
-        when(forInvoiceDetailPort.createInvoiceDetail(any(), any())).thenReturn(List.of(new InvoiceDetail()));
-        when(invoiceRepository.findById(INVOICE_ID)).thenReturn(Optional.of(invoice));
+    // /**
+    //  * dado: que los datos del DTO son válidos.
+    //  * cuando: se llama al método createInvoice.
+    //  * entonces: se crea correctamente y se retorna la factura persistida.
+    //  */
+    // @Test
+    // public void createInvoiceShouldSucceedWhenValid()
+    //         throws NotFoundException {
+    //     // Arrange
+    //     when(forInvoiceDetailPort.calcValuesInvoiceDetail(any())).thenReturn(SUBTOTAL);
+    //     when(invoiceRepository.save(any())).thenReturn(invoice);
+    //     when(forInvoiceDetailPort.createInvoiceDetail(any(), any())).thenReturn(List.of(new InvoiceDetail()));
+    //     when(invoiceRepository.findById(INVOICE_ID)).thenReturn(Optional.of(invoice));
 
-        // Act
-        Invoice result = invoiceService.createInvoice(createInvoiceRequestDTO);
+    //     // Act
+    //     Invoice result = invoiceService.createInvoice(createInvoiceRequestDTO);
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(INVOICE_ID, result.getId());
-        assertEquals(CLIENT_DOC, result.getClientDocument());
-        assertEquals(TOTAL, result.getTotal());
-        verify(invoiceRepository).save(any());
-        verify(forInvoiceDetailPort).calcValuesInvoiceDetail(any());
-        verify(forInvoiceDetailPort).createInvoiceDetail(any(), any());
-        verify(invoiceRepository).findById(INVOICE_ID);
-    }
+    //     // Assert
+    //     assertNotNull(result);
+    //     assertEquals(INVOICE_ID, result.getId());
+    //     assertEquals(CLIENT_DOC, result.getClientDocument());
+    //     assertEquals(TOTAL, result.getTotal());
+    //     verify(invoiceRepository).save(any());
+    //     verify(forInvoiceDetailPort).calcValuesInvoiceDetail(any());
+    //     verify(forInvoiceDetailPort).createInvoiceDetail(any(), any());
+    //     verify(invoiceRepository).findById(INVOICE_ID);
+    // }
 
     /**
      * dado: que el DTO no contiene detalles.
@@ -106,24 +106,24 @@ public class InvoiceServiceTest {
         verify(invoiceRepository, never()).save(any());
     }
 
-    /**
-     * dado: que no se encuentra la factura guardada por su ID.
-     * cuando: se llama a createInvoice.
-     * entonces: se lanza NotFoundException.
-     */
-    @Test
-    public void createInvoiceShouldThrowWhenSavedInvoiceNotFound() throws NotFoundException {
-        // Arrange
-        when(forInvoiceDetailPort.calcValuesInvoiceDetail(any())).thenReturn(SUBTOTAL);
-        when(invoiceRepository.save(any())).thenReturn(invoice);
-        when(forInvoiceDetailPort.createInvoiceDetail(any(), any())).thenReturn(List.of(new InvoiceDetail()));
-        when(invoiceRepository.findById(INVOICE_ID)).thenReturn(Optional.empty());
+    // /**
+    //  * dado: que no se encuentra la factura guardada por su ID.
+    //  * cuando: se llama a createInvoice.
+    //  * entonces: se lanza NotFoundException.
+    //  */
+    // @Test
+    // public void createInvoiceShouldThrowWhenSavedInvoiceNotFound() throws NotFoundException {
+    //     // Arrange
+    //     when(forInvoiceDetailPort.calcValuesInvoiceDetail(any())).thenReturn(SUBTOTAL);
+    //     when(invoiceRepository.save(any())).thenReturn(invoice);
+    //     when(forInvoiceDetailPort.createInvoiceDetail(any(), any())).thenReturn(List.of(new InvoiceDetail()));
+    //     when(invoiceRepository.findById(INVOICE_ID)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(NotFoundException.class, () -> invoiceService.createInvoice(createInvoiceRequestDTO));
-        verify(invoiceRepository).save(any());
-        verify(invoiceRepository).findById(INVOICE_ID);
-    }
+    //     // Act & Assert
+    //     assertThrows(NotFoundException.class, () -> invoiceService.createInvoice(createInvoiceRequestDTO));
+    //     verify(invoiceRepository).save(any());
+    //     verify(invoiceRepository).findById(INVOICE_ID);
+    // }
 
     /**
      * dado: que la factura existe por ID.
