@@ -126,4 +126,12 @@ public class CashRegisterController {
         return cashRegisterMapper.fromCashRegisterToCashRegisterResponseDTO(cashRegister);
     }
 
+    @PatchMapping("/{cashRegisterId}/employee/{employeeId}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('EDIT_CASH_REGISTER')")
+    public CashRegisterResponseDTO changeChasRegisterToEmployee(@PathVariable String cashRegisterId,
+            @PathVariable String employeeId) throws NotFoundException {
+        CashRegister cashRegister = forCashRegisterPort.changeChasRegisterToEmployee(cashRegisterId, employeeId);
+        return cashRegisterMapper.fromCashRegisterToCashRegisterResponseDTO(cashRegister);
+    }
 }

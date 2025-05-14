@@ -110,4 +110,22 @@ public class CashRegisterService implements ForCashRegisterPort {
                 .orElseThrow(
                         () -> new NotFoundException("No se encontró el registro de caja con empleado: " + employeeId));
     }
+
+    @Override
+    public CashRegister changeChasRegisterToEmployee(String cashRegisterId, String employeeId)
+            throws NotFoundException {
+        // Busacamos el cash register que queremos asignar al empleado
+        CashRegister cashRegister = findById(cashRegisterId);
+        // Buscamos el que empleado ya tiene asignado un cash register
+        CashRegister cashRegisterEmployee = findByEmployeeId(employeeId);
+        if (cashRegisterEmployee != null) {
+            // Si el empleado ya tiene un cash register asignado, lo desasignamos
+            cashRegisterEmployee.setEmployeeId(null);
+            cashRegisterRepository.save(cashRegisterEmployee);
+        }
+        // Asignamos el cash register al empleado
+        cashRegister.setEmployeeId(employeeId);
+        cashRegister = cashRegisterRepository.save(cashRegister);
+        return cashRegister;
+    }
 }

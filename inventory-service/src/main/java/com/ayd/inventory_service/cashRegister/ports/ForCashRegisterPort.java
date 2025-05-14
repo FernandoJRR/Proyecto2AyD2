@@ -18,7 +18,8 @@ public interface ForCashRegisterPort {
 
     public CashRegister findByCode(String code) throws NotFoundException;
 
-    public CashRegister save(CreateCashRegisterRequestDTO createCashRegisterRequestDTO) throws DuplicatedEntryException,NotFoundException;
+    public CashRegister save(CreateCashRegisterRequestDTO createCashRegisterRequestDTO)
+            throws DuplicatedEntryException, NotFoundException;
 
     public CashRegister update(String id, UpdateCashRegisterRequestDTO updateCashRegisterRequestDTO)
             throws NotFoundException,
@@ -27,4 +28,7 @@ public interface ForCashRegisterPort {
     public CashRegister toggleActive(String id) throws NotFoundException;
 
     public CashRegister findByEmployeeId(String employeeId) throws NotFoundException;
+
+    public CashRegister changeChasRegisterToEmployee(String cashRegisterId, String employeeId)
+            throws NotFoundException;
 }
