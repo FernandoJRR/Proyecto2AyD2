@@ -1,5 +1,8 @@
 package com.ayd.invoice_service.Invoice.ports;
 
-public interface ProductClientPort {
+import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedProductService.packages.dtos.GolfPackageResponseDTO;
 
+public interface ProductClientPort {
+    public GolfPackageResponseDTO getPackageById(String packageId) throws NotFoundException;
 }
