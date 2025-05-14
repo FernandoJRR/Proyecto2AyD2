@@ -273,7 +273,7 @@ public class GameServiceTest {
     @Test
     void updateScore_Success() throws NotFoundException {
         // ARRANGE
-        when(gameRepository.findByReservationId(GAME_ID)).thenReturn(Optional.of(playGame));
+        when(gameRepository.findById(GAME_ID)).thenReturn(Optional.of(playGame));
         when(holeRepository.findByNumber(HOLE_NUMBER)).thenReturn(Optional.of(playHole));
         when(playerRepository.findById(PLAYER_ID)).thenReturn(Optional.of(playingPlayer));
         when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -294,7 +294,7 @@ public class GameServiceTest {
     @Test
     void updateScore_SuccessLastHole() throws NotFoundException {
         // ARRANGE
-        when(gameRepository.findByReservationId(GAME_ID)).thenReturn(Optional.of(playGame));
+        when(gameRepository.findById(GAME_ID)).thenReturn(Optional.of(playGame));
         when(holeRepository.findByNumber(LAST_HOLE_NUMBER)).thenReturn(Optional.of(new Hole()));
         when(playerRepository.findById(PLAYER_ID)).thenReturn(Optional.of(playingPlayer));
         when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -314,7 +314,7 @@ public class GameServiceTest {
     @Test
     void updateScore_GameNotFound_ThrowsNotFoundException() {
         // ARRANGE
-        when(gameRepository.findByReservationId(INVALID_GAME_ID)).thenReturn(Optional.empty());
+        when(gameRepository.findById(INVALID_GAME_ID)).thenReturn(Optional.empty());
 
         // ACT
         // ASSERT
