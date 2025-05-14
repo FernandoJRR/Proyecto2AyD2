@@ -76,7 +76,7 @@ public class GameService implements ForGamesPort {
     }
 
     public Game updateScore(String gameId, ScoreGameRequestDTO request) throws NotFoundException, IllegalArgumentException {
-        Game currentGame = gameRepository.findByReservationId(gameId)
+        Game currentGame = gameRepository.findById(gameId)
             .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id"));
 
         Hole currentHole = holeRepository.findByNumber(request.getHoleNumber())
@@ -85,7 +85,7 @@ public class GameService implements ForGamesPort {
         Integer scoreHoleNumber = request.getHoleNumber();
         List<ScorePlayerRequestDTO> scorePlayerRequest = request.getScorePlayers();
 
-        if (currentGame.getCurrentHole() >= scoreHoleNumber) {
+        if (currentGame.getCurrentHole() != null && currentGame.getCurrentHole() >= scoreHoleNumber) {
             throw new IllegalArgumentException("El hoyo ingresado es menor al progreso actual");
         }
         currentGame.setCurrentHole(scoreHoleNumber);
@@ -143,4 +143,33 @@ public class GameService implements ForGamesPort {
             return response;
     }
 
+    public ScoreGameResponseDTO getScoreHole(String gameId, Integer holeNumber) throws NotFoundException {
+        List<PlayerHoleScore> scores = playerHoleScoreRepository.findByGame_IdAndHole_Number(gameId, holeNumber);
+
+        Map<String, List<PlayerHoleScore>> groupedScores = scores.stream()
+            .collect(Collectors.groupingBy(s -> s.getPlayer().getId()));
+
+            List<ScorePlayerResponseDTO> playerScoresList = groupedScores.entrySet().stream()
+            .map(entry -> {
+                String playerId = entry.getKey();
+                List<PlayerHoleScore> playerScores = entry.getValue();
+
+                String playerName = playerScores.get(0).getPlayer().getName();
+                int totalShots = playerScores.stream()
+                    .mapToInt(PlayerHoleScore::getShots)
+                    .sum();
+
+                ScorePlayerResponseDTO dto = new ScorePlayerResponseDTO();
+                dto.setId(playerId);
+                dto.setName(playerName);
+                dto.setTotalShots(totalShots);
+
+                return dto;
+            })
+            .collect(Collectors.toList());
+
+            ScoreGameResponseDTO response = new ScoreGameResponseDTO();
+            response.setPlayerScores(playerScoresList);
+            return response;
+    }
 }

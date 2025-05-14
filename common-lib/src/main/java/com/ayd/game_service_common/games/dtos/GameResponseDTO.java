@@ -17,4 +17,5 @@ public class GameResponseDTO {
     private String reservationId;
     private List<PlayerResponseDTO> players;
     private Boolean hasFinished;
+    private Integer currentHole;
 }

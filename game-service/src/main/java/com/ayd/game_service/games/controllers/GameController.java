@@ -142,18 +142,34 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Obtener el punteo actual de un juego", description = "Este endpoint permite la obtencion del punteo actual de un juego.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Punteo obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GameResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "404", description = "Juego no encontrado.", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    @GetMapping("/score/{gameId}")
-    public ResponseEntity<ScoreGameResponseDTO> getScore(
-            @PathVariable("gameId") String gameId)
-            throws NotFoundException, IllegalArgumentException {
-        ScoreGameResponseDTO result = forGamesPort.getScore(gameId);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
+        @Operation(summary = "Obtener el punteo actual de un juego", description = "Este endpoint permite la obtencion del punteo actual de un juego.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "201", description = "Punteo obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ScoreGameResponseDTO.class))),
+                        @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "404", description = "Juego no encontrado.", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        })
+        @GetMapping("/score/{gameId}")
+        public ResponseEntity<ScoreGameResponseDTO> getScore(
+                        @PathVariable("gameId") String gameId)
+                        throws NotFoundException, IllegalArgumentException {
+                ScoreGameResponseDTO result = forGamesPort.getScore(gameId);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+
+        @Operation(summary = "Obtener el punteo actual de un juego en un hoyo", description = "Este endpoint permite la obtencion del punteo actual de un juego en un hoyo.")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "201", description = "Punteo obtenido exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ScoreGameResponseDTO.class))),
+                        @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "404", description = "Juego no encontrado.", content = @Content(mediaType = "application/json")),
+                        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        })
+        @GetMapping("/score/{gameId}/{holeNumber}")
+        public ResponseEntity<ScoreGameResponseDTO> getScoreHole(
+                        @PathVariable("gameId") String gameId,
+                        @PathVariable("holeNumber") Integer holeNumber)
+                        throws NotFoundException, IllegalArgumentException {
+                ScoreGameResponseDTO result = forGamesPort.getScoreHole(gameId, holeNumber);
+                return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
 }

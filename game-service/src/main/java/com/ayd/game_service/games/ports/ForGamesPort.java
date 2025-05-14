@@ -15,4 +15,5 @@ public interface ForGamesPort {
     public Game getGameByReservationId(String reservationId) throws NotFoundException;
     public Game updateScore(String gameId, ScoreGameRequestDTO request) throws NotFoundException, IllegalArgumentException;
     public ScoreGameResponseDTO getScore(String gameId) throws NotFoundException;
+    public ScoreGameResponseDTO getScoreHole(String gameId, Integer holeNumber) throws NotFoundException;
 }
