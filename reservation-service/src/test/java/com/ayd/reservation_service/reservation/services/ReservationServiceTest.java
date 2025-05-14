@@ -67,7 +67,7 @@ class ReservationServiceTest {
     public static final CreatePlayerRequestDTO PLAYER_1 = new CreatePlayerRequestDTO("Player 1", Integer.valueOf(25));
     public static final CreatePlayerRequestDTO PLAYER_2 = new CreatePlayerRequestDTO("Player 2", Integer.valueOf(28));
     private static final GameResponseDTO GAME_RESPONSE_DTO = new GameResponseDTO("game-789", "reserv", List.of(),
-            false);
+            false,1);
     public static final List<CreatePlayerRequestDTO> VALID_PLAYERS = List.of(PLAYER_1, PLAYER_2);
 
     private CreateReservationRequestDTO createDTO;
