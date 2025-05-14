@@ -15,9 +15,7 @@ import com.ayd.shared.exceptions.ReportGenerationExeption;
 @ExtendWith(MockitoExtension.class)
 public class PdfPrintServiceTest {
 
-    private static final String TEST_REPORT_PATH = "/ReservationsReport";
     private Map<String, Object> parameters;
-    private static final byte[] PDF_BYTES = new byte[] { 1, 2, 3 };
 
     @InjectMocks
     private PdfPrintService pdfPrintService;
