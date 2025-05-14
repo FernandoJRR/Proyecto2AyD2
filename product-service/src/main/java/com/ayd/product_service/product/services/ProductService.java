@@ -17,8 +17,7 @@ import com.ayd.product_service.product.models.Product;
 import com.ayd.product_service.product.ports.ForProductPort;
 import com.ayd.product_service.product.repositories.ProductRepository;
 import com.ayd.product_service.product.specifitacions.ProductSpecification;
-import com.ayd.product_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.product_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

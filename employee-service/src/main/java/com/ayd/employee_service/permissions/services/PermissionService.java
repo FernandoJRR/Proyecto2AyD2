@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ayd.employee_service.permissions.models.Permission;
 import com.ayd.employee_service.permissions.ports.ForPermissionsPort;
 import com.ayd.employee_service.permissions.repositories.PermissionRepository;
-import com.ayd.employee_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

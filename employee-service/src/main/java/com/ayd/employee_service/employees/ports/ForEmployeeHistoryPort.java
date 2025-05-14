@@ -8,8 +8,7 @@ import java.util.Optional;
 import com.ayd.employee_service.employees.models.Employee;
 import com.ayd.employee_service.employees.models.EmployeeHistory;
 import com.ayd.employee_service.employees.models.HistoryType;
-import com.ayd.employee_service.shared.exceptions.InvalidPeriodException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 public interface ForEmployeeHistoryPort {
         public EmployeeHistory createEmployeeHistoryHiring(Employee employee, LocalDate hiringDate)

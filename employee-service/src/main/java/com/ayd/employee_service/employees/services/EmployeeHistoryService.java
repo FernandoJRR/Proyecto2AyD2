@@ -17,8 +17,7 @@ import com.ayd.employee_service.employees.models.HistoryType;
 import com.ayd.employee_service.employees.ports.ForEmployeeHistoryPort;
 import com.ayd.employee_service.employees.ports.ForHistoryTypePort;
 import com.ayd.employee_service.employees.repositories.EmployeeHistoryRepository;
-import com.ayd.employee_service.shared.exceptions.InvalidPeriodException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

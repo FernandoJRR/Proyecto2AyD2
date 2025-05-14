@@ -2,10 +2,9 @@ package com.ayd.employee_service.auth.jwt.utils;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import com.ayd.employee_service.auth.jwt.ports.ForJwtGenerator;
@@ -21,7 +20,7 @@ public class JwtGeneratorUtil implements ForJwtGenerator {
     public static final String SECRET_KEY = "claveSercretisimaXdLuisMonterroso";
 
     @Override
-    public String generateToken(User user, Set<GrantedAuthority> permissions) {
+    public String generateToken(User user, List<String> permissions) {
         // Extraer roles y permisos
         Map<String, Object> claims = new HashMap<>();
 

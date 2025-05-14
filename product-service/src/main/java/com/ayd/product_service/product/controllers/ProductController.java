@@ -1,16 +1,12 @@
 package com.ayd.product_service.product.controllers;
 
-import lombok.RequiredArgsConstructor;
-
-import java.lang.Thread.State;
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.rsocket.RSocketProperties.Server.Spec;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
-import com.ayd.product_service.product.dtos.ProductResponseDTO;
+import com.ayd.product_service.product.dtos.DeleteProductResponseDTO;
 import com.ayd.product_service.product.dtos.SpecificationProductDTO;
 import com.ayd.product_service.product.dtos.StateProductResponseDTO;
 import com.ayd.product_service.product.dtos.TypeProductResponseDTO;
@@ -28,13 +24,14 @@ import com.ayd.product_service.product.dtos.UpdateProductRequestDTO;
 import com.ayd.product_service.product.mappers.ProductMapper;
 import com.ayd.product_service.product.models.Product;
 import com.ayd.product_service.product.ports.ForProductPort;
-import com.ayd.product_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.product_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
+import com.ayd.sharedProductService.product.dtos.ProductResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -54,6 +51,7 @@ public class ProductController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('CREATE_PRODUCT')")
     public ProductResponseDTO createProduct(@Valid @RequestBody CreateProductRequestDTO createProductRequestDTO)
             throws DuplicatedEntryException, NotFoundException {
         Product product = forProductPort.createProduct(createProductRequestDTO);
@@ -70,6 +68,7 @@ public class ProductController {
     })
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('EDIT_PRODUCT')")
     public ProductResponseDTO updateProduct(
             @PathVariable String id,
             @Valid @RequestBody UpdateProductRequestDTO updateProductRequestDTO)
@@ -86,8 +85,10 @@ public class ProductController {
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean deleteProduct(@PathVariable String id) throws NotFoundException {
-        return forProductPort.deleteProduct(id);
+    @PreAuthorize("hasAnyAuthority('DELETE_PRODUCT')")
+    public DeleteProductResponseDTO deleteProduct(@PathVariable String id) throws NotFoundException {
+        boolean rssult = forProductPort.deleteProduct(id);
+        return new DeleteProductResponseDTO(id, rssult, "Producto con id: " + id + " eliminado correctamente");
     }
 
     @Operation(summary = "Obtener un producto por ID", description = "Devuelve la información de un producto a partir de su identificador único.")
@@ -111,7 +112,7 @@ public class ProductController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponseDTO> getAllProducts(
-            @RequestBody(required = false) SpecificationProductDTO specificationProductDTO) {
+            @ModelAttribute SpecificationProductDTO specificationProductDTO) {
         List<Product> products = forProductPort.getProducts(specificationProductDTO);
         return productMapper.fromProductsToProductResponseDTOs(products);
     }
@@ -121,7 +122,7 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Lista de productos obtenida exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @GetMapping("/ids")
+    @PostMapping("/ids")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponseDTO> getProductsByIds(
             @RequestBody(required = false) List<String> ids) {

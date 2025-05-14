@@ -1,6 +1,6 @@
 package com.ayd.employee_service.permissions.models;
 
-import com.ayd.employee_service.shared.models.Auditor;
+import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

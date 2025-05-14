@@ -22,8 +22,7 @@ import com.ayd.employee_service.employees.models.EmployeeType;
 import com.ayd.employee_service.employees.ports.ForEmployeeTypePort;
 import com.ayd.employee_service.permissions.mappers.PermissionMapper;
 import com.ayd.employee_service.permissions.models.Permission;
-import com.ayd.employee_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

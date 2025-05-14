@@ -2,8 +2,7 @@ package com.ayd.employee_service.users.services;
 
 import org.springframework.stereotype.Service;
 
-import com.ayd.employee_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.shared.utils.PasswordEncoderUtil;
 import com.ayd.employee_service.users.models.User;
 import com.ayd.employee_service.users.ports.ForUsersPort;

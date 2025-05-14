@@ -8,9 +8,7 @@ import com.ayd.employee_service.employees.models.Employee;
 import com.ayd.employee_service.employees.models.EmployeeHistory;
 import com.ayd.employee_service.employees.models.EmployeeType;
 import com.ayd.employee_service.employees.models.HistoryType;
-import com.ayd.employee_service.shared.exceptions.DuplicatedEntryException;
-import com.ayd.employee_service.shared.exceptions.InvalidPeriodException;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.users.models.User;
 
 public interface ForEmployeesPort {
@@ -35,8 +33,6 @@ public interface ForEmployeesPort {
         public Employee findEmployeeByUsername(String username) throws NotFoundException;
 
         public List<Employee> findEmployees();
-
-        public List<Employee> findEmployeesInvoiceForPeriod(Integer periodYear);
 
         public Employee desactivateEmployee(String currentId, LocalDate deactivationDate, HistoryType historyTypeReason)
                         throws NotFoundException, IllegalStateException, InvalidPeriodException;

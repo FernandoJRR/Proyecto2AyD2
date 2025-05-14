@@ -1,0 +1,782 @@
+pipeline {
+    agent any
+
+    environment {
+        
+        PROJECT_REPO_PATH = "/var/lib/jenkins/workspace/Proyecto2AyD2-dev"
+
+        DEPLOY_BACKEND_DIR = "/var/api/project2AyD2"
+
+        COMMON_LIB_IS_DEPLOYED = false
+
+        MICRO_SERVICE_EUREKA = "eureka-server"
+        SERVICE_EUREKA_NAME_JAR = "eureka-server.jar"
+        DEPLOY_EUREKA_JAR = false
+        
+        MICRO_SERVICE_API_GATEWAY = "api-gateway"
+        SERVICE_API_GATEWAY_NAME_JAR = "api-gateway.jar"
+        DEPLOY_API_GATEWAY_JAR = false
+        
+        MICRO_SERVICE_CONFIG = "config-service"
+        SERVICE_CONFIG_NAME_JAR = "config-service.jar"
+        DEPLOY_CONFIG_JAR = false
+        
+        MICRO_SERVICE_EMPLOYEE = "employee-service"
+        SERVICE_EMPLOYEE_NAME_JAR = "employee-service.jar"
+        DEPLOY_EMPLOYEE_JAR = false
+        
+        MICRO_SERVICE_GAME = "game-service"
+        SERVICE_GAME_NAME_JAR = "game-service.jar"
+        DEPLOY_GAME_JAR = false
+        
+        MICRO_SERVICE_INVENTORY = "inventory-service"
+        SERVICE_INVENTORY_NAME_JAR = "inventory-service.jar"
+        DEPLOY_INVENTORY_JAR = false
+        
+        MICRO_SERVICE_INVOICE = "invoice-service"
+        SERVICE_INVOICE_NAME_JAR = "invoice-service.jar"
+        DEPLOY_INVOICE_JAR = false
+        
+        MICRO_SERVICE_PRODUCT = "product-service"
+        SERVICE_PRODUCT_NAME_JAR = "product-service.jar"
+        DEPLOY_PRODUCT_JAR = false
+        
+        MICRO_SERVICE_RESERVATION = "reservation-service"
+        SERVICE_RESERVATION_NAME_JAR = "reservation-service.jar"
+        DEPLOY_RESERVATION_JAR = false
+
+        MICRO_SERVICE_REPORTS = "reports-service"
+        SERVICE_REPORTS_NAME_JAR = "reports-service.jar"
+        DEPLOY_REPORTS_JAR = false
+        
+    }
+
+    stages {
+        
+        stage('Checkout') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/FernandoJRR/Proyecto2AyD2-Back.git'
+            }
+        }
+
+        // Construccion de la librería común
+        stage ('Build Common Lib'){
+            steps {
+                script {
+                    // La libreria común se encuentra en la raíz del proyecto y no tiene pruebas
+                    echo "🚀 Compilando librería común"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('common-lib') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en la librería común: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila la librería común"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando librería común"
+                        dir('common-lib') {
+                            sh 'mvn clean install'
+                        }
+                        COMMON_LIB_IS_DEPLOYED = true
+                    } else {
+                        echo "🚀 No hay cambios en la librería común, no se compila."
+                        // Marcamos COMMON_LIB_IS_DEPLOYED como falso ya que no se ha compilado
+                        COMMON_LIB_IS_DEPLOYED = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Eureka
+        stage('Build Eureka Server'){
+            steps{
+                script{
+                    echo "🚀 Compilando Eureka Server"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('eureka-server') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Eureka Server: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Eureka Server"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando Eureka Server"
+                        dir('eureka-server') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                        DEPLOY_EUREKA_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Eureka Server, no se compila."
+                        // Marcamos DEPLOY_EUREKA_JAR como falso ya que no se ha compilado
+                        DEPLOY_EUREKA_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio API Gateway
+        stage('Build API Gateway'){
+            steps{
+                script{
+                    echo "🚀 Compilando API Gateway"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('api-gateway') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el API Gateway: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el API Gateway"
+                        }
+                    }
+                    if (changes || shouldBuild) {
+                        echo "🚀 Compilando API Gateway"
+                        dir('api-gateway') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                        DEPLOY_API_GATEWAY_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el API Gateway, no se compila."
+                        // Marcamos DEPLOY_API_GATEWAY_JAR como falso ya que no se ha compilado
+                        DEPLOY_API_GATEWAY_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Config
+        stage('Build Config Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Config Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('config-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Config Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Config Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Config Service"
+                        dir('config-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Config Service'
+                            ])
+                        }
+                        DEPLOY_CONFIG_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Config Service, no se compila."
+                        // Marcamos DEPLOY_CONFIG_JAR como falso ya que no se ha compilado
+                        DEPLOY_CONFIG_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Employee
+        stage('Build Employee Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Employee Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('employee-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Employee Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Employee Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Employee Service"
+                        dir('employee-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Employee Service'
+                            ])
+                        }
+                        DEPLOY_EMPLOYEE_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Employee Service, no se compila."
+                        // Marcamos DEPLOY_EMPLOYEE_JAR como falso ya que no se ha compilado
+                        DEPLOY_EMPLOYEE_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Product
+        stage('Build Product Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Product Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('product-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Product Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Product Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Product Service"
+                        dir('product-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Product Service'
+                            ])
+                        }
+                        DEPLOY_PRODUCT_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Product Service, no se compila."
+                        // Marcamos DEPLOY_PRODUCT_JAR como falso ya que no se ha compilado
+                        DEPLOY_PRODUCT_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Reservation
+        stage('Build Reservation Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Reservation Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('reservation-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Reservation Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Reservation Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Reservation Service"
+                        dir('reservation-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Reservation Service'
+                            ])
+                        }
+                        DEPLOY_RESERVATION_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Reservation Service, no se compila."
+                        // Marcamos DEPLOY_RESERVATION_JAR como falso ya que no se ha compilado
+                        DEPLOY_RESERVATION_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Inventory
+        stage('Build Inventory Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Inventory Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('inventory-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Inventory Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Inventory Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Inventory Service"
+                        dir('inventory-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Inventory Service'
+                            ])
+                        }
+                        DEPLOY_INVENTORY_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Inventory Service, no se compila."
+                        // Marcamos DEPLOY_INVENTORY_JAR como falso ya que no se ha compilado
+                        DEPLOY_INVENTORY_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Invoice
+        stage('Build Invoice Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Invoice Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('invoice-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Invoice Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Invoice Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Invoice Service"
+                        dir('invoice-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Invoice Service'
+                            ])
+                        }
+                        DEPLOY_INVOICE_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Invoice Service, no se compila."
+                        // Marcamos DEPLOY_INVOICE_JAR como falso ya que no se ha compilado
+                        DEPLOY_INVOICE_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Game
+        stage('Build Game Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Game Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('game-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Game Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Game Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Game Service"
+                        dir('game-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Game Service'
+                            ])
+                        }
+                        DEPLOY_GAME_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Game Service, no se compila."
+                        // Marcamos DEPLOY_GAME_JAR como falso ya que no se ha compilado
+                        DEPLOY_GAME_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Construccion del servicio Reports
+        stage('Build Reports Service'){
+            steps{
+                script{
+                    echo "🚀 Compilando Reports Service"
+                    def changes = ""
+                    def shouldBuild = false
+                    dir('reports-service') {
+                        changes = sh(script: 'git --no-pager diff --name-only HEAD~1 HEAD .', returnStdout: true).trim()
+                        // Verificamos si existe la carpeta target ya que si no existe significa que no se ha compilado
+                        echo "🚀 Cambios en el Reports Service: ${changes}"
+                        if(!fileExists('target')) {
+                            shouldBuild = true
+                            echo "🚀 La carpeta target no existe, se compila el Reports Service"
+                        }
+                    }
+                    if (changes || shouldBuild || COMMON_LIB_IS_DEPLOYED) {
+                        echo "🚀 Compilando Reports Service"
+                        dir('reports-service') {
+                            if(COMMON_LIB_IS_DEPLOYED) {
+                                sh 'mvn clean compile -DskipTests'
+                                sh 'mvn clean install -DskipTests'
+                            }
+                            sh 'mvn clean verify'
+                            // Publicamos las pruebas de jacoco
+                            junit 'target/surefire-reports/*.xml'
+
+                            // Publicamos el reporte de jacoco
+                            jacoco execPattern: 'target/jacoco.exec'
+
+                            publishHTML (target : [
+                                reportDir: 'target/site/jacoco',
+                                reportFiles: 'index.html',
+                                reportName: 'Jacoco Code Coverage Reports Service'
+                            ])
+                        }
+                        DEPLOY_REPORTS_JAR = true
+                    } else {
+                        echo "🚀 No hay cambios en el Reports Service, no se compila."
+                        // Marcamos DEPLOY_REPORTS_JAR como falso ya que no se ha compilado
+                        DEPLOY_REPORTS_JAR = false
+                    }
+                }
+            }
+        }
+
+        // Deploy de los servicios
+        stage('Deploy Services'){
+            steps{
+                script{
+                    echo "🚀 Desplegando servicios..."
+                    // Desplegamos el servicio Eureka
+                    // Por medio de la bandera DEPLOY_EUREKA_JAR verificamos si se ha compilado
+                    // Pero tambien desplegamos si no existe el JAR en la carpeta de despliegue
+
+                    if (DEPLOY_EUREKA_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR")) {
+                        echo "🚀 Desplegando Eureka Server"
+                        dir('eureka-server') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio eureka-server.service..."
+                                sudo systemctl stop eureka-server.service
+                            """
+
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/eureka-server-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_EUREKA_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio API Gateway
+                    // Este se despliega siempre ya que si algun servicio cambia, el API Gateway cambia
+                    if(true){
+                        echo "🚀 Desplegando API Gateway"
+                        dir('api-gateway') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio api-gateway.service..."
+                                sudo systemctl stop api-gateway.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_API_GATEWAY_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/api-gateway-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_API_GATEWAY_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Config
+                    if (DEPLOY_CONFIG_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_CONFIG_NAME_JAR")) {
+                        echo "🚀 Desplegando Config Service"
+                        dir('config-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio config-service.service..."
+                                sudo systemctl stop config-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_CONFIG_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/config-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_CONFIG_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Employee
+                    if (DEPLOY_EMPLOYEE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_EMPLOYEE_NAME_JAR")) {
+                        echo "🚀 Desplegando Employee Service"
+                        dir('employee-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio employee-service.service..."
+                                sudo systemctl stop employee-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_EMPLOYEE_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/employee-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_EMPLOYEE_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Game
+                    if (DEPLOY_GAME_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_GAME_NAME_JAR")) {
+                        echo "🚀 Desplegando Game Service"
+                        dir('game-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio game-service.service..."
+                                sudo systemctl stop game-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_GAME_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/game-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_GAME_NAME_JAR
+                            """
+                        }
+                    }
+                    // Desplegamos el servicio Inventory
+                    if (DEPLOY_INVENTORY_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_INVENTORY_NAME_JAR")) {
+                        echo "🚀 Desplegando Inventory Service"
+                        dir('inventory-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio inventory-service.service..."
+                                sudo systemctl stop inventory-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_INVENTORY_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/inventory-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_INVENTORY_NAME_JAR
+                            """
+                        }
+                    }
+
+                    // Desplegamos el servicio Invoice
+                    if (DEPLOY_INVOICE_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_INVOICE_NAME_JAR")) {
+                        echo "🚀 Desplegando Invoice Service"
+                        dir('invoice-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio invoice-service.service..."
+                                sudo systemctl stop invoice-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_INVOICE_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/invoice-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_INVOICE_NAME_JAR
+                            """
+                        }
+                    }
+
+                    // Desplegamos el servicio Product
+                    if (DEPLOY_PRODUCT_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR")) {
+                        echo "🚀 Desplegando Product Service"
+                        dir('product-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio product-service.service..."
+                                sudo systemctl stop product-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/product-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_PRODUCT_NAME_JAR
+                            """
+                        }
+                    }
+
+                    // Desplegamos el servicio Reservation
+                    if (DEPLOY_RESERVATION_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_RESERVATION_NAME_JAR")) {
+                        echo "🚀 Desplegando Reservation Service"
+                        dir('reservation-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio reservation-service.service..."
+                                sudo systemctl stop reservation-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_RESERVATION_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/reservation-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_RESERVATION_NAME_JAR
+                            """
+                        }
+                    }
+
+                    // Desplegamos el servicio Reports
+                    if (DEPLOY_REPORTS_JAR || !fileExists("$DEPLOY_BACKEND_DIR/$SERVICE_REPORTS_NAME_JAR")) {
+                        echo "🚀 Desplegando Reports Service"
+                        dir('reports-service') {
+                            // Apagamos el servicio si es que esta corriendo
+                            sh """
+                                echo "🔄 Apagando servicio reports-service.service..."
+                                sudo systemctl stop reports-service.service
+                            """
+                            sh """
+                                echo "🧹 Eliminando JAR anterior..."
+                                rm -f $DEPLOY_BACKEND_DIR/$SERVICE_REPORTS_NAME_JAR
+                                
+                                echo "📦 Copiando nuevo JAR a $DEPLOY_BACKEND_DIR ..."
+                                rsync -av target/reports-service-0.0.1-SNAPSHOT.jar $DEPLOY_BACKEND_DIR/$SERVICE_REPORTS_NAME_JAR
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Reboot Services'){
+            steps {
+                script {
+                    // Los iniciamos si es que estubieran apagados los servicios
+                    if(DEPLOY_EUREKA_JAR || sh(script: 'sudo systemctl is-active --quiet eureka-server.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Eureka Server"
+                        sh 'sudo systemctl restart eureka-server.service'
+                    }
+                    //Si no funciona este lo debemos de reiniciar siempre
+                    if(DEPLOY_EUREKA_JAR || sh(script: 'sudo systemctl is-active --quiet api-gateway.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando API Gateway"
+                        sh 'sudo systemctl restart api-gateway.service'
+                    }
+                    if(DEPLOY_CONFIG_JAR || sh(script: 'sudo systemctl is-active --quiet config-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Config Service"
+                        sh 'sudo systemctl restart config-service.service'
+                    }
+                    if(DEPLOY_EMPLOYEE_JAR || sh(script: 'sudo systemctl is-active --quiet employee-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Employee Service"
+                        sh 'sudo systemctl restart employee-service.service'
+                    }
+                    if(DEPLOY_GAME_JAR || sh(script: 'sudo systemctl is-active --quiet game-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Game Service"
+                        sh 'sudo systemctl restart game-service.service'
+                    }
+                    if(DEPLOY_INVENTORY_JAR || sh(script: 'sudo systemctl is-active --quiet inventory-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Inventory Service"
+                        sh 'sudo systemctl restart inventory-service.service'
+                    }
+                    if(DEPLOY_INVOICE_JAR || sh(script: 'sudo systemctl is-active --quiet invoice-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Invoice Service"
+                        sh 'sudo systemctl restart invoice-service.service'
+                    }
+                    if(DEPLOY_PRODUCT_JAR || sh(script: 'sudo systemctl is-active --quiet product-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Product Service"
+                        sh 'sudo systemctl restart product-service.service'
+                    }
+                    if(DEPLOY_RESERVATION_JAR || sh(script: 'sudo systemctl is-active --quiet reservation-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Reservation Service"
+                        sh 'sudo systemctl restart reservation-service.service'
+                    }
+                    if(DEPLOY_REPORTS_JAR || sh(script: 'sudo systemctl is-active --quiet reports-service.service', returnStatus: true) != 0){
+                        echo "🔄 Reiniciando Reports Service"
+                        sh 'sudo systemctl restart reports-service.service'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "🎉 Pipeline completado con éxito."
+        }
+        failure {
+            echo "❌ Algo falló en el pipeline."
+        }
+    }
+}

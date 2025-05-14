@@ -1,0 +1,57 @@
+spring:
+  profiles:
+    active: local
+
+  application:
+    name: api-gateway
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MariaDBDialect
+
+
+  cloud:
+    gateway:
+      routes:
+        - id: employee-service
+          uri: lb://EMPLOYEE-SERVICE
+          predicates:
+            - Path=/api/v1/login, /api/v1/login/**,/api/v1/history-types/**,/api/v1/permissions/**,/api/v1/permissions,/api/v1/employee-types/**,/api/v1/employee-types,/api/v1/employees/**,/api/v1/employees,/api/v1/vacations/**
+        - id: products-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/v1/products,/api/v1/products/**,/api/v1/packages,/api/v1/packages/**
+        - id: game-service
+          uri: lb://GAME-SERVICE
+          predicates:
+            - Path=/api/v1/games,/api/v1/games/**
+        - id: inventory-service
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/api/v1/warehouses,/api/v1/warehouses/**,/api/v1/suppliers,/api/v1/suppliers/**,/api/v1/cash-registers,/api/v1/cash-registers/**,/api/v1/product-entries,/api/v1/product-entries/**,/api/v1/stocks/**
+        - id: reservation-service
+          uri: lb://RESERVATION-SERVICE
+          predicates:
+            - Path=/api/v1/reservations/,/api/v1/reservations/**,/api/v1/schedules,/api/v1/schedules/**
+        - id: reports-service
+          uri: lb://REPORTS-SERVICE
+          predicates:
+            - Path=/api/v1/reservation-reports,/api/v1/reservation-reports/**,/api/v1/popular-hours-report/**,/api/v1/popular-hours-report
+        - id: config-service
+          uri: lb://CONFIG-SERVICE
+          predicates:
+            - Path=/api/v1/config,/api/v1/config/**
+        - id: invoice-service
+          uri: lb://INVOICE-SERVICE
+          predicates:
+            - Path=/api/v1/invoices,/api/v1/invoices/**
+
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+
+
+server:
+  port: 8080

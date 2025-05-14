@@ -1,12 +1,8 @@
 package com.ayd.employee_service.auth.login.service;
 
 import java.util.List;
-import java.util.Set;
 
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.ayd.employee_service.auth.jwt.ports.ForJwtGenerator;
@@ -17,7 +13,8 @@ import com.ayd.employee_service.employees.dtos.EmployeeResponseDTO;
 import com.ayd.employee_service.employees.mappers.EmployeeMapper;
 import com.ayd.employee_service.permissions.dtos.PermissionResponseDTO;
 import com.ayd.employee_service.permissions.mappers.PermissionMapper;
-import com.ayd.employee_service.shared.exceptions.NotFoundException;
+import com.ayd.shared.exceptions.*;
+import com.ayd.employee_service.shared.utils.PasswordEncoderUtil;
 import com.ayd.employee_service.users.models.User;
 import com.ayd.employee_service.users.ports.ForUsersPort;
 
@@ -29,10 +26,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional(rollbackOn = Exception.class)
 public class LoginService implements ForLogin {
 
-    private final AuthenticationManager authenticationManager;
     private final ForJwtGenerator forJwtGenerator;
     private final ForUsersPort forUsersPort;
     private final ForUserLoader forUserLoader;
+
+    private final PasswordEncoderUtil passwordEncoder;
 
     // mappers
     private final EmployeeMapper employeeMapper;
@@ -44,18 +42,16 @@ public class LoginService implements ForLogin {
         // traer el usuario por nombre de usuario
         User user = forUsersPort.findUserByUsername(username);
 
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadCredentialsException("");
+        }
+
         // verificar que el usuario no esté desactivado
         if (user.getDesactivatedAt() != null) {
             throw new NotFoundException("El usuario se encuentra desactivado.");
         }
-
-        // autenticamos el usuario con usuario y contrasenia
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-
-        // JWT
-
         // si la autenticacion no fallo entonces cargamos los permisos del usuario
-        Set<GrantedAuthority> authorities = forUserLoader.loadUserPermissions(user);
+        List<String> authorities = forUserLoader.loadUserPermissions(user);
         // cagados los permisos entonces generamos el jwt
         String jwt = forJwtGenerator.generateToken(user, authorities);
         // construimos la respuesta
