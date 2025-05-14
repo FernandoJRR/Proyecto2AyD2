@@ -29,10 +29,16 @@ public class Reservation extends Auditor {
     private LocalDate date;
 
     @Column(nullable = false)
-    private Boolean paid = false;
+    private Boolean paid;
 
     @Column(nullable = false)
     private Boolean notShow;
+
+    @Column(nullable = true)
+    private String gameId;
+
+    @Column(nullable = true)
+    private String packageId;
 
     public Reservation(CreateReservationRequestDTO createReservationRequestDTO) {
         this.startTime = createReservationRequestDTO.getStartTime();
@@ -40,5 +46,6 @@ public class Reservation extends Auditor {
         this.date = createReservationRequestDTO.getDate();
         this.paid = false;
         notShow = false;
+        packageId = createReservationRequestDTO.getPackageId();
     }
 }

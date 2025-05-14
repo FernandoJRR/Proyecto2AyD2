@@ -1,4 +1,4 @@
-package com.ayd.config_service.parameters.dtos;
+package com.ayd.sharedConfigService.dto;
 
 import lombok.Value;
 

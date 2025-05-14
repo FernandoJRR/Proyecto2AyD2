@@ -30,7 +30,7 @@ public enum SystemPermissionEnum {
     CREATE_INVOICE(new Permission("Crear factura", "CREATE_INVOICE")),
 
     // Permisos de reservas
-    CREATE_RESERVATION(new Permission("Crear reserva", "CREATE_RESERVATION")),
+    CREATE_RESERVATION(new Permission("Crear reserva presencial", "CREATE_PRESENTIAL_RESERVATION")),
     CANCEL_RESERVATION(new Permission("Cancelar reserva", "CANCEL_RESERVATION")),
     PAY_RESERVATION(new Permission("Pagar reserva", "PAY_RESERVATION")),
     DELETE_RESERVATION(new Permission("Eliminar reserva", "DELETE_RESERVATION")),

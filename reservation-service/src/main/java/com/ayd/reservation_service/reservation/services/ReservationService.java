@@ -40,18 +40,21 @@ public class ReservationService implements ForReservationPort {
     public byte[] createPresentialReservation(CreateReservationRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException, WriterException, IOException {
         // mandamos a crear la reserva
-        String gameId = createReservation(createReservationRequestDTO);
+        Reservation reservation = createReservation(createReservationRequestDTO);
         // ahora mandamos a crear el qr con el id de la reserva y id del juego
-        return qrCodeAdapter.generateQrCode(appProperties.getFrontURL() + "/app/juegos/jugar/" + gameId);
+        return createReservationQR(reservation);
     }
 
     @Override
     public Reservation createOnlineReservation(CreateReservationRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException {
-
+        // mandamos a crear la reserva
+        Reservation reservation = createReservation(createReservationRequestDTO);
+        // ahora mandamos a crear el qr con el id de la reserva y id del juego
+        return reservation;
     }
 
-    private String createReservation(CreateReservationRequestDTO createReservationRequestDTO)
+    private Reservation createReservation(CreateReservationRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException {
         if (reservationRepository.existsByStartTimeAndEndTimeAndDate(
                 createReservationRequestDTO.getStartTime(), createReservationRequestDTO.getEndTime(),
@@ -68,10 +71,10 @@ public class ReservationService implements ForReservationPort {
                 createReservationRequestDTO.getPlayers());
 
         // mandamos a crear el juego con los datos de los jugadores
-       GameResponseDTO gameClientPort.createGame(createGameRequestDTO);
+        GameResponseDTO savedGame = gameClientPort.createGame(createGameRequestDTO);
 
-        // una vez creado el juego y la reserva podemos mandar a crear la facturacion
-        // del paquete seleccionado
+        // refrescamos la reservacion para guardar el id del juego
+        savedReservation.setGameId(savedGame.getId());
 
         // retornamos la reservacion creada para que el metodo crear lo maneje
         return savedReservation;
@@ -92,17 +95,22 @@ public class ReservationService implements ForReservationPort {
     }
 
     @Override
-    public Reservation setPaymentReservation(String reservationId) throws IllegalStateException, NotFoundException {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new NotFoundException("No se encontró la reserva con el ID: " + reservationId));
+    public byte[] payReservation(String reservationId) throws  NotFoundException, WriterException, IOException {
+        Reservation reservation = getReservation(reservationId);
+
         if (reservation.getNotShow()) {
             throw new IllegalStateException("La reserva ha sido cancelada.");
         }
         if (reservation.getPaid()) {
             throw new IllegalStateException("La reserva ya ha sido pagada.");
         }
+
+        //mandamos a pagar toda la reserva al invoice service
+
         reservation.setPaid(true);
-        return reservationRepository.save(reservation);
+
+        //creamos el qr
+        return createReservationQR(reservation);
     }
 
     @Override
@@ -167,6 +175,21 @@ public class ReservationService implements ForReservationPort {
     public Reservation getReservation(String reservationId) throws NotFoundException {
         return reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new NotFoundException("No se encontró la reserva con el ID: " + reservationId));
+    }
+
+    @Override
+    public byte[] getReservationQr(String reservationId)
+            throws WriterException, IOException, NotFoundException {
+        // mandamos a crear la reserva
+        Reservation reservation = getReservation(reservationId);
+        // ahora mandamos a crear el qr con el id de la reserva y id del juego
+        return createReservationQR(reservation);
+    }
+
+    private byte[] createReservationQR(Reservation reservation)
+            throws WriterException, IOException {
+        return qrCodeAdapter
+                .generateQrCode(appProperties.getFrontURL() + "/app/juegos/jugar/" + reservation.getGameId());
     }
 
 }

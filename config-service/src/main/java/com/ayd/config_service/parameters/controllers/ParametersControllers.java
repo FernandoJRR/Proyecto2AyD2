@@ -13,13 +13,12 @@ import com.ayd.config_service.parameters.dtos.ParameterDiasRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterNITRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterNombreRequestDTO;
 import com.ayd.config_service.parameters.dtos.ParameterRegimenRequestDTO;
-import com.ayd.config_service.parameters.dtos.ParameterResponseDTO;
 import com.ayd.config_service.parameters.enums.ParameterEnum;
 import com.ayd.config_service.parameters.mappers.ParameterMapper;
 import com.ayd.config_service.parameters.models.Parameter;
 import com.ayd.config_service.parameters.ports.ForParameterPort;
 import com.ayd.shared.exceptions.*;
-
+import com.ayd.sharedConfigService.dto.ParameterResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
