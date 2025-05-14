@@ -42,6 +42,10 @@ spring:
           uri: lb://CONFIG-SERVICE
           predicates:
             - Path=/api/v1/config,/api/v1/config/**
+        - id: invoice-service
+          uri: lb://INVOICE-SERVICE
+          predicates:
+            - Path=/api/v1/invoices,/api/v1/invoices/**
 
 
 eureka:
