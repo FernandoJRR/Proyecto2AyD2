@@ -35,9 +35,7 @@ public interface ReservationRepository
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
 
-    public boolean existsByStartTimeAndEndTimeAndDate(
-            LocalTime startTime, LocalTime endTime, LocalDate date);
-
-
+    public boolean existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
+            LocalDate date, LocalTime startTime, LocalTime endTime);
 
 }

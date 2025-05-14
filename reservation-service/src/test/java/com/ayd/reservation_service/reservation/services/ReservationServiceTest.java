@@ -93,7 +93,7 @@ class ReservationServiceTest {
     @Test
     void createPresentialReservationReturnsQrBytes() throws Exception {
         // arrange
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDate(any(), any(), any())).thenReturn(false);
+        when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any(), any(), any())).thenReturn(false);
         when(reservationRepository.save(any())).thenReturn(reservation);
         when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
         when(qrCodeAdapter.generateQrCode(any())).thenReturn("fake-qr".getBytes());
@@ -115,7 +115,7 @@ class ReservationServiceTest {
     @Test
     void createOnlineReservationReturnsReservationWithGameId() throws Exception {
         // arrange
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDate(START_TIME, END_TIME, DATE)).thenReturn(false);
+        when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(START_TIME, END_TIME, DATE)).thenReturn(false);
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
         when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
 

@@ -22,7 +22,7 @@ public class GameClientAdapter implements ForGameClientPort {
                 // usamos usa method en lugar de get para permitir enviar un body en la
                 // solicitud
                 .method(HttpMethod.POST)
-                .uri("lb://API-GATEWAY/api/v1/games")
+                .uri("lb://API-GATEWAY/api/v1/games/free")
                 .bodyValue(createGameRequestDTO)
                 // ejecutmaos la solicitud y se prepara para obtener la respuesta
                 .retrieve()

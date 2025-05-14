@@ -56,9 +56,9 @@ public class ReservationService implements ForReservationPort {
 
     private Reservation createReservation(CreateReservationRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException {
-        if (reservationRepository.existsByStartTimeAndEndTimeAndDate(
-                createReservationRequestDTO.getStartTime(), createReservationRequestDTO.getEndTime(),
-                createReservationRequestDTO.getDate())) {
+        if (reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
+                createReservationRequestDTO.getDate(),
+                createReservationRequestDTO.getStartTime(), createReservationRequestDTO.getEndTime())) {
             throw new DuplicatedEntryException("Ya existe una reserva en el mismo horario.");
         }
 
@@ -95,7 +95,7 @@ public class ReservationService implements ForReservationPort {
     }
 
     @Override
-    public byte[] payReservation(String reservationId) throws  NotFoundException, WriterException, IOException {
+    public byte[] payReservation(String reservationId) throws NotFoundException, WriterException, IOException {
         Reservation reservation = getReservation(reservationId);
 
         if (reservation.getNotShow()) {
@@ -105,11 +105,11 @@ public class ReservationService implements ForReservationPort {
             throw new IllegalStateException("La reserva ya ha sido pagada.");
         }
 
-        //mandamos a pagar toda la reserva al invoice service
+        // mandamos a pagar toda la reserva al invoice service
 
         reservation.setPaid(true);
 
-        //creamos el qr
+        // creamos el qr
         return createReservationQR(reservation);
     }
 
