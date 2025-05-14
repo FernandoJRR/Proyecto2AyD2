@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.product_service.packages.dtos.GolfPackageResponseDTO;
+
 import com.ayd.product_service.packages.dtos.SaveGolfPackageRequestDTO;
 import com.ayd.product_service.packages.mappers.GolfPackageMapper;
 import com.ayd.product_service.packages.models.GolfPackage;
 import com.ayd.product_service.packages.ports.ForGolfPackagePort;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedProductService.packages.dtos.GolfPackageResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

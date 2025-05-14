@@ -1,6 +1,6 @@
-package com.ayd.product_service.packages.dtos;
+package com.ayd.sharedProductService.packages.dtos;
 
-import com.ayd.product_service.product.dtos.ProductResponseDTO;
+import com.ayd.sharedProductService.product.dtos.ProductResponseDTO;
 
 import lombok.Value;
 

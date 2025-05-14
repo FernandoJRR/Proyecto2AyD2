@@ -1,4 +1,4 @@
-package com.ayd.product_service.product.dtos;
+package com.ayd.sharedProductService.product.dtos;
 
 import java.math.BigDecimal;
 

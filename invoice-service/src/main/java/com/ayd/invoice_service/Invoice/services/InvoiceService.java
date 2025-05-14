@@ -58,6 +58,8 @@ public class InvoiceService implements ForInvoicePort {
             invoiceDetails.add(forInvoiceDetailPort.createInvoiceDetail(detail, invoice));
         }
 
+        // Alteramos el stock de los productos de la factura
+
         return invoiceRepository.findById(saveInvoice.getId())
                 .orElseThrow(() -> new NotFoundException("No se encontró la factura con id: " + saveInvoice.getId()));
     }

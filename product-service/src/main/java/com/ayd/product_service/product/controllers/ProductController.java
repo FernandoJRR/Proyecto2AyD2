@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.product_service.product.dtos.CreateProductRequestDTO;
 import com.ayd.product_service.product.dtos.DeleteProductResponseDTO;
-import com.ayd.product_service.product.dtos.ProductResponseDTO;
 import com.ayd.product_service.product.dtos.SpecificationProductDTO;
 import com.ayd.product_service.product.dtos.StateProductResponseDTO;
 import com.ayd.product_service.product.dtos.TypeProductResponseDTO;
@@ -26,6 +25,7 @@ import com.ayd.product_service.product.mappers.ProductMapper;
 import com.ayd.product_service.product.models.Product;
 import com.ayd.product_service.product.ports.ForProductPort;
 import com.ayd.shared.exceptions.*;
+import com.ayd.sharedProductService.product.dtos.ProductResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
