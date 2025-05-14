@@ -2,8 +2,8 @@ package com.ayd.invoice_service.Invoice.models;
 
 import java.math.BigDecimal;
 
-import com.ayd.invoice_service.Invoice.enums.ItemType;
 import com.ayd.shared.models.Auditor;
+import com.ayd.sharedInvoiceService.enums.ItemType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

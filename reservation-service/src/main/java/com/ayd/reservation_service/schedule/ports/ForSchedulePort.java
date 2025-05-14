@@ -11,7 +11,7 @@ import com.ayd.shared.exceptions.NotFoundException;
 public interface ForSchedulePort {
     public Schedule getScheduleById(String scheduleId) throws NotFoundException;
 
-    public List<Schedule> getSchedulesByOnline(boolean online);
+    public List<Schedule> getAllSchedules();
 
     public Schedule createSchedule(CreateScheduleRequestDTO createScheduleRequest)
             throws DuplicatedEntryException, IllegalStateException;

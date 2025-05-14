@@ -1,4 +1,4 @@
-package com.ayd.invoice_service.Invoice.enums;
+package com.ayd.sharedInvoiceService.enums;
 
 public enum ItemType {
     GOOD, // bienes
