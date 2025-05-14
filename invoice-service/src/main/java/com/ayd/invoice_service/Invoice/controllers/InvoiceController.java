@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.invoice_service.Invoice.dtos.InvoiceResponseDTO;
 import com.ayd.invoice_service.Invoice.dtos.ItemTypeResponseDTO;
 import com.ayd.invoice_service.Invoice.dtos.PaymentMethodResponse;
 import com.ayd.invoice_service.Invoice.dtos.SpecificationInvoiceRequestDTO;
@@ -22,6 +21,7 @@ import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.invoice_service.Invoice.ports.ForInvoicePort;
 import com.ayd.shared.exceptions.NotFoundException;
 import com.ayd.sharedInvoiceService.dtos.CreateInvoiceRequestDTO;
+import com.ayd.sharedInvoiceService.dtos.InvoiceResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

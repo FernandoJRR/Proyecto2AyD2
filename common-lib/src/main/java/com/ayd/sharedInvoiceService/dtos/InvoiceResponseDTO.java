@@ -1,4 +1,4 @@
-package com.ayd.invoice_service.Invoice.dtos;
+package com.ayd.sharedInvoiceService.dtos;
 
 import lombok.Value;
 

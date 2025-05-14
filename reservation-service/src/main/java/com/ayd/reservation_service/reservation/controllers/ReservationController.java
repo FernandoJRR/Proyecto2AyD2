@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationOnlineRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationPresentialRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.PayReservationRequestDTO;
 import com.ayd.reservation_service.reservation.mappers.ReservationMapper;
 import com.ayd.reservation_service.reservation.models.Reservation;
 import com.ayd.reservation_service.reservation.ports.ForReservationPort;
@@ -55,13 +57,13 @@ public class ReservationController {
     @PostMapping("/presential")
     @PreAuthorize("hasAnyAuthority('CREATE_PRESENTIAL_RESERVATION')")
     public ResponseEntity<byte[]> createPresentialReservation(
-            @Valid @RequestBody CreateReservationRequestDTO createReservationRequestDTO)
+            @Valid @RequestBody CreateReservationPresentialRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException, NotFoundException, WriterException, IOException {
-        byte[] qr = forReservationPort.createPresentialReservation(createReservationRequestDTO);
+        byte[] pdf = forReservationPort.createPresentialReservation(createReservationRequestDTO);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("inline", "reservacion_qr.pdf");
-        return new ResponseEntity<>(qr, headers, HttpStatus.OK);
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
 
     @Operation(summary = "Crear una nueva reservación", description = "Registra una nueva reservación en el sistema. Valida duplicados y existencia de entidades relacionadas como paquetes, horarios o usuarios.")
@@ -74,11 +76,15 @@ public class ReservationController {
     })
     @PostMapping("/online")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReservationResponseDTO createOnlineReservation(
-            @Valid @RequestBody CreateReservationRequestDTO createReservationRequestDTO)
+    public ResponseEntity<byte[]> createOnlineReservation(
+            @Valid @RequestBody CreateReservationOnlineRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException, NotFoundException {
-        Reservation reservation = forReservationPort.createOnlineReservation(createReservationRequestDTO);
-        return reservationMapper.fromReservationToReservationResponseDTO(reservation);
+        byte[] pdf = forReservationPort.createOnlineReservation(createReservationRequestDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "reservacion_qr.pdf");
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
 
     @Operation(summary = "Cancelar una reservación", description = "Cancela una reservación existente utilizando su ID. Valida que la reservación exista y que sea posible cancelarla según su estado actual.")
@@ -104,17 +110,18 @@ public class ReservationController {
             @ApiResponse(responseCode = "409", description = "No se puede marcar como pagada por su estado actual"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @PatchMapping("/pay/{reservationId}")
+    @PatchMapping("/pay")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyAuthority('PAY_RESERVATION')")
-    public ResponseEntity<byte[]> setPaymentReservation(@PathVariable String reservationId)
+    public ResponseEntity<byte[]> setPaymentReservation(
+            @Valid @RequestBody PayReservationRequestDTO payReservationRequestDTO)
             throws IllegalStateException, NotFoundException, WriterException, IOException {
 
-        byte[] qr = forReservationPort.payReservation(reservationId);
+        byte[] pdf = forReservationPort.payReservation(payReservationRequestDTO);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("inline", "reservacion_qr.pdf");
-        return new ResponseEntity<>(qr, headers, HttpStatus.OK);
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
 
     @Operation(summary = "Obtener reservación por ID", description = "Devuelve la información detallada de una reservación específica utilizando su identificador único.")
@@ -130,22 +137,22 @@ public class ReservationController {
         return reservationMapper.fromReservationToReservationResponseDTO(reservation);
     }
 
-      @Operation(summary = "Obtener el qr de la reservacion")
+    @Operation(summary = "Obtener el qr de la reservacion")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reservación encontrada exitosamente"),
             @ApiResponse(responseCode = "404", description = "Reservación no encontrada"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
     @GetMapping("/get-reservation-qr/{reservationId}")
-    public ResponseEntity<byte[]> getReservationQr(@PathVariable String reservationId) throws NotFoundException, WriterException, IOException {
+    public ResponseEntity<byte[]> getReservationQr(@PathVariable String reservationId)
+            throws NotFoundException, WriterException, IOException {
 
-        byte[] qr = forReservationPort.getReservationQr(reservationId);
+        byte[] qr = forReservationPort.getReservationInvoice(reservationId);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
         headers.setContentDispositionFormData("inline", "reservacion_qr.pdf");
         return new ResponseEntity<>(qr, headers, HttpStatus.OK);
     }
-
 
     @Operation(summary = "Obtener lista de reservaciones", description = "Devuelve una lista de reservaciones. Se pueden aplicar filtros opcionales mediante el cuerpo de la solicitud.")
     @ApiResponses(value = {

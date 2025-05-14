@@ -3,7 +3,7 @@ package com.ayd.reservation_service.reservation.models;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationDTO;
 import com.ayd.shared.models.Auditor;
 
 import jakarta.persistence.Column;
@@ -40,13 +40,13 @@ public class Reservation extends Auditor {
     @Column(nullable = false)
     private String customerFullname;
 
-    @Column(nullable = true)
+    @Column(nullable = true, unique = true)
     private String gameId;
 
-    @Column(nullable = true)
-    private String packageId;
+    @Column(nullable = true, unique = true)
+    private String invoiceId;
 
-    public Reservation(CreateReservationRequestDTO createReservationRequestDTO) {
+    public Reservation(CreateReservationDTO createReservationRequestDTO) {
         this.startTime = createReservationRequestDTO.getStartTime();
         this.endTime = createReservationRequestDTO.getEndTime();
         this.date = createReservationRequestDTO.getDate();
@@ -54,6 +54,5 @@ public class Reservation extends Auditor {
         notShow = false;
         customerFullname = createReservationRequestDTO.getCustomerFullname();
         customerNit = createReservationRequestDTO.getCustomerNit();
-        packageId = createReservationRequestDTO.getPackageId();
     }
 }
