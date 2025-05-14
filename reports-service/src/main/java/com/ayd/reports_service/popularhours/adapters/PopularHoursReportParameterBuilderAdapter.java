@@ -1,26 +1,24 @@
-package com.ayd.reports_service.reservations.adapters;
+package com.ayd.reports_service.popularhours.adapters;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
+import com.ayd.reports_service.popularhours.dtos.PopularHoursReportDTO;
 import com.ayd.reports_service.shared.ports.ReportParameterBuilderPort;
 
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 
-/**
- * @param ReportReservationsDTO el dto que contiene la informacion del reporte
- */
 @Component
-public class ResesrvationReportParameterBuilderAdapter implements ReportParameterBuilderPort<ReportReservationsDTO> {
+public class PopularHoursReportParameterBuilderAdapter
+        implements ReportParameterBuilderPort<PopularHoursReportDTO> {
 
-    private ReportReservationsDTO reportReservationsDTO;
+    private PopularHoursReportDTO report;
 
     @Override
-    public void init(ReportReservationsDTO reportDTO) {
-        this.reportReservationsDTO = reportDTO;
+    public void init(PopularHoursReportDTO reportDTO) {
+        this.report = reportDTO;
     }
 
     @Override
@@ -30,11 +28,10 @@ public class ResesrvationReportParameterBuilderAdapter implements ReportParamete
 
         // convertir la lista de clientes a un JRBeanArrayDataSource para JasperReports
         JRBeanArrayDataSource reservations = new JRBeanArrayDataSource(
-                reportReservationsDTO.getReservations().toArray());
-
+                report.getPopularHours().toArray());
         // agregar aprams clave al mapa
         params.put("reservations", reservations);
-        params.put("totalReservations", reportReservationsDTO.getTotalReservations());
+        params.put("totalReservations", report.getTotalReservations());
 
         return params;
     }

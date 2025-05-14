@@ -1,7 +1,6 @@
 package com.ayd.reservation_service.reservation.models;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
@@ -30,22 +29,23 @@ public class Reservation extends Auditor {
     private LocalDate date;
 
     @Column(nullable = false)
-    private String userId;
+    private Boolean paid;
 
     @Column(nullable = false)
-    private boolean online;
+    private Boolean notShow;
 
-    private boolean paid = false;
+    @Column(nullable = true)
+    private String gameId;
 
-    private boolean cancelled = false;
+    @Column(nullable = true)
+    private String packageId;
 
     public Reservation(CreateReservationRequestDTO createReservationRequestDTO) {
         this.startTime = createReservationRequestDTO.getStartTime();
         this.endTime = createReservationRequestDTO.getEndTime();
         this.date = createReservationRequestDTO.getDate();
-        this.userId = createReservationRequestDTO.getUserId();
-        this.online = createReservationRequestDTO.isOnline();
         this.paid = false;
-        this.cancelled = false;
+        notShow = false;
+        packageId = createReservationRequestDTO.getPackageId();
     }
 }

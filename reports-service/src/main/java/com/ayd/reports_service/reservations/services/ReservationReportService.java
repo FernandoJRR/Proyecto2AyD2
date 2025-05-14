@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.ayd.reports_service.pdf.ports.PdfPrinterPort;
 import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
-import com.ayd.reports_service.reservations.port.ReportParameterBuilderPort;
 import com.ayd.reports_service.reservations.port.ReservationClientPort;
-import com.ayd.reports_service.shared.services.ReportServicePort;
+import com.ayd.reports_service.shared.ports.ReportParameterBuilderPort;
+import com.ayd.reports_service.shared.ports.ReportServicePort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.ReportGenerationExeption;
 import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ReservationReportService implements ReportServicePort<PeriodRequestDTO> {
+public class ReservationReportService implements ReportServicePort<ReportReservationsDTO, PeriodRequestDTO> {
 
     private final PdfPrinterPort pdfPrinterPort;
     private final ReservationClientPort reservationClientPort;
