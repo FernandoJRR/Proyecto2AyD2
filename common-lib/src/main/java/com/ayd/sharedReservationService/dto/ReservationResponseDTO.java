@@ -11,8 +11,9 @@ public class ReservationResponseDTO {
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate date;
-    private String userId;
     private Boolean notShow;
     private Boolean paid;
     private String gameId;
+    private String customerFullname;
+    private String customerNit;
 }

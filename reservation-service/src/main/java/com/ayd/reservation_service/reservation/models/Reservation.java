@@ -52,8 +52,8 @@ public class Reservation extends Auditor {
         this.date = createReservationRequestDTO.getDate();
         this.paid = false;
         notShow = false;
-        customerFullname = createReservationRequestDTO.getCustomerFullName();
-        customerNit = createReservationRequestDTO.getCustomerNIT();
+        customerFullname = createReservationRequestDTO.getCustomerFullname();
+        customerNit = createReservationRequestDTO.getCustomerNit();
         packageId = createReservationRequestDTO.getPackageId();
     }
 }

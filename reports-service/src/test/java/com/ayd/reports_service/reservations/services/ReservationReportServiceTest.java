@@ -35,23 +35,25 @@ class ReservationReportServiceTest {
     private static final PeriodRequestDTO PERIOD_DTO = new PeriodRequestDTO(LocalDate.now(), LocalDate.now());
     private static final byte[] PDF_BYTES = new byte[] { 1, 2, 3 };
 
-    public static final String RESERVATION_ID = "R001";
+    public static final String RESERVATION_ID = "resv-123";
     public static final LocalTime START_TIME = LocalTime.of(10, 0);
     public static final LocalTime END_TIME = LocalTime.of(11, 0);
-    public static final LocalDate DATE = LocalDate.of(2025, 5, 11);
-    public static final String USER_ID = "U123";
-    public static final boolean ONLINE = true;
-    public static final boolean PAID = true;
-    public static final boolean CANCELLED = false;
+    public static final LocalDate DATE = LocalDate.of(2025, 5, 20);
+    public static final boolean PAID = false;
+    public static final boolean NOT_SHOW = true;
+    public static final String GAME_ID = "game-456";
+    public static final String CUSTOMER_NAME = "Juan Pérez";
+    public static final String CUSTOMER_CUI = "1234567-8";
 
-    public static final String RESERVATION_ID_2 = "R002";
+    public static final String RESERVATION_ID_2 = "resv-789";
     public static final LocalTime START_TIME_2 = LocalTime.of(14, 30);
     public static final LocalTime END_TIME_2 = LocalTime.of(15, 30);
-    public static final LocalDate DATE_2 = LocalDate.of(2025, 5, 12);
-    public static final String USER_ID_2 = "U456";
-    public static final boolean ONLINE_2 = false;
-    public static final boolean PAID_2 = false;
-    public static final boolean CANCELLED_2 = true;
+    public static final LocalDate DATE_2 = LocalDate.of(2025, 6, 5);
+    public static final boolean PAID_2 = true;
+    public static final boolean NOT_SHOW_2 = false;
+    public static final String GAME_ID_2 = "game-999";
+    public static final String CUSTOMER_NAME_2 = "María Gómez";
+    public static final String CUSTOMER_CUI_2 = "9876543-2";
 
     private ReservationResponseDTO response1;
     private ReservationResponseDTO response2;
@@ -73,20 +75,23 @@ class ReservationReportServiceTest {
                 START_TIME,
                 END_TIME,
                 DATE,
-                USER_ID,
-                ONLINE,
                 PAID,
-                CANCELLED);
+                NOT_SHOW,
+                GAME_ID,
+                CUSTOMER_NAME,
+                CUSTOMER_CUI);
 
         response2 = new ReservationResponseDTO(
                 RESERVATION_ID_2,
                 START_TIME_2,
                 END_TIME_2,
                 DATE_2,
-                USER_ID_2,
-                ONLINE_2,
                 PAID_2,
-                CANCELLED_2);
+                NOT_SHOW_2,
+                GAME_ID_2,
+                CUSTOMER_NAME_2,
+                CUSTOMER_CUI_2);
+
     }
 
     /**

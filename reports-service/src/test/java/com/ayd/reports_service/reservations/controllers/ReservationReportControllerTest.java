@@ -36,26 +36,26 @@ public class ReservationReportControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     @MockitoBean
-    private ReportServicePort<ReportReservationsDTO,PeriodRequestDTO> reservationReportPort;
+    private ReportServicePort<ReportReservationsDTO, PeriodRequestDTO> reservationReportPort;
 
     private final String BASE_URL = "/api/v1/reservation-reports";
 
     private final PeriodRequestDTO filters = new PeriodRequestDTO(LocalDate.now(), LocalDate.now());
-    public static final String RESERVATION_ID = "R001";
+
+    public static final String RESERVATION_ID = "resv-123";
     public static final LocalTime START_TIME = LocalTime.of(10, 0);
     public static final LocalTime END_TIME = LocalTime.of(11, 0);
-    public static final LocalDate DATE = LocalDate.of(2025, 5, 11);
-    public static final String USER_ID = "U123";
-    public static final boolean ONLINE = true;
-    public static final boolean PAID = true;
-    public static final boolean CANCELLED = false;
+    public static final LocalDate DATE = LocalDate.of(2025, 5, 20);
+    public static final boolean PAID = false;
+    public static final boolean NOT_SHOW = true;
+    public static final String GAME_ID = "game-456";
+    public static final String CUSTOMER_NAME = "Juan Pérez";
+    public static final String CUSTOMER_CUI = "1234567-8";
 
     private ReservationResponseDTO reservation;
     private ReportReservationsDTO reportDTO;
-
-
 
     @BeforeEach
     void setUp() {
@@ -64,13 +64,13 @@ public class ReservationReportControllerTest {
                 START_TIME,
                 END_TIME,
                 DATE,
-                USER_ID,
-                ONLINE,
                 PAID,
-                CANCELLED);
+                NOT_SHOW,
+                GAME_ID,
+                CUSTOMER_NAME,
+                CUSTOMER_CUI);
         reportDTO = new ReportReservationsDTO(List.of(reservation), 1);
     }
-
 
     /**
      * dado: request válido
