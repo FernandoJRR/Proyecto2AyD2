@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service_common.games.dtos.GameResponseDTO;
 import com.ayd.reservation_service.reservation.ports.ForGameClientPort;
-import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ public class GameClientAdapter implements ForGameClientPort {
     private final WebClient.Builder webClientBuilder;
 
     @Override
-    public Object createGame(CreateGameRequestDTO createGameRequestDTO) {
+    public GameResponseDTO createGame(CreateGameRequestDTO createGameRequestDTO) {
         return webClientBuilder.build()
                 // usamos usa method en lugar de get para permitir enviar un body en la
                 // solicitud
@@ -27,7 +27,7 @@ public class GameClientAdapter implements ForGameClientPort {
                 // ejecutmaos la solicitud y se prepara para obtener la respuesta
                 .retrieve()
                 // flux espera una lista
-                .bodyToMono(ReservationResponseDTO.class).block();
+                .bodyToMono(GameResponseDTO.class).block();
     }
 
 }

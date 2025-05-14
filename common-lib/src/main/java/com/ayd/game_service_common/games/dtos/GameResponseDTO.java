@@ -1,12 +1,11 @@
-package com.ayd.game_service.games.dtos;
+package com.ayd.game_service_common.games.dtos;
 
 import java.util.List;
 
-import com.ayd.game_service.players.dtos.PlayerResponseDTO;
+import com.ayd.game_service_common.players.dtos.PlayerResponseDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
 @NoArgsConstructor
 @Data

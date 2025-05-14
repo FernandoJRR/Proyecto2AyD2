@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service_common.games.dtos.GameResponseDTO;
 import com.ayd.reservation_service.qr.services.QrCodeAdapter;
 import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
 import com.ayd.reservation_service.reservation.models.Reservation;
@@ -67,7 +68,7 @@ public class ReservationService implements ForReservationPort {
                 createReservationRequestDTO.getPlayers());
 
         // mandamos a crear el juego con los datos de los jugadores
-        gameClientPort.createGame(createGameRequestDTO);
+       GameResponseDTO gameClientPort.createGame(createGameRequestDTO);
 
         // una vez creado el juego y la reserva podemos mandar a crear la facturacion
         // del paquete seleccionado
