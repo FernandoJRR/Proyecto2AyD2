@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.game_service.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service.games.dtos.GameResponseDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
