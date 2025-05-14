@@ -1,5 +1,6 @@
 package com.ayd.reports_service.reservations.controllers;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -21,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
-import com.ayd.reports_service.shared.services.ReportServicePort;
+import com.ayd.reports_service.shared.ports.ReportServicePort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.ReportGenerationExeption;
 import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
@@ -35,8 +36,9 @@ public class ReservationReportControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    
     @MockitoBean
-    private ReportServicePort<PeriodRequestDTO> reservationReportPort;
+    private ReportServicePort<ReportReservationsDTO,PeriodRequestDTO> reservationReportPort;
 
     private final String BASE_URL = "/api/v1/reservation-reports";
 
@@ -51,8 +53,9 @@ public class ReservationReportControllerTest {
     public static final boolean CANCELLED = false;
 
     private ReservationResponseDTO reservation;
-
     private ReportReservationsDTO reportDTO;
+
+
 
     @BeforeEach
     void setUp() {
@@ -68,6 +71,7 @@ public class ReservationReportControllerTest {
         reportDTO = new ReportReservationsDTO(List.of(reservation), 1);
     }
 
+
     /**
      * dado: request válido
      * cuando: se llama createReservationReport
@@ -75,7 +79,7 @@ public class ReservationReportControllerTest {
      */
     @Test
     void createReservationReportReturnsDTO() throws Exception {
-        when(reservationReportPort.generateReport(filters)).thenReturn(reportDTO);
+        when(reservationReportPort.generateReport(any())).thenReturn(reportDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +98,7 @@ public class ReservationReportControllerTest {
     void exportReservationReportReturnsPdfBytes() throws Exception {
         byte[] pdfBytes = new byte[] { 1, 2, 3 };
 
-        when(reservationReportPort.generateReportAsPdf(filters)).thenReturn(pdfBytes);
+        when(reservationReportPort.generateReportAsPdf(any())).thenReturn(pdfBytes);
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/export")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +115,7 @@ public class ReservationReportControllerTest {
      */
     @Test
     void exportReservationReportThrowsError() throws Exception {
-        when(reservationReportPort.generateReportAsPdf(filters)).thenThrow(new ReportGenerationExeption("Error"));
+        when(reservationReportPort.generateReportAsPdf(any())).thenThrow(new ReportGenerationExeption("Error"));
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/export")
                 .contentType(MediaType.APPLICATION_JSON)

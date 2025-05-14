@@ -1,9 +1,7 @@
-package com.ayd.game_service.players.dtos;
+package com.ayd.game_service_common.players.dtos;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
 @Data
 @NoArgsConstructor

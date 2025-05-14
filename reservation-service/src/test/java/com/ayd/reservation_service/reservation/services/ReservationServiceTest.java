@@ -24,102 +24,131 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
+import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service_common.games.dtos.GameResponseDTO;
+import com.ayd.game_service_common.players.dtos.CreatePlayerRequestDTO;
+import com.ayd.reservation_service.qr.services.QrCodeAdapter;
 import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
 import com.ayd.reservation_service.reservation.models.Reservation;
+import com.ayd.reservation_service.reservation.ports.ForGameClientPort;
 import com.ayd.reservation_service.reservation.repositories.ReservationRepository;
 import com.ayd.shared.dtos.PeriodRequestDTO;
-import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.shared.security.AppProperties;
 import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
+import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
 
     @Mock
     private ReservationRepository reservationRepository;
+    @Mock
+    private ForGameClientPort gameClientPort;
+    @Mock
+    private QrCodeAdapter qrCodeAdapter;
+    @Mock
+    private AppProperties appProperties;
 
     @InjectMocks
     private ReservationService reservationService;
 
     private static final String RESERVATION_ID = "resv-123";
-    private static final String USER_ID = "user-456";
     private static final LocalDate DATE = LocalDate.of(2025, 5, 10);
     private static final LocalTime START_TIME = LocalTime.of(10, 0);
     private static final LocalTime END_TIME = LocalTime.of(11, 0);
-    private static final boolean ONLINE = true;
     private static final boolean PAID = false;
-    private static final boolean CANCELLED = false;
+    private static final boolean NOT_SHOW = false;
+
+    public static final String CUSTOMER_CUI = "1234567-8";
+    public static final String CUSTOMER_FULL_NAME = "Juan Pérez";
+    public static final String PACKAGE_ID = "PKG001";
+
+    public static final CreatePlayerRequestDTO PLAYER_1 = new CreatePlayerRequestDTO("Player 1", Integer.valueOf(25));
+    public static final CreatePlayerRequestDTO PLAYER_2 = new CreatePlayerRequestDTO("Player 2", Integer.valueOf(28));
+    private static final GameResponseDTO GAME_RESPONSE_DTO = new GameResponseDTO("game-789", "reserv", List.of(),
+            false);
+    public static final List<CreatePlayerRequestDTO> VALID_PLAYERS = List.of(PLAYER_1, PLAYER_2);
 
     private CreateReservationRequestDTO createDTO;
     private Reservation reservation;
 
     @BeforeEach
     void setUp() {
-        createDTO = new CreateReservationRequestDTO(START_TIME, END_TIME, DATE, USER_ID, ONLINE);
+
+        createDTO = new CreateReservationRequestDTO(START_TIME, END_TIME, DATE,
+                CUSTOMER_CUI, CUSTOMER_FULL_NAME, PACKAGE_ID, VALID_PLAYERS);
+
         reservation = new Reservation(createDTO);
         reservation.setId(RESERVATION_ID);
         reservation.setPaid(PAID);
-        reservation.setCancelled(CANCELLED);
+        reservation.setNotShow(NOT_SHOW);
     }
 
     /**
-     * dado: no existe una reserva con la misma configuración ni por usuario.
-     * cuando: se llama a createReservation.
-     * entonces: se guarda correctamente la reserva y se retorna.
+     * dado: los datos de reserva son válidos y no existe duplicado.
+     * cuando: se llama a createPresentialReservation.
+     * entonces: se guarda la reserva, se crea el juego y se genera el QR.
      */
     @Test
-    void shouldCreateReservationSuccessfully() throws DuplicatedEntryException {
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndUserIdAndOnline(
-                START_TIME, END_TIME, DATE, USER_ID, ONLINE)).thenReturn(false);
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndOnline(
-                START_TIME, END_TIME, DATE, ONLINE)).thenReturn(false);
-        when(reservationRepository.save(any(Reservation.class))).thenAnswer(inv -> inv.getArgument(0));
+    void createPresentialReservationReturnsQrBytes() throws Exception {
+        // arrange
+        when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any(), any(), any())).thenReturn(false);
+        when(reservationRepository.save(any())).thenReturn(reservation);
+        when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
+        when(qrCodeAdapter.generateQrCode(any())).thenReturn("fake-qr".getBytes());
 
-        Reservation result = reservationService.createReservation(createDTO);
+        // act
+        byte[] qrBytes = reservationService.createPresentialReservation(createDTO);
 
-        assertNotNull(result);
-        assertEquals(USER_ID, result.getUserId());
-        assertEquals(START_TIME, result.getStartTime());
-        assertEquals(END_TIME, result.getEndTime());
-        assertEquals(DATE, result.getDate());
-        assertEquals(ONLINE, result.isOnline());
-
-        verify(reservationRepository).save(any(Reservation.class));
+        // assert
+        assertAll(
+                () -> assertNotNull(qrBytes),
+                () -> assertTrue(qrBytes.length > 0));
     }
 
     /**
-     * dado: ya existe una reserva con la misma configuración y el mismo usuario.
-     * cuando: se llama a createReservation.
-     * entonces: se lanza una DuplicatedEntryException.
+     * dado: los datos de reserva son válidos y no existe duplicado.
+     * cuando: se llama a createOnlineReservation.
+     * entonces: se guarda la reserva y se asocia el ID del juego.
      */
     @Test
-    void shouldThrowWhenDuplicateReservationByUserExists() {
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndUserIdAndOnline(
-                START_TIME, END_TIME, DATE, USER_ID, ONLINE)).thenReturn(true);
+    void createOnlineReservationReturnsReservationWithGameId() throws Exception {
+        // arrange
+        when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(START_TIME, END_TIME, DATE)).thenReturn(false);
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+        when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
 
-        assertThrows(DuplicatedEntryException.class,
-                () -> reservationService.createReservation(createDTO));
+        // act
+        Reservation result = reservationService.createOnlineReservation(createDTO);
 
-        verify(reservationRepository, never()).save(any());
+        // assert
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertEquals("game-789", result.getGameId()),
+                () -> verify(reservationRepository).save(any(Reservation.class)),
+                () -> verify(gameClientPort).createGame(any(CreateGameRequestDTO.class)));
     }
 
     /**
-     * dado: no existe reserva duplicada por usuario, pero sí una reserva general
-     * con misma configuración.
-     * cuando: se llama a createReservation.
-     * entonces: se lanza una DuplicatedEntryException.
+     * dado: la reserva existe, no ha sido cancelada ni pagada.
+     * cuando: se llama a payReservation.
+     * entonces: se marca como pagada y se genera el QR.
      */
     @Test
-    void shouldThrowWhenDuplicateReservationGeneralExists() {
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndUserIdAndOnline(
-                START_TIME, END_TIME, DATE, USER_ID, ONLINE)).thenReturn(false);
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndOnline(
-                START_TIME, END_TIME, DATE, ONLINE)).thenReturn(true);
+    void payReservationMarksAsPaidAndReturnsQr() throws Exception {
+        // arrange
+        reservation.setGameId("game-789");
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+        when(qrCodeAdapter.generateQrCode(any())).thenReturn("fake-qr".getBytes());
 
-        assertThrows(DuplicatedEntryException.class,
-                () -> reservationService.createReservation(createDTO));
+        // act
+        byte[] qrBytes = reservationService.payReservation(RESERVATION_ID);
 
-        verify(reservationRepository, never()).save(any());
+        // assert
+        assertAll(
+                () -> assertNotNull(qrBytes),
+                () -> assertTrue(reservation.getPaid()));
     }
 
     /**
@@ -134,7 +163,7 @@ class ReservationServiceTest {
 
         Reservation result = reservationService.cancelReservation(RESERVATION_ID);
 
-        assertTrue(result.isCancelled());
+        assertTrue(result.getNotShow());
         verify(reservationRepository).save(reservation);
     }
 
@@ -174,28 +203,12 @@ class ReservationServiceTest {
      */
     @Test
     void shouldThrowWhenReservationAlreadyCancelled() {
-        reservation.setCancelled(true);
+        reservation.setNotShow(true);
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
         assertThrows(IllegalStateException.class, () -> reservationService.cancelReservation(RESERVATION_ID));
 
         verify(reservationRepository, never()).save(any());
-    }
-
-    /**
-     * dado: existe una reserva válida que no ha sido pagada ni cancelada.
-     * cuando: se llama a setPaymentReservation.
-     * entonces: se marca como pagada y se guarda correctamente.
-     */
-    @Test
-    void shouldSetPaymentSuccessfully() throws NotFoundException {
-        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
-        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
-
-        Reservation result = reservationService.setPaymentReservation(RESERVATION_ID);
-
-        assertTrue(result.isPaid());
-        verify(reservationRepository).save(reservation);
     }
 
     /**
@@ -207,7 +220,7 @@ class ReservationServiceTest {
     void shouldThrowNotFoundWhenSettingPaymentOnNonexistentReservation() {
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> reservationService.setPaymentReservation(RESERVATION_ID));
+        assertThrows(NotFoundException.class, () -> reservationService.payReservation(RESERVATION_ID));
 
         verify(reservationRepository, never()).save(any());
     }
@@ -222,7 +235,7 @@ class ReservationServiceTest {
         reservation.setPaid(true);
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
-        assertThrows(IllegalStateException.class, () -> reservationService.setPaymentReservation(RESERVATION_ID));
+        assertThrows(IllegalStateException.class, () -> reservationService.payReservation(RESERVATION_ID));
 
         verify(reservationRepository, never()).save(any());
     }
@@ -234,10 +247,10 @@ class ReservationServiceTest {
      */
     @Test
     void shouldThrowWhenReservationCancelledOnSetPayment() {
-        reservation.setCancelled(true);
+        reservation.setNotShow(true);
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
-        assertThrows(IllegalStateException.class, () -> reservationService.setPaymentReservation(RESERVATION_ID));
+        assertThrows(IllegalStateException.class, () -> reservationService.payReservation(RESERVATION_ID));
 
         verify(reservationRepository, never()).save(any());
     }
@@ -311,7 +324,7 @@ class ReservationServiceTest {
     @Test
     void shouldReturnFilteredReservationsWhenSpecificationProvided() {
         ReservationSpecificationRequestDTO dto = new ReservationSpecificationRequestDTO(
-                USER_ID, START_TIME, END_TIME, LocalDate.now(), true, false, false);
+                null, START_TIME, END_TIME, LocalDate.now(), true, false, false);
 
         List<Reservation> reservations = List.of(reservation);
         when(reservationRepository.findAll(any(Specification.class))).thenReturn(reservations);
@@ -319,7 +332,7 @@ class ReservationServiceTest {
         List<Reservation> result = reservationService.getReservations(dto);
 
         assertEquals(1, result.size());
-        assertEquals(USER_ID, result.get(0).getUserId());
+        assertEquals(START_TIME, result.get(0).getStartTime());
         verify(reservationRepository).findAll(any(Specification.class));
     }
 
@@ -346,6 +359,40 @@ class ReservationServiceTest {
                 () -> assertEquals(1, result.size()),
                 () -> verify(reservationRepository, times(1))
                         .findReservationByDateBetween(any(), any()));
+    }
+
+    /**
+     * dado: fechas válidas con reservas populares agrupadas por hora
+     * cuando: se llama getPopularHoursBetweenDates
+     * entonces: retorna lista de estadísticas con la cantidad por franja
+     */
+    @Test
+    void getPopularHoursBetweenDatesReturnsStatsCorrectly() {
+        // arrange
+        LocalDate startDate = LocalDate.of(2025, 5, 10);
+        LocalDate endDate = LocalDate.of(2025, 5, 12);
+        PeriodRequestDTO dto = new PeriodRequestDTO(startDate, endDate);
+
+        ReservationTimeStatsDTO stat1 = new ReservationTimeStatsDTO(
+                START_TIME, END_TIME, 3l);
+        ReservationTimeStatsDTO stat2 = new ReservationTimeStatsDTO(
+                END_TIME, END_TIME.plusHours(1), 5l);
+
+        when(reservationRepository.findReservationsGroupedByTimeRangeAndFilteredByDate(
+                any(), any()))
+                .thenReturn(List.of(stat1, stat2));
+
+        // act
+        List<ReservationTimeStatsDTO> result = reservationService.getPopularHoursBetweenDates(dto);
+
+        // assert
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertEquals(2, result.size()),
+                () -> assertEquals(3, result.get(0).getTotal()),
+                () -> assertEquals(5, result.get(1).getTotal()),
+                () -> verify(reservationRepository, times(1))
+                        .findReservationsGroupedByTimeRangeAndFilteredByDate(any(), any()));
     }
 
 }

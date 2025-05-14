@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
-import com.ayd.reports_service.reservations.port.ReportParameterBuilderPort;
+import com.ayd.reports_service.shared.ports.ReportParameterBuilderPort;
 
 import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 

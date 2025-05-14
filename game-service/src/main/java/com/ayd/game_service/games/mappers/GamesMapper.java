@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.ayd.game_service.games.dtos.GameResponseDTO;
 import com.ayd.game_service.games.models.Game;
 import com.ayd.game_service.players.mappers.PlayerMapper;
+import com.ayd.game_service_common.games.dtos.GameResponseDTO;
 
 @Mapper(componentModel = "spring", uses = PlayerMapper.class)
 public interface GamesMapper {

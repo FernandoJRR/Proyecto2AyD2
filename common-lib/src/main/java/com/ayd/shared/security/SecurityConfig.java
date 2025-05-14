@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final AppProperties appProperties;
+   // private final AppProperties appProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,7 +27,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/v1/login").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/v1/login"
+                ,"/api/v1/reservations/online", "/api/v1/games/free").permitAll()
                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter(),
                         UsernamePasswordAuthenticationFilter.class);

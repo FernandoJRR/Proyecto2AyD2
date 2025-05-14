@@ -49,17 +49,15 @@ public class InvoiceService implements ForInvoicePort {
         invoice.setSubtotal(total);
         BigDecimal MyCompaytax = BigDecimal.valueOf(0.12);
         BigDecimal tax = invoice.getSubtotal().multiply(MyCompaytax);
+        invoice.setTax(tax);
         invoice.setTotal(total.add(tax));
 
         Invoice saveInvoice = invoiceRepository.save(invoice);
 
         List<InvoiceDetail> invoiceDetails = new java.util.ArrayList<>();
         for (var detail : createInvoiceRequestDTO.getDetails()) {
-            invoiceDetails.add(forInvoiceDetailPort.createInvoiceDetail(detail, invoice));
+            invoiceDetails.addAll(forInvoiceDetailPort.createInvoiceDetail(detail, invoice));
         }
-
-        // Alteramos el stock de los productos de la factura
-
         return invoiceRepository.findById(saveInvoice.getId())
                 .orElseThrow(() -> new NotFoundException("No se encontró la factura con id: " + saveInvoice.getId()));
     }

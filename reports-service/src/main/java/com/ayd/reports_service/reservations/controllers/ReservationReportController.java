@@ -1,7 +1,6 @@
 package com.ayd.reports_service.reservations.controllers;
 
 import org.springframework.http.HttpHeaders;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
-import com.ayd.reports_service.shared.services.ReportServicePort;
+import com.ayd.reports_service.shared.ports.ReportServicePort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.ReportGenerationExeption;
 
@@ -27,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReservationReportController {
 
-    private final ReportServicePort<PeriodRequestDTO> reservationReportPort;
+    private final ReportServicePort<ReportReservationsDTO, PeriodRequestDTO> reservationReportPort;
 
     @Operation(summary = "Crear un reporte de reservas")
     @ApiResponses(value = {
@@ -38,7 +37,7 @@ public class ReservationReportController {
     @ResponseStatus(HttpStatus.OK)
     public ReportReservationsDTO createReservationReport(
             @Valid @RequestBody PeriodRequestDTO filters) {
-        ReportReservationsDTO reservations = reservationReportPort.generateReport(filters);
+        ReportReservationsDTO reservations = (ReportReservationsDTO) reservationReportPort.generateReport(filters);
         return reservations;
     }
 
