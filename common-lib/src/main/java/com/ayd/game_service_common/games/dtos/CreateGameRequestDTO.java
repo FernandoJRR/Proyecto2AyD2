@@ -1,8 +1,8 @@
-package com.ayd.game_service.games.dtos;
+package com.ayd.game_service_common.games.dtos;
 
 import java.util.List;
 
-import com.ayd.game_service.players.dtos.CreatePlayerRequestDTO;
+import com.ayd.game_service_common.players.dtos.CreatePlayerRequestDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

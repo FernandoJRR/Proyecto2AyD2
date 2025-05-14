@@ -2,7 +2,7 @@ package com.ayd.game_service.games.ports;
 
 import java.util.List;
 
-import com.ayd.game_service.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
 import com.ayd.game_service.games.models.Game;

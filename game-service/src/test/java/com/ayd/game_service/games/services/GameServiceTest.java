@@ -23,7 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ayd.game_service.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
 import com.ayd.game_service.games.dtos.ScorePlayerRequestDTO;
@@ -32,7 +32,7 @@ import com.ayd.game_service.games.models.Game;
 import com.ayd.game_service.games.repositories.GameRepository;
 import com.ayd.game_service.holes.models.Hole;
 import com.ayd.game_service.holes.repositories.HoleRepository;
-import com.ayd.game_service.players.dtos.CreatePlayerRequestDTO;
+import com.ayd.game_service_common.players.dtos.CreatePlayerRequestDTO;
 import com.ayd.game_service.players.models.Player;
 import com.ayd.game_service.players.models.PlayerHoleScore;
 import com.ayd.game_service.players.repositories.PlayerHoleScoreRepository;
