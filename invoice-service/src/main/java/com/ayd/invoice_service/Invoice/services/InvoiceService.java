@@ -15,11 +15,15 @@ import com.ayd.invoice_service.Invoice.enums.ItemType;
 import com.ayd.invoice_service.Invoice.enums.PaymentMethod;
 import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
+import com.ayd.invoice_service.Invoice.ports.ConfigClientPort;
 import com.ayd.invoice_service.Invoice.ports.ForInvoiceDetailPort;
 import com.ayd.invoice_service.Invoice.ports.ForInvoicePort;
 import com.ayd.invoice_service.Invoice.repositories.InvoiceRepository;
 import com.ayd.invoice_service.Invoice.specifications.InvoiceSpecification;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedConfigService.dto.ParameterResponseDTO;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -31,6 +35,7 @@ public class InvoiceService implements ForInvoicePort {
 
     private final InvoiceRepository invoiceRepository;
     private final ForInvoiceDetailPort forInvoiceDetailPort;
+    private final ConfigClientPort configClientPort;
 
     @Override
     public Invoice createInvoice(CreateInvoiceRequestDTO createInvoiceRequestDTO)
@@ -46,9 +51,22 @@ public class InvoiceService implements ForInvoicePort {
 
         BigDecimal total = forInvoiceDetailPort.calcValuesInvoiceDetail(createInvoiceRequestDTO.getDetails());
 
+        ParameterResponseDTO regimenParameter = configClientPort.getRegimenParameter();
+        String jsonValue = regimenParameter.getValue();
+
+        BigDecimal myCompaytax = BigDecimal.valueOf(0.12);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(jsonValue);
+            BigDecimal value = root.get("value").decimalValue();
+            myCompaytax = value.divide(BigDecimal.valueOf(100));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error al obtener el regimen: " + e.getMessage());
+        }
+
         invoice.setSubtotal(total);
-        BigDecimal MyCompaytax = BigDecimal.valueOf(0.12);
-        BigDecimal tax = invoice.getSubtotal().multiply(MyCompaytax);
+        BigDecimal tax = invoice.getSubtotal().multiply(myCompaytax);
         invoice.setTax(tax);
         invoice.setTotal(total.add(tax));
 
