@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ayd.shared.exceptions.*;
-import com.ayd.inventory_service.stock.dtos.ModifyStockRequest;
+import com.ayd.sharedInventoryService.stock.dto.ModifyStockRequest;
 import com.ayd.inventory_service.stock.models.Stock;
 import com.ayd.inventory_service.stock.ports.ForModifiyStockPort;
 import com.ayd.inventory_service.stock.repositories.StockRepository;

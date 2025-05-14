@@ -1,6 +1,6 @@
-package com.ayd.inventory_service.stock.dtos;
+package com.ayd.sharedInventoryService.stock.dto;
 
-import com.ayd.inventory_service.warehouse.dtos.WarehouseResponseDTO;
+import com.ayd.sharedInventoryService.warehouse.dto.WarehouseResponseDTO;
 
 import lombok.Value;
 

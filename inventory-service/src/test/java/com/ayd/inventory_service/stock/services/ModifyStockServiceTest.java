@@ -14,12 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.ayd.inventory_service.stock.dtos.ModifyStockRequest;
 import com.ayd.inventory_service.stock.models.Stock;
 import com.ayd.inventory_service.stock.repositories.StockRepository;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
 import com.ayd.inventory_service.warehouse.ports.ForWarehousePort;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedInventoryService.stock.dto.ModifyStockRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ModifyStockServiceTest {
@@ -77,7 +77,7 @@ class ModifyStockServiceTest {
      * dado: el producto no existe en el almacén.
      * cuando: se intenta restar stock.
      * entonces: se lanza una excepción NotFoundException.
-     * 
+     *
      * @throws NotFoundException
      */
     @Test
@@ -93,7 +93,7 @@ class ModifyStockServiceTest {
      * dado: se solicita restar una cantidad negativa.
      * cuando: se llama al método.
      * entonces: se lanza una excepción IllegalStateException.
-     * 
+     *
      * @throws NotFoundException
      */
     @Test
@@ -110,7 +110,7 @@ class ModifyStockServiceTest {
      * dado: se intenta restar más stock del disponible.
      * cuando: se llama al método.
      * entonces: se lanza una excepción IllegalStateException.
-     * 
+     *
      * @throws NotFoundException
      */
     @Test
