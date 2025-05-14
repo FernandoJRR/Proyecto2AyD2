@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.shared.exceptions.*;
-import com.ayd.inventory_service.stock.dtos.ModifyStockRequest;
-import com.ayd.inventory_service.stock.dtos.StockResponseDTO;
+import com.ayd.sharedInventoryService.stock.dto.ModifyStockRequest;
+import com.ayd.sharedInventoryService.stock.dto.StockResponseDTO;
 import com.ayd.inventory_service.stock.dtos.UpdateMinStockRequestDTO;
 import com.ayd.inventory_service.stock.mappers.StockMapper;
 import com.ayd.inventory_service.stock.models.Stock;

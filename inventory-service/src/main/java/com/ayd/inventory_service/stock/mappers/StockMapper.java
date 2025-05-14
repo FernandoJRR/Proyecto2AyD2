@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.ayd.inventory_service.stock.dtos.StockResponseDTO;
 import com.ayd.inventory_service.stock.models.Stock;
+import com.ayd.sharedInventoryService.stock.dto.StockResponseDTO;
 
 @Mapper(componentModel = "spring")
 public interface StockMapper {

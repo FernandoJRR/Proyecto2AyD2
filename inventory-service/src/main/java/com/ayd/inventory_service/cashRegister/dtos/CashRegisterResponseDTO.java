@@ -1,6 +1,6 @@
 package com.ayd.inventory_service.cashRegister.dtos;
 
-import com.ayd.inventory_service.warehouse.dtos.WarehouseResponseDTO;
+import com.ayd.sharedInventoryService.warehouse.dto.WarehouseResponseDTO;
 
 import lombok.Value;
 
