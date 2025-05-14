@@ -8,17 +8,26 @@ import org.springframework.stereotype.Service;
 
 import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service_common.games.dtos.GameResponseDTO;
-import com.ayd.reservation_service.qr.services.QrCodeAdapter;
-import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
+import com.ayd.game_service_common.players.dtos.CreatePlayerRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationOnlineRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationPresentialRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.PayReservationRequestDTO;
+import com.ayd.reservation_service.reservation.mappers.ReservationMapper;
 import com.ayd.reservation_service.reservation.models.Reservation;
 import com.ayd.reservation_service.reservation.ports.ForGameClientPort;
+import com.ayd.reservation_service.reservation.ports.ForInvoiceClientPort;
+import com.ayd.reservation_service.reservation.ports.ForReportClientPort;
 import com.ayd.reservation_service.reservation.ports.ForReservationPort;
 import com.ayd.reservation_service.reservation.repositories.ReservationRepository;
 import com.ayd.reservation_service.reservation.specifications.ReservationSpecification;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
-import com.ayd.shared.security.AppProperties;
+import com.ayd.sharedInvoiceService.dtos.CreateInvoiceRequestDTO;
+import com.ayd.sharedInvoiceService.dtos.InvoiceResponseDTO;
+import com.ayd.sharedReservationService.dto.ReservationInterServiceDTO;
+import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
 import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
 import com.google.zxing.WriterException;
@@ -33,28 +42,40 @@ public class ReservationService implements ForReservationPort {
 
     private final ReservationRepository reservationRepository;
     private final ForGameClientPort gameClientPort;
-    private final QrCodeAdapter qrCodeAdapter;
-    private final AppProperties appProperties;
+    private final ForInvoiceClientPort forInvoiceClient;
+    private final ForReportClientPort forReportClientPort;
+    private final ReservationMapper reservationMapper;
+
 
     @Override
-    public byte[] createPresentialReservation(CreateReservationRequestDTO createReservationRequestDTO)
+    public byte[] createPresentialReservation(CreateReservationPresentialRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException, WriterException, IOException {
         // mandamos a crear la reserva
-        Reservation reservation = createReservation(createReservationRequestDTO);
+        Reservation reservation = createReservation(createReservationRequestDTO, List.of());
+        // pagar la reservacion que genera un pdf
+        byte[] pdf = payReservation(reservation, createReservationRequestDTO.getCreateInvoiceRequestDTO());
+
+        return pdf;
         // ahora mandamos a crear el qr con el id de la reserva y id del juego
-        return createReservationQR(reservation);
+        // return createReservationQR(reservation);
     }
 
     @Override
-    public Reservation createOnlineReservation(CreateReservationRequestDTO createReservationRequestDTO)
+    public byte[] createOnlineReservation(CreateReservationOnlineRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException {
         // mandamos a crear la reserva
-        Reservation reservation = createReservation(createReservationRequestDTO);
-        // ahora mandamos a crear el qr con el id de la reserva y id del juego
-        return reservation;
+        Reservation reservation = createReservation(createReservationRequestDTO,
+                createReservationRequestDTO.getPlayers());
+        ReservationResponseDTO reservationResponseDTO = reservationMapper
+                .fromReservationToReservationResponseDTO(reservation);
+        // CREAR UN PDF UNICAMENTE CON LA INFORMACION DE LA RESERVA
+        byte[] pdf = forReportClientPort
+                .exportReservationTicket(reservationResponseDTO);
+        return pdf;
     }
 
-    private Reservation createReservation(CreateReservationRequestDTO createReservationRequestDTO)
+    private Reservation createReservation(CreateReservationDTO createReservationRequestDTO,
+            List<CreatePlayerRequestDTO> players)
             throws DuplicatedEntryException {
         if (reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
                 createReservationRequestDTO.getDate(),
@@ -68,7 +89,7 @@ public class ReservationService implements ForReservationPort {
 
         // creamos el objeto para enviar al servicio de juegos
         CreateGameRequestDTO createGameRequestDTO = new CreateGameRequestDTO(savedReservation.getId(),
-                createReservationRequestDTO.getPlayers());
+                players);
 
         // mandamos a crear el juego con los datos de los jugadores
         GameResponseDTO savedGame = gameClientPort.createGame(createGameRequestDTO);
@@ -95,8 +116,9 @@ public class ReservationService implements ForReservationPort {
     }
 
     @Override
-    public byte[] payReservation(String reservationId) throws NotFoundException, WriterException, IOException {
-        Reservation reservation = getReservation(reservationId);
+    public byte[] payReservation(PayReservationRequestDTO payReservationRequestDTO)
+            throws NotFoundException, WriterException, IOException {
+        Reservation reservation = getReservation(payReservationRequestDTO.getReservationId());
 
         if (reservation.getNotShow()) {
             throw new IllegalStateException("La reserva ha sido cancelada.");
@@ -105,18 +127,38 @@ public class ReservationService implements ForReservationPort {
             throw new IllegalStateException("La reserva ya ha sido pagada.");
         }
 
-        // mandamos a pagar toda la reserva al invoice service
+        byte[] pdf = payReservation(reservation, payReservationRequestDTO.getCreateInvoiceRequestDTO());
 
-        reservation.setPaid(true);
-
+        return pdf;
         // creamos el qr
-        return createReservationQR(reservation);
+        // return createReservationQR(reservation);
+    }
+
+    private byte[] payReservation(Reservation reservation, CreateInvoiceRequestDTO createReservationRequestDTO) {
+
+        // MANR A GUARDAR LA FACTURA CreateReservationRequestDTO.createInvoiceRequestDTO
+        InvoiceResponseDTO invoice = forInvoiceClient
+                .createInvoice(createReservationRequestDTO);
+
+        // MARCAR COMO PAGAD LA RESERVACION
+        reservation.setPaid(true);
+        reservation.setInvoiceId(invoice.getId());
+
+        // UNA VEZ OBTENIDA LA RESPUESTA CON LA FACTURA CREADA SE RECOMIENDA CRRAR UN
+        // PDF CON EL QR Y LA INFO DE LA FACTURA
+        // SINO SOLO DEVOLVER EL QR ASI COMO ESTA
+        ReservationResponseDTO reservationResponseDTO = reservationMapper
+                .fromReservationToReservationResponseDTO(reservation);
+
+        byte[] pdf = forReportClientPort
+                .exportInvoiceWithQR(new ReservationInterServiceDTO(reservationResponseDTO, invoice));
+
+        return pdf;
     }
 
     @Override
     public boolean deleteReservation(String reservationId) throws IllegalStateException, NotFoundException {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new NotFoundException("No se encontró la reserva con el ID: " + reservationId));
+        Reservation reservation = getReservation(reservationId);
         if (reservation.getPaid()) {
             throw new IllegalStateException("La reserva ya ha sido pagada.");
         }
@@ -178,18 +220,28 @@ public class ReservationService implements ForReservationPort {
     }
 
     @Override
-    public byte[] getReservationQr(String reservationId)
+    public byte[] getReservationInvoice(String reservationId)
             throws WriterException, IOException, NotFoundException {
-        // mandamos a crear la reserva
+        // mandamos a traer la reserva
         Reservation reservation = getReservation(reservationId);
+        // si la reserva no ha sido pagada entonces no se puede cargar el qr
+        if (!reservation.getPaid() || reservation.getInvoiceId().isBlank()) {
+            throw new IllegalStateException("La reservacion no ha sido pagada");
+        }
+
+        // sino entonces podemos mandar a traer los datos de la factura
+        InvoiceResponseDTO invoice = forInvoiceClient.getInvoice(reservation.getInvoiceId());
+
+        // mandamos a crear la invoice con el qr
+        ReservationResponseDTO reservationResponseDTO = reservationMapper
+                .fromReservationToReservationResponseDTO(reservation);
+        byte[] pdf = forReportClientPort
+                .exportInvoiceWithQR(new ReservationInterServiceDTO(reservationResponseDTO, invoice));
+
+        return pdf;
         // ahora mandamos a crear el qr con el id de la reserva y id del juego
-        return createReservationQR(reservation);
+        // return createReservationQR(reservation);
     }
 
-    private byte[] createReservationQR(Reservation reservation)
-            throws WriterException, IOException {
-        return qrCodeAdapter
-                .generateQrCode(appProperties.getFrontURL() + "/app/juegos/jugar/" + reservation.getGameId());
-    }
 
 }
