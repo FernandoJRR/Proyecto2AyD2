@@ -5,6 +5,7 @@ import java.util.List;
 import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
+import com.ayd.game_service.games.dtos.UpdatePlayersRequestDTO;
 import com.ayd.game_service.games.models.Game;
 import com.ayd.shared.exceptions.NotFoundException;
 
@@ -16,4 +17,5 @@ public interface ForGamesPort {
     public Game updateScore(String gameId, ScoreGameRequestDTO request) throws NotFoundException, IllegalArgumentException;
     public ScoreGameResponseDTO getScore(String gameId) throws NotFoundException;
     public ScoreGameResponseDTO getScoreHole(String gameId, Integer holeNumber) throws NotFoundException;
+    public Game updatePlayersGame(String gameId, UpdatePlayersRequestDTO request) throws NotFoundException;
 }
