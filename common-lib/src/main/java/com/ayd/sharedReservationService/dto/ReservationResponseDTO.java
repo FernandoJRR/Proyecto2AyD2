@@ -12,7 +12,7 @@ public class ReservationResponseDTO {
     private LocalTime endTime;
     private LocalDate date;
     private String userId;
-    private boolean online;
-    private boolean paid;
-    private boolean cancelled;
+    private Boolean notShow;
+    private Boolean paid;
+    private String gameId;
 }
