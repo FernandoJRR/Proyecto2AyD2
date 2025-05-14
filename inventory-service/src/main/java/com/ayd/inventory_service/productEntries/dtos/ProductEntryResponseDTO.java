@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.ayd.inventory_service.supplier.dtos.SupplierResponseDTO;
-import com.ayd.inventory_service.warehouse.dtos.WarehouseResponseDTO;
+import com.ayd.sharedInventoryService.warehouse.dto.WarehouseResponseDTO;
 
 import lombok.Value;
 

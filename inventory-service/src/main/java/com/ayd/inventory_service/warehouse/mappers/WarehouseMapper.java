@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.ayd.inventory_service.warehouse.dtos.WarehouseResponseDTO;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
+import com.ayd.sharedInventoryService.warehouse.dto.WarehouseResponseDTO;
 
 @Mapper(componentModel = "spring")
 public interface WarehouseMapper {

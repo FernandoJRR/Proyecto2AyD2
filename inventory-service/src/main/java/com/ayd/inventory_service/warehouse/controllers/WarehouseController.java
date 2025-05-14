@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayd.shared.exceptions.*;
+import com.ayd.sharedInventoryService.warehouse.dto.WarehouseResponseDTO;
 import com.ayd.inventory_service.warehouse.dtos.CreateWarehouseRequestDTO;
 import com.ayd.inventory_service.warehouse.dtos.SpecificationWarehouseDTO;
 import com.ayd.inventory_service.warehouse.dtos.UpdateWarehouseRequestDTO;
-import com.ayd.inventory_service.warehouse.dtos.WarehouseResponseDTO;
 import com.ayd.inventory_service.warehouse.mappers.WarehouseMapper;
 import com.ayd.inventory_service.warehouse.models.Warehouse;
 import com.ayd.inventory_service.warehouse.ports.ForWarehousePort;
