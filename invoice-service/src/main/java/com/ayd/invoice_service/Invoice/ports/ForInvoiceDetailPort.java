@@ -11,9 +11,9 @@ import com.ayd.shared.exceptions.NotFoundException;
 public interface ForInvoiceDetailPort {
     public InvoiceDetail getInvoiceDetailById(String id) throws NotFoundException;
 
-    public InvoiceDetail createInvoiceDetail(CreateInvoiceDetailRequestDTO createInvoiceDetailRequestDTO,
-            Invoice invoice) throws IllegalArgumentException;
-    
+    public List<InvoiceDetail> createInvoiceDetail(CreateInvoiceDetailRequestDTO createInvoiceDetailRequestDTO,
+            Invoice invoice) throws IllegalArgumentException, NotFoundException;
+
     public BigDecimal calcValuesInvoiceDetail(List<CreateInvoiceDetailRequestDTO> createInvoiceDetailRequestDTO)
             throws IllegalArgumentException;
 
