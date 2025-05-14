@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.inventory_service.cashRegister.dtos.CashRegisterResponseDTO;
 import com.ayd.inventory_service.cashRegister.dtos.CreateCashRegisterRequestDTO;
 import com.ayd.inventory_service.cashRegister.dtos.SpecificationCashRegisterRequestDTO;
 import com.ayd.inventory_service.cashRegister.dtos.UpdateCashRegisterRequestDTO;
@@ -23,6 +22,7 @@ import com.ayd.inventory_service.cashRegister.mappers.CashRegisterMapper;
 import com.ayd.inventory_service.cashRegister.models.CashRegister;
 import com.ayd.inventory_service.cashRegister.ports.ForCashRegisterPort;
 import com.ayd.shared.exceptions.*;
+import com.ayd.sharedInventoryService.cashRegister.dto.CashRegisterResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

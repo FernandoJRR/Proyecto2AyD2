@@ -1,4 +1,4 @@
-package com.ayd.inventory_service.cashRegister.dtos;
+package com.ayd.sharedInventoryService.cashRegister.dto;
 
 import com.ayd.sharedInventoryService.warehouse.dto.WarehouseResponseDTO;
 
