@@ -31,6 +31,7 @@ import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
 import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
+import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
@@ -69,10 +70,9 @@ class ReservationServiceTest {
      */
     @Test
     void shouldCreateReservationSuccessfully() throws DuplicatedEntryException {
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndUserIdAndOnline(
-                START_TIME, END_TIME, DATE, USER_ID, ONLINE)).thenReturn(false);
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndOnline(
-                START_TIME, END_TIME, DATE, ONLINE)).thenReturn(false);
+        when(reservationRepository.existsByStartTimeAndEndTimeAndDate(
+                START_TIME, END_TIME, DATE)).thenReturn(false);
+
         when(reservationRepository.save(any(Reservation.class))).thenAnswer(inv -> inv.getArgument(0));
 
         Reservation result = reservationService.createReservation(createDTO);
@@ -94,8 +94,8 @@ class ReservationServiceTest {
      */
     @Test
     void shouldThrowWhenDuplicateReservationByUserExists() {
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndUserIdAndOnline(
-                START_TIME, END_TIME, DATE, USER_ID, ONLINE)).thenReturn(true);
+        when(reservationRepository.existsByStartTimeAndEndTimeAndDate(
+                START_TIME, END_TIME, DATE)).thenReturn(true);
 
         assertThrows(DuplicatedEntryException.class,
                 () -> reservationService.createReservation(createDTO));
@@ -111,10 +111,8 @@ class ReservationServiceTest {
      */
     @Test
     void shouldThrowWhenDuplicateReservationGeneralExists() {
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndUserIdAndOnline(
-                START_TIME, END_TIME, DATE, USER_ID, ONLINE)).thenReturn(false);
-        when(reservationRepository.existsByStartTimeAndEndTimeAndDateAndOnline(
-                START_TIME, END_TIME, DATE, ONLINE)).thenReturn(true);
+        when(reservationRepository.existsByStartTimeAndEndTimeAndDate(
+                START_TIME, END_TIME, DATE)).thenReturn(false);
 
         assertThrows(DuplicatedEntryException.class,
                 () -> reservationService.createReservation(createDTO));
@@ -346,6 +344,40 @@ class ReservationServiceTest {
                 () -> assertEquals(1, result.size()),
                 () -> verify(reservationRepository, times(1))
                         .findReservationByDateBetween(any(), any()));
+    }
+
+    /**
+     * dado: fechas válidas con reservas populares agrupadas por hora
+     * cuando: se llama getPopularHoursBetweenDates
+     * entonces: retorna lista de estadísticas con la cantidad por franja
+     */
+    @Test
+    void getPopularHoursBetweenDatesReturnsStatsCorrectly() {
+        // arrange
+        LocalDate startDate = LocalDate.of(2025, 5, 10);
+        LocalDate endDate = LocalDate.of(2025, 5, 12);
+        PeriodRequestDTO dto = new PeriodRequestDTO(startDate, endDate);
+
+        ReservationTimeStatsDTO stat1 = new ReservationTimeStatsDTO(
+                START_TIME, END_TIME, 3l);
+        ReservationTimeStatsDTO stat2 = new ReservationTimeStatsDTO(
+                END_TIME, END_TIME.plusHours(1), 5l);
+
+        when(reservationRepository.findReservationsGroupedByTimeRangeAndFilteredByDate(
+                any(), any()))
+                .thenReturn(List.of(stat1, stat2));
+
+        // act
+        List<ReservationTimeStatsDTO> result = reservationService.getPopularHoursBetweenDates(dto);
+
+        // assert
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertEquals(2, result.size()),
+                () -> assertEquals(3, result.get(0).getTotal()),
+                () -> assertEquals(5, result.get(1).getTotal()),
+                () -> verify(reservationRepository, times(1))
+                        .findReservationsGroupedByTimeRangeAndFilteredByDate(any(), any()));
     }
 
 }

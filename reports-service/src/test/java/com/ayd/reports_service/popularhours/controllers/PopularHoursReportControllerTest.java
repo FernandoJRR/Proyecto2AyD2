@@ -1,11 +1,8 @@
-package com.ayd.reports_service.reservations.controllers;
+package com.ayd.reports_service.popularhours.controllers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,83 +18,67 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
+import com.ayd.reports_service.popularhours.dtos.PopularHoursReportDTO;
 import com.ayd.reports_service.shared.ports.ReportServicePort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.ReportGenerationExeption;
-import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
+import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = ReservationReportController.class)
+@WebMvcTest(controllers = PopularHoursReportController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class ReservationReportControllerTest {
+public class PopularHoursReportControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     @MockitoBean
-    private ReportServicePort<ReportReservationsDTO,PeriodRequestDTO> reservationReportPort;
+    private ReportServicePort<PopularHoursReportDTO, PeriodRequestDTO> reservationReportPort;
 
-    private final String BASE_URL = "/api/v1/reservation-reports";
+    private static final String BASE_URL = "/api/v1/popular-hours-report";
+    private static final LocalDate DATE = LocalDate.of(2025, 5, 11);
+    private static final LocalTime START_TIME = LocalTime.of(10, 0);
+    private static final LocalTime END_TIME = LocalTime.of(11, 0);
+    private static final Long TOTAL = 5l;
 
-    private final PeriodRequestDTO filters = new PeriodRequestDTO(LocalDate.now(), LocalDate.now());
-    public static final String RESERVATION_ID = "R001";
-    public static final LocalTime START_TIME = LocalTime.of(10, 0);
-    public static final LocalTime END_TIME = LocalTime.of(11, 0);
-    public static final LocalDate DATE = LocalDate.of(2025, 5, 11);
-    public static final String USER_ID = "U123";
-    public static final boolean ONLINE = true;
-    public static final boolean PAID = true;
-    public static final boolean CANCELLED = false;
-
-    private ReservationResponseDTO reservation;
-    private ReportReservationsDTO reportDTO;
-
-
+    private PeriodRequestDTO filters;
+    private PopularHoursReportDTO reportDTO;
 
     @BeforeEach
     void setUp() {
-        reservation = new ReservationResponseDTO(
-                RESERVATION_ID,
-                START_TIME,
-                END_TIME,
-                DATE,
-                USER_ID,
-                ONLINE,
-                PAID,
-                CANCELLED);
-        reportDTO = new ReportReservationsDTO(List.of(reservation), 1);
+        filters = new PeriodRequestDTO(DATE, DATE);
+        ReservationTimeStatsDTO stat = new ReservationTimeStatsDTO(START_TIME, END_TIME, TOTAL);
+        reportDTO = new PopularHoursReportDTO(List.of(stat), TOTAL.intValue());
     }
-
 
     /**
      * dado: request válido
-     * cuando: se llama createReservationReport
+     * cuando: se llama getPopularHoursBetweenDates
      * entonces: retorna DTO con status 200
      */
     @Test
-    void createReservationReportReturnsDTO() throws Exception {
+    void getPopularHoursBetweenDatesReturnsDTO() throws Exception {
         when(reservationReportPort.generateReport(any())).thenReturn(reportDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(filters)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.reservations").isArray())
-                .andExpect(jsonPath("$.totalReservations").value(1));
+                .andExpect(jsonPath("$.popularHours").isArray())
+                .andExpect(jsonPath("$.totalReservations").value(TOTAL));
     }
 
     /**
      * dado: request válido
-     * cuando: se llama exportReservationReport
+     * cuando: se llama exportPopularHoursBetweenDates
      * entonces: retorna PDF con headers y status 200
      */
     @Test
-    void exportReservationReportReturnsPdfBytes() throws Exception {
+    void exportPopularHoursBetweenDatesReturnsPdfBytes() throws Exception {
         byte[] pdfBytes = new byte[] { 1, 2, 3 };
-
         when(reservationReportPort.generateReportAsPdf(any())).thenReturn(pdfBytes);
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/export")
@@ -110,12 +91,13 @@ public class ReservationReportControllerTest {
 
     /**
      * dado: error en exportación
-     * cuando: se llama exportReservationReport
+     * cuando: se llama exportPopularHoursBetweenDates
      * entonces: retorna status 500
      */
     @Test
-    void exportReservationReportThrowsError() throws Exception {
-        when(reservationReportPort.generateReportAsPdf(any())).thenThrow(new ReportGenerationExeption("Error"));
+    void exportPopularHoursBetweenDatesThrowsError() throws Exception {
+        when(reservationReportPort.generateReportAsPdf(any()))
+                .thenThrow(new ReportGenerationExeption("Error"));
 
         mockMvc.perform(MockMvcRequestBuilders.post(BASE_URL + "/export")
                 .contentType(MediaType.APPLICATION_JSON)

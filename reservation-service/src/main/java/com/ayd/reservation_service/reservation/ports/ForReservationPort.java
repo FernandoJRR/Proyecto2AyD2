@@ -8,6 +8,7 @@ import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
 import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
+import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
 
 public interface ForReservationPort {
 
@@ -25,4 +26,6 @@ public interface ForReservationPort {
     public boolean deleteReservation(String reservationId) throws IllegalStateException, NotFoundException;
 
     public List<Reservation> getReservations(ReservationSpecificationRequestDTO reservationSpecificationRequestDTO);
+
+    public List<ReservationTimeStatsDTO> getPopularHoursBetweenDates(PeriodRequestDTO periodRequestDTO);
 }

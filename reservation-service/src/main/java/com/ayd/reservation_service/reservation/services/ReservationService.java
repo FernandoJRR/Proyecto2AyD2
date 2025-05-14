@@ -14,6 +14,7 @@ import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
 import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
+import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -28,17 +29,14 @@ public class ReservationService implements ForReservationPort {
     @Override
     public Reservation createReservation(CreateReservationRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException, IllegalStateException {
-        if (reservationRepository.existsByStartTimeAndEndTimeAndDateAndUserIdAndOnline(
+        if (reservationRepository.existsByStartTimeAndEndTimeAndDate(
                 createReservationRequestDTO.getStartTime(), createReservationRequestDTO.getEndTime(),
-                createReservationRequestDTO.getDate(), createReservationRequestDTO.getUserId(),
-                createReservationRequestDTO.isOnline())) {
+                createReservationRequestDTO.getDate())) {
             throw new DuplicatedEntryException("Ya existe una reserva con la misma configuración por el usuario.");
         }
-        if (reservationRepository.existsByStartTimeAndEndTimeAndDateAndOnline(
-                createReservationRequestDTO.getStartTime(), createReservationRequestDTO.getEndTime(),
-                createReservationRequestDTO.getDate(), createReservationRequestDTO.isOnline())) {
-            throw new DuplicatedEntryException("Ya existe una reserva con la misma configuración.");
-        }
+
+
+
         Reservation reservation = new Reservation(createReservationRequestDTO);
         return reservationRepository.save(reservation);
     }
@@ -98,9 +96,35 @@ public class ReservationService implements ForReservationPort {
         return reservationRepository.findAll(spec);
     }
 
+    /**
+     * Obtiene todas las reservas que se encuentran dentro del rango de fechas
+     * especificado.
+     *
+     * @param periodRequestDTO objeto que contiene la fecha de inicio y la fecha de
+     *                         fin para el filtro.
+     * @return una lista de objetos {@link Reservation} que tienen una fecha dentro
+     *         del rango proporcionado.
+     */
     @Override
     public List<Reservation> getReservationsBetweenDates(PeriodRequestDTO periodRequestDTO) {
-        return reservationRepository.findReservationByDateBetween(periodRequestDTO.getStartDate(), periodRequestDTO.getEndDate());
+        return reservationRepository.findReservationByDateBetween(periodRequestDTO.getStartDate(),
+                periodRequestDTO.getEndDate());
+    }
+
+    /**
+     * Obtiene una lista de rangos horarios con la cantidad de reservas realizadas
+     * en cada uno,
+     * dentro del rango de fechas especificado.
+     *
+     * @param periodRequestDTO objeto que contiene la fecha de inicio y la fecha de
+     *                         fin para el filtro.
+     * @return una lista de {@link ReservationTimeStatsDTO} que representan los
+     *         rangos horarios más populares.
+     */
+    @Override
+    public List<ReservationTimeStatsDTO> getPopularHoursBetweenDates(PeriodRequestDTO periodRequestDTO) {
+        return reservationRepository.findReservationsGroupedByTimeRangeAndFilteredByDate(
+                periodRequestDTO.getStartDate(), periodRequestDTO.getEndDate());
     }
 
     @Override

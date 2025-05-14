@@ -23,8 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ayd.reports_service.pdf.ports.PdfPrinterPort;
 import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
-import com.ayd.reports_service.reservations.port.ReportParameterBuilderPort;
 import com.ayd.reports_service.reservations.port.ReservationClientPort;
+import com.ayd.reports_service.shared.ports.ReportParameterBuilderPort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.ReportGenerationExeption;
 import com.ayd.sharedReservationService.dto.ReservationResponseDTO;

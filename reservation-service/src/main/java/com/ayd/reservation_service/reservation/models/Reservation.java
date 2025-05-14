@@ -1,7 +1,6 @@
 package com.ayd.reservation_service.reservation.models;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
