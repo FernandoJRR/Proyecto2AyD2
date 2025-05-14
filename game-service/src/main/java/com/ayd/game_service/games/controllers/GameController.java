@@ -17,6 +17,7 @@ import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
 import com.ayd.game_service_common.games.dtos.GameResponseDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
+import com.ayd.game_service.games.dtos.UpdatePlayersRequestDTO;
 import com.ayd.game_service.games.mappers.GamesMapper;
 import com.ayd.game_service.games.models.Game;
 import com.ayd.game_service.games.ports.ForGamesPort;
@@ -63,6 +64,24 @@ public class GameController {
             @RequestBody @Valid CreateGameRequestDTO request)
             throws NotFoundException {
         Game result = forGamesPort.createGame(request);
+
+        GameResponseDTO response = gamesMapper.fromGameToResponseDTO(result);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Operation(summary = "Agrega jugadores a un juego", description = "Este endpoint permite la adicion de jugadores a un juego sin ellos.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Juego creado exitosamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UpdatePlayersRequestDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Solicitud inválida, usualmente por error en la validacion de parametros.", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @PatchMapping("/players/{gameId}")
+    public ResponseEntity<GameResponseDTO> updatePlayersGame(
+            @RequestBody @Valid UpdatePlayersRequestDTO request,
+            @PathVariable("gameId") String gameId)
+            throws NotFoundException {
+        Game result = forGamesPort.updatePlayersGame(gameId, request);
 
         GameResponseDTO response = gamesMapper.fromGameToResponseDTO(result);
 

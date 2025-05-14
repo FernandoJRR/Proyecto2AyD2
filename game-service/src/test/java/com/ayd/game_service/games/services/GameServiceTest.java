@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -24,10 +25,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service.games.dtos.PlayerNameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
 import com.ayd.game_service.games.dtos.ScorePlayerRequestDTO;
 import com.ayd.game_service.games.dtos.ScorePlayerResponseDTO;
+import com.ayd.game_service.games.dtos.UpdatePlayersRequestDTO;
 import com.ayd.game_service.games.models.Game;
 import com.ayd.game_service.games.repositories.GameRepository;
 import com.ayd.game_service.holes.models.Hole;
@@ -106,6 +109,13 @@ public class GameServiceTest {
     private String GAME_1_LIST_RESERVATION_ID = "cdsk-msdm-mdsc-mkos";
     private String GAME_2_LIST_RESERVATION_ID = "cskl-mocd-sdmp-mkos";
 
+    private UpdatePlayersRequestDTO requestPlayer;
+    private PlayerNameRequestDTO player1Update;
+    private PlayerNameRequestDTO player2Update;
+    private Game gameUpdate;
+    private String GAME_UPDATE_PLAYER_1_NAME = "Ana";
+    private String GAME_UPDATE_PLAYER_2_NAME = "Luis";
+
     @BeforeEach
     public void setUp() {
         player1Request = new CreatePlayerRequestDTO();
@@ -183,6 +193,23 @@ public class GameServiceTest {
         game2List = new Game();
         game2List.setId(GAME_2_LIST_ID);
         game2List.setReservationId(GAME_2_LIST_RESERVATION_ID);
+
+        requestPlayer = new UpdatePlayersRequestDTO();
+
+        player1Update = new PlayerNameRequestDTO();
+        player1Update.setName(GAME_UPDATE_PLAYER_1_NAME);
+        player1Update.setPlayerNumber(1);
+
+        player2Update = new PlayerNameRequestDTO();
+        player2Update.setName(GAME_UPDATE_PLAYER_2_NAME);
+        player2Update.setPlayerNumber(2);
+
+        requestPlayer.setPlayers(List.of(player1Update, player2Update));
+
+        gameUpdate = new Game();
+        gameUpdate.setId(GAME_ID);
+        gameUpdate.setPlayers(new ArrayList<>());
+        gameUpdate.setReservationId(RESERVATION_ID);
     }
 
     @Test
@@ -386,5 +413,31 @@ public class GameServiceTest {
         assertEquals(GAME_2_LIST_ID, result.get(1).getId());
         assertEquals(GAME_2_LIST_RESERVATION_ID, result.get(1).getReservationId());
         verify(gameRepository).findAll();
+    }
+
+    @Test
+    void updatePlayersGame_Success() throws NotFoundException {
+        // Arrange
+        when(gameRepository.findById(GAME_ID)).thenReturn(Optional.of(gameUpdate));
+        when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ArgumentCaptor<Game> gameCaptor = ArgumentCaptor.forClass(Game.class);
+
+        // Act
+        Game result = gameService.updatePlayersGame(GAME_ID, requestPlayer);
+
+        // Assert
+        verify(gameRepository).save(gameCaptor.capture());
+        Game savedGame = gameCaptor.getValue();
+
+        assertNotNull(result);
+        assertEquals(2, savedGame.getPlayers().size());
+        assertEquals(GAME_UPDATE_PLAYER_1_NAME, savedGame.getPlayers().get(0).getName());
+        assertEquals(1, savedGame.getPlayers().get(0).getPlayerNumber());
+        assertEquals(GAME_UPDATE_PLAYER_2_NAME, savedGame.getPlayers().get(1).getName());
+        assertEquals(2, savedGame.getPlayers().get(1).getPlayerNumber());
+
+        assertSame(savedGame, savedGame.getPlayers().get(0).getGame());
+        assertSame(savedGame, savedGame.getPlayers().get(1).getGame());
     }
 }
