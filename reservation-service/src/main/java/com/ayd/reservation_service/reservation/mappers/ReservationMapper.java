@@ -9,6 +9,9 @@ import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 
 @Mapper(componentModel = "spring")
 public interface ReservationMapper {
+
+
+
     public ReservationResponseDTO fromReservationToReservationResponseDTO(
             Reservation reservation);
 

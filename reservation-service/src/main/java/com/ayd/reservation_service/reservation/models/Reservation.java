@@ -29,22 +29,16 @@ public class Reservation extends Auditor {
     private LocalDate date;
 
     @Column(nullable = false)
-    private String userId;
+    private Boolean paid = false;
 
     @Column(nullable = false)
-    private boolean online;
-
-    private boolean paid = false;
-
-    private boolean cancelled = false;
+    private Boolean notShow;
 
     public Reservation(CreateReservationRequestDTO createReservationRequestDTO) {
         this.startTime = createReservationRequestDTO.getStartTime();
         this.endTime = createReservationRequestDTO.getEndTime();
         this.date = createReservationRequestDTO.getDate();
-        this.userId = createReservationRequestDTO.getUserId();
-        this.online = createReservationRequestDTO.isOnline();
         this.paid = false;
-        this.cancelled = false;
+        notShow = false;
     }
 }

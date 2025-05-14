@@ -56,7 +56,7 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        createDTO = new CreateReservationRequestDTO(START_TIME, END_TIME, DATE, USER_ID, ONLINE);
+        createDTO = new CreateReservationRequestDTO(START_TIME, END_TIME, DATE);
         reservation = new Reservation(createDTO);
         reservation.setId(RESERVATION_ID);
         reservation.setPaid(PAID);

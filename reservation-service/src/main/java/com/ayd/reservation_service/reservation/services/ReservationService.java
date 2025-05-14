@@ -1,20 +1,26 @@
 package com.ayd.reservation_service.reservation.services;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
+import com.ayd.reservation_service.qr.services.QrCodeAdapter;
 import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
 import com.ayd.reservation_service.reservation.models.Reservation;
+import com.ayd.reservation_service.reservation.ports.ForGameClientPort;
 import com.ayd.reservation_service.reservation.ports.ForReservationPort;
 import com.ayd.reservation_service.reservation.repositories.ReservationRepository;
 import com.ayd.reservation_service.reservation.specifications.ReservationSpecification;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.DuplicatedEntryException;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.shared.security.AppProperties;
 import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
 import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
+import com.google.zxing.WriterException;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -25,33 +31,62 @@ import lombok.AllArgsConstructor;
 public class ReservationService implements ForReservationPort {
 
     private final ReservationRepository reservationRepository;
+    private final ForGameClientPort gameClientPort;
+    private final QrCodeAdapter qrCodeAdapter;
+    private final AppProperties appProperties;
 
     @Override
-    public Reservation createReservation(CreateReservationRequestDTO createReservationRequestDTO)
-            throws DuplicatedEntryException, IllegalStateException {
+    public byte[] createPresentialReservation(CreateReservationRequestDTO createReservationRequestDTO)
+            throws DuplicatedEntryException, WriterException, IOException {
+        // mandamos a crear la reserva
+        String gameId = createReservation(createReservationRequestDTO);
+        // ahora mandamos a crear el qr con el id de la reserva y id del juego
+        return qrCodeAdapter.generateQrCode(appProperties.getFrontURL() + "/app/juegos/jugar/" + gameId);
+    }
+
+    @Override
+    public Reservation createOnlineReservation(CreateReservationRequestDTO createReservationRequestDTO)
+            throws DuplicatedEntryException {
+
+    }
+
+    private String createReservation(CreateReservationRequestDTO createReservationRequestDTO)
+            throws DuplicatedEntryException {
         if (reservationRepository.existsByStartTimeAndEndTimeAndDate(
                 createReservationRequestDTO.getStartTime(), createReservationRequestDTO.getEndTime(),
                 createReservationRequestDTO.getDate())) {
-            throw new DuplicatedEntryException("Ya existe una reserva con la misma configuración por el usuario.");
+            throw new DuplicatedEntryException("Ya existe una reserva en el mismo horario.");
         }
 
-
-
+        // creamos la reserva con los datos de la peticion
         Reservation reservation = new Reservation(createReservationRequestDTO);
-        return reservationRepository.save(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
+        // creamos el objeto para enviar al servicio de juegos
+        CreateGameRequestDTO createGameRequestDTO = new CreateGameRequestDTO(savedReservation.getId(),
+                createReservationRequestDTO.getPlayers());
+
+        // mandamos a crear el juego con los datos de los jugadores
+        gameClientPort.createGame(createGameRequestDTO);
+
+        // una vez creado el juego y la reserva podemos mandar a crear la facturacion
+        // del paquete seleccionado
+
+        // retornamos la reservacion creada para que el metodo crear lo maneje
+        return savedReservation;
     }
 
     @Override
     public Reservation cancelReservation(String reservationId) throws IllegalStateException, NotFoundException {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new NotFoundException("No se encontró la reserva con el ID: " + reservationId));
-        if (reservation.isPaid()) {
+        if (reservation.getPaid()) {
             throw new IllegalStateException("La reserva ya ha sido pagada.");
         }
-        if (reservation.isCancelled()) {
+        if (reservation.getNotShow()) {
             throw new IllegalStateException("La reserva ya ha sido cancelada.");
         }
-        reservation.setCancelled(true);
+        reservation.setNotShow(true);
         return reservationRepository.save(reservation);
     }
 
@@ -59,10 +94,10 @@ public class ReservationService implements ForReservationPort {
     public Reservation setPaymentReservation(String reservationId) throws IllegalStateException, NotFoundException {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new NotFoundException("No se encontró la reserva con el ID: " + reservationId));
-        if (reservation.isCancelled()) {
+        if (reservation.getNotShow()) {
             throw new IllegalStateException("La reserva ha sido cancelada.");
         }
-        if (reservation.isPaid()) {
+        if (reservation.getPaid()) {
             throw new IllegalStateException("La reserva ya ha sido pagada.");
         }
         reservation.setPaid(true);
@@ -73,7 +108,7 @@ public class ReservationService implements ForReservationPort {
     public boolean deleteReservation(String reservationId) throws IllegalStateException, NotFoundException {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new NotFoundException("No se encontró la reserva con el ID: " + reservationId));
-        if (reservation.isPaid()) {
+        if (reservation.getPaid()) {
             throw new IllegalStateException("La reserva ya ha sido pagada.");
         }
         reservationRepository.delete(reservation);
