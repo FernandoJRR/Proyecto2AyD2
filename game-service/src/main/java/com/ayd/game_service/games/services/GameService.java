@@ -8,10 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.ayd.game_service_common.games.dtos.CreateGameRequestDTO;
+import com.ayd.game_service.games.dtos.PlayerNameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameRequestDTO;
 import com.ayd.game_service.games.dtos.ScoreGameResponseDTO;
 import com.ayd.game_service.games.dtos.ScorePlayerRequestDTO;
 import com.ayd.game_service.games.dtos.ScorePlayerResponseDTO;
+import com.ayd.game_service.games.dtos.UpdatePlayersRequestDTO;
 import com.ayd.game_service.games.models.Game;
 import com.ayd.game_service.games.ports.ForGamesPort;
 import com.ayd.game_service.games.repositories.GameRepository;
@@ -171,5 +173,26 @@ public class GameService implements ForGamesPort {
             ScoreGameResponseDTO response = new ScoreGameResponseDTO();
             response.setPlayerScores(playerScoresList);
             return response;
+    }
+
+    public Game updatePlayersGame(String gameId, UpdatePlayersRequestDTO request) throws NotFoundException {
+        Game game = gameRepository.findById(gameId)
+            .orElseThrow(() -> new NotFoundException("Juego no encontrado"));
+
+        if (game.getPlayers() == null) {
+            game.setPlayers(new ArrayList<>());
+        } else {
+            game.getPlayers().clear();
+        }
+
+        for (PlayerNameRequestDTO playerDto : request.getPlayers()) {
+            Player player = new Player();
+            player.setName(playerDto.getName());
+            player.setPlayerNumber(playerDto.getPlayerNumber());
+            player.setGame(game);
+            game.getPlayers().add(player);
+        }
+
+        return gameRepository.save(game);
     }
 }
