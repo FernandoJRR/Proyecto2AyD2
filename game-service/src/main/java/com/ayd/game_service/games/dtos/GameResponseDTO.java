@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class GameResponseDTO {
 
-    private String packageId;
     private String reservationId;
     private List<PlayerResponseDTO> players;
     private boolean hasFinished;

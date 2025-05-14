@@ -61,6 +61,10 @@ public class GameService implements ForGamesPort {
         return gameRepository.save(game);
     }
 
+    public List<Game> getGames() {
+        return gameRepository.findAll();
+    }
+
     public Game getGameById(String gameId) throws NotFoundException {
         return gameRepository.findById(gameId)
             .orElseThrow(() -> new NotFoundException("No se ha encontrado el juego con ese id"));

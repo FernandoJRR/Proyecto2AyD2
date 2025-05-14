@@ -64,6 +64,9 @@ public class GameServiceTest {
     private Game playGame;
     private Hole playHole;
 
+    private Game game1List;
+    private Game game2List;
+
     private Player playingPlayer;
 
     private Player player1;
@@ -88,7 +91,6 @@ public class GameServiceTest {
 
     private String PLAYER_ID = "cksd-sdkl-kocd-csdo";
 
-    private String PACKAGE_ID = "jofd-mkfd-fdss-cdsm";
     private String RESERVATION_ID = "fsdl-sfdl-fdsl-flms";
     private String GAME_ID = "peww-csdm-sdfl-lmkc";
     private String INVALID_GAME_ID = "fdks-cdmk-fdsm-mdsc";
@@ -97,6 +99,12 @@ public class GameServiceTest {
     private Integer LAST_HOLE_NUMBER = 18;
     private Integer CURRENT_HOLE_NUMBER = 4;
     private Integer PLAYER_SHOTS = 3;
+
+    private String GAME_1_LIST_ID = "dscd-emwc-cmko-moww";
+    private String GAME_2_LIST_ID = "cdsm-dsfl-dmcs-csdl";
+
+    private String GAME_1_LIST_RESERVATION_ID = "cdsk-msdm-mdsc-mkos";
+    private String GAME_2_LIST_RESERVATION_ID = "cskl-mocd-sdmp-mkos";
 
     @BeforeEach
     public void setUp() {
@@ -167,6 +175,14 @@ public class GameServiceTest {
         score3.setShots(2);
 
         scoresList = Arrays.asList(score1, score2, score3);
+
+        game1List = new Game();
+        game1List.setId(GAME_1_LIST_ID);
+        game1List.setReservationId(GAME_1_LIST_RESERVATION_ID);
+
+        game2List = new Game();
+        game2List.setId(GAME_2_LIST_ID);
+        game2List.setReservationId(GAME_2_LIST_RESERVATION_ID);
     }
 
     @Test
@@ -351,5 +367,24 @@ public class GameServiceTest {
         assertTrue(response.getPlayerScores().isEmpty());
 
         verify(playerHoleScoreRepository).findByGame_Id(GAME_ID);
+    }
+
+    @Test
+    void getGames_Success() {
+        // Arrange
+        List<Game> expectedGames = Arrays.asList(game1List, game2List);
+        when(gameRepository.findAll()).thenReturn(expectedGames);
+
+        // Act
+        List<Game> result = gameService.getGames();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(GAME_1_LIST_ID, result.get(0).getId());
+        assertEquals(GAME_1_LIST_RESERVATION_ID, result.get(0).getReservationId());
+        assertEquals(GAME_2_LIST_ID, result.get(1).getId());
+        assertEquals(GAME_2_LIST_RESERVATION_ID, result.get(1).getReservationId());
+        verify(gameRepository).findAll();
     }
 }
