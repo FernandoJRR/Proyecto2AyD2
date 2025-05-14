@@ -8,6 +8,7 @@ import lombok.Value;
 @Data
 @NoArgsConstructor
 public class PlayerResponseDTO {
+    private String id;
     private String name;
     private Integer playerNumber;
 }

@@ -8,4 +8,5 @@ import com.ayd.game_service.players.models.PlayerHoleScore;
 
 public interface PlayerHoleScoreRepository extends JpaRepository<PlayerHoleScore, String> {
     List<PlayerHoleScore> findByGame_Id(String gameId);
+    List<PlayerHoleScore> findByGame_IdAndHole_Number(String gameId, Integer holeNumber);
 }
