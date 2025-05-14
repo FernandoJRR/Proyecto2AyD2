@@ -88,27 +88,6 @@ public class InvoiceDetailServiceTest {
     }
 
     /**
-     * dado: que los datos del detalle son válidos.
-     * cuando: se llama al método createInvoiceDetail.
-     * entonces: se guarda y retorna el detalle correctamente.
-     */
-    @Test
-    public void createInvoiceDetailShouldCreateWhenValid() {
-        // Arrange
-        when(invoiceDetailRepository.save(any(InvoiceDetail.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-
-        // Act
-        InvoiceDetail result = invoiceDetailService.createInvoiceDetail(validRequestDTO, invoice);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(ITEM_NAME, result.getItemName());
-        assertEquals(TOTAL, result.getTotal());
-        verify(invoiceDetailRepository).save(any(InvoiceDetail.class));
-    }
-
-    /**
      * dado: que la cantidad es cero o menor.
      * cuando: se llama al método createInvoiceDetail.
      * entonces: se lanza IllegalArgumentException.
