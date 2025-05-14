@@ -2,12 +2,12 @@ package com.ayd.invoice_service.Invoice.ports;
 
 import java.util.List;
 
-import com.ayd.invoice_service.Invoice.dtos.CreateInvoiceRequestDTO;
 import com.ayd.invoice_service.Invoice.dtos.ItemTypeResponseDTO;
 import com.ayd.invoice_service.Invoice.dtos.PaymentMethodResponse;
 import com.ayd.invoice_service.Invoice.dtos.SpecificationInvoiceRequestDTO;
 import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedInvoiceService.dtos.CreateInvoiceRequestDTO;
 
 public interface ForInvoicePort {
     public Invoice createInvoice(CreateInvoiceRequestDTO createInvoiceRequestDTO)

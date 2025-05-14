@@ -1,28 +1,31 @@
 package com.ayd.invoice_service.invoice.services;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import com.ayd.invoice_service.Invoice.dtos.CreateInvoiceDetailRequestDTO;
-import com.ayd.invoice_service.Invoice.enums.ItemType;
-import com.ayd.invoice_service.Invoice.models.Invoice;
-import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
-import com.ayd.invoice_service.Invoice.repositories.InvoiceDetailRepository;
-import com.ayd.invoice_service.Invoice.services.InvoiceDetailService;
-import com.ayd.shared.exceptions.NotFoundException;
-
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.ayd.invoice_service.Invoice.models.Invoice;
+import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
+import com.ayd.invoice_service.Invoice.repositories.InvoiceDetailRepository;
+import com.ayd.invoice_service.Invoice.services.InvoiceDetailService;
+import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedInvoiceService.dtos.CreateInvoiceDetailRequestDTO;
+import com.ayd.sharedInvoiceService.enums.ItemType;
 
 @ExtendWith(MockitoExtension.class)
 public class InvoiceDetailServiceTest {

@@ -12,6 +12,4 @@ public class UpdateScheduleRequestDTO {
     private LocalTime startTime;
     @NotNull(message = "La hora de fin es requerida")
     private LocalTime endTime;
-    @NotNull(message = "El tipo de horario es requerido")
-    private boolean online;
 }
