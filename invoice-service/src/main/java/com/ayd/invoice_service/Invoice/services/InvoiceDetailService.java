@@ -63,6 +63,7 @@ public class InvoiceDetailService implements ForInvoiceDetailPort {
                         .divide(BigDecimal.valueOf(dto.getPackageDetail().size()))
                         .divide(BigDecimal.valueOf(packageDetail.getQuantity())));
                 innerInvoiceDetail.setItemType(ItemType.GOOD);
+                innerInvoiceDetail = invoiceDetailRepository.save(innerInvoiceDetail);
                 invoiceDetails.add(innerInvoiceDetail);
             });
         } else {
