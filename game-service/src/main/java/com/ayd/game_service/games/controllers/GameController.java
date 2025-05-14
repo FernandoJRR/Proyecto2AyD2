@@ -1,5 +1,7 @@
 package com.ayd.game_service.games.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,7 @@ import com.ayd.game_service.games.ports.ForGamesPort;
 import com.ayd.shared.exceptions.NotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,6 +37,19 @@ import lombok.RequiredArgsConstructor;
 public class GameController {
     private final ForGamesPort forGamesPort;
     private final GamesMapper gamesMapper;
+
+        @Operation(summary = "Obtener todos los juegos", description = "Este endpoint permite la obtencion de todos los juegos")
+        @ApiResponses(value = {
+                        @ApiResponse(responseCode = "201", description = "Punteo obtenido exitosamente", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GameResponseDTO.class)))),
+                        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+        })
+        @GetMapping("/")
+        public ResponseEntity<List<GameResponseDTO>> getGames()
+                        throws NotFoundException, IllegalArgumentException {
+                List<Game> result = forGamesPort.getGames();
+                List<GameResponseDTO> response = gamesMapper.fromGamesToResponseDTO(result);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
 
         @Operation(summary = "Crear un nuevo juego", description = "Este endpoint permite la creación de un nuevo juego en el sistema.")
         @ApiResponses(value = {
