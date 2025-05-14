@@ -21,7 +21,7 @@ public class CreateReservationRequestDTO {
     private LocalDate date;
 
     @NotBlank(message = "El NIT del cliente es requerido")
-    private String customerCUI;
+    private String customerNIT;
     @NotBlank(message = "El nombre del cliente es requerido")
     private String customerFullName;
 
