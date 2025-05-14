@@ -49,6 +49,7 @@ public class InvoiceService implements ForInvoicePort {
         invoice.setSubtotal(total);
         BigDecimal MyCompaytax = BigDecimal.valueOf(0.12);
         BigDecimal tax = invoice.getSubtotal().multiply(MyCompaytax);
+        invoice.setTax(tax);
         invoice.setTotal(total.add(tax));
 
         Invoice saveInvoice = invoiceRepository.save(invoice);
