@@ -12,6 +12,7 @@ import lombok.Value;
 @Data
 public class GameResponseDTO {
 
+    private String id;
     private String reservationId;
     private List<PlayerResponseDTO> players;
     private Boolean hasFinished;

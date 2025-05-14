@@ -43,7 +43,7 @@ public class GameController {
                         @ApiResponse(responseCode = "201", description = "Punteo obtenido exitosamente", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GameResponseDTO.class)))),
                         @ApiResponse(responseCode = "500", description = "Error interno del servidor")
         })
-        @GetMapping("/")
+        @GetMapping
         public ResponseEntity<List<GameResponseDTO>> getGames()
                         throws NotFoundException, IllegalArgumentException {
                 List<Game> result = forGamesPort.getGames();
