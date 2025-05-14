@@ -74,7 +74,7 @@ public class InvoiceServiceTest {
         // Arrange
         when(forInvoiceDetailPort.calcValuesInvoiceDetail(any())).thenReturn(SUBTOTAL);
         when(invoiceRepository.save(any())).thenReturn(invoice);
-        when(forInvoiceDetailPort.createInvoiceDetail(any(), any())).thenReturn(new InvoiceDetail());
+        when(forInvoiceDetailPort.createInvoiceDetail(any(), any())).thenReturn(List.of(new InvoiceDetail()));
         when(invoiceRepository.findById(INVOICE_ID)).thenReturn(Optional.of(invoice));
 
         // Act
@@ -116,7 +116,7 @@ public class InvoiceServiceTest {
         // Arrange
         when(forInvoiceDetailPort.calcValuesInvoiceDetail(any())).thenReturn(SUBTOTAL);
         when(invoiceRepository.save(any())).thenReturn(invoice);
-        when(forInvoiceDetailPort.createInvoiceDetail(any(), any())).thenReturn(new InvoiceDetail());
+        when(forInvoiceDetailPort.createInvoiceDetail(any(), any())).thenReturn(List.of(new InvoiceDetail()));
         when(invoiceRepository.findById(INVOICE_ID)).thenReturn(Optional.empty());
 
         // Act & Assert
