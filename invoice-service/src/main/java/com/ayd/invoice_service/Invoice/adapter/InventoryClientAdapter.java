@@ -23,7 +23,7 @@ public class InventoryClientAdapter implements InventoryClientPort {
     public List<StockResponseDTO> substractVariousStockByProductIdAndWarehouseId(
             List<ModifyStockRequest> modifyStockRequests) throws NotFoundException, IllegalStateException {
         return webClientBuilder.build()
-                .post()
+                .patch()
                 .uri("lb://API-GATEWAY/api/v1/stocks/modify-stock")
                 .bodyValue(modifyStockRequests)
                 .retrieve()

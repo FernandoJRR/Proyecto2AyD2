@@ -53,7 +53,7 @@ public class InvoiceController {
         return invoiceMapper.fromInvoiceToInvoiceResponseDTO(invoice);
     }
 
-    @PostMapping("/warehouse")
+    @PostMapping("/warehouse/{warehouseId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyAuthority('CREATE_INVOICE')")
     public InvoiceResponseDTO createInvoiceByWarehouseId(
