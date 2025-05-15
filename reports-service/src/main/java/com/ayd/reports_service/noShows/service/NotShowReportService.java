@@ -1,14 +1,14 @@
-package com.ayd.reports_service.reservations.services;
+package com.ayd.reports_service.noShows.service;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.ayd.reports_service.noShows.ports.NotShowReportPort;
 import com.ayd.reports_service.pdf.ports.PdfPrinterPort;
 import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
 import com.ayd.reports_service.shared.ports.ReportParameterBuilderPort;
-import com.ayd.reports_service.shared.ports.ReportServicePort;
 import com.ayd.reports_service.shared.ports.ReservationClientPort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.ReportGenerationExeption;
@@ -16,9 +16,9 @@ import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 
 import lombok.RequiredArgsConstructor;
 
-@Service("reservationReportService")
+@Service("notShowReportService")
 @RequiredArgsConstructor
-public class ReservationReportService implements ReportServicePort<ReportReservationsDTO, PeriodRequestDTO> {
+public class NotShowReportService implements NotShowReportPort {
 
     private final PdfPrinterPort pdfPrinterPort;
     private final ReservationClientPort reservationClientPort;
@@ -28,6 +28,8 @@ public class ReservationReportService implements ReportServicePort<ReportReserva
     public ReportReservationsDTO generateReport(PeriodRequestDTO filters) {
         // mandamos a a traer la info al serviio de reservaciones
         List<ReservationResponseDTO> reservations = reservationClientPort.getReservationReportByPeriod(filters);
+        // filtramos solo los notshow
+        reservations = reservations.stream().filter(reservation -> reservation.getNotShow()).toList();
         // calculamos el total de las reservas
         Integer totalReservations = reservations.size();
         // creamos el dto de del reporte
@@ -41,7 +43,7 @@ public class ReservationReportService implements ReportServicePort<ReportReserva
         // extraer los parametros del reporte
         reportParameterBuilderPort.init(report);
         Map<String, Object> params = reportParameterBuilderPort.buildParameters();
-        return pdfPrinterPort.exportPdf("/ReservationsReport", params);
+        return pdfPrinterPort.exportPdf("/NotShowReport", params);
     }
 
 }

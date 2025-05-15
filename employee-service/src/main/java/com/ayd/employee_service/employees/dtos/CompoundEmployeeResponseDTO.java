@@ -1,7 +1,8 @@
 package com.ayd.employee_service.employees.dtos;
 
 import java.util.List;
-import java.util.Map;
+
+import com.ayd.sharedEmployeeService.dto.EmployeeResponseDTO;
 
 import lombok.Value;
 

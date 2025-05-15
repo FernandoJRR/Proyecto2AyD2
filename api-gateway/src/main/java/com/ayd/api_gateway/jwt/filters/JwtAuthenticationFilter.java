@@ -29,8 +29,9 @@ public class JwtAuthenticationFilter implements GlobalFilter {
         String path = exchange.getRequest().getURI().getPath();
 
         if (path.equals("/api/v1/login")
-        || path.equals("/api/v1/reservations/online")
-        || path.equals("/api/v1/games/free")) {
+                || path.equals("/api/v1/reservations/online")
+                || path.equals("/api/v1/games/free")
+                || path.equals("/api/v1/reservations-exports/reservation-ticket")) {
             return chain.filter(exchange);
         }
         try {

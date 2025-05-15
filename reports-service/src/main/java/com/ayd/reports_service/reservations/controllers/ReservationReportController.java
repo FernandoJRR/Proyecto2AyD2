@@ -1,5 +1,7 @@
 package com.ayd.reports_service.reservations.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,14 +21,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/reservation-reports")
-@RequiredArgsConstructor
 public class ReservationReportController {
 
-    private final ReportServicePort<ReportReservationsDTO, PeriodRequestDTO> reservationReportPort;
+    @Autowired
+    @Qualifier("reservationReportService")
+    private ReportServicePort<ReportReservationsDTO, PeriodRequestDTO> reservationReportPort;
 
     @Operation(summary = "Crear un reporte de reservas")
     @ApiResponses(value = {

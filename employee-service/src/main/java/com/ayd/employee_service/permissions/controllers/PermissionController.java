@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.employee_service.permissions.dtos.PermissionResponseDTO;
 import com.ayd.employee_service.permissions.mappers.PermissionMapper;
 import com.ayd.employee_service.permissions.models.Permission;
 import com.ayd.employee_service.permissions.ports.ForPermissionsPort;
+import com.ayd.sharedEmployeeService.dto.PermissionResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
