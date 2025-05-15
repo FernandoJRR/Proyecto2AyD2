@@ -17,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ayd.reports_service.pdf.ports.PdfPrinterPort;
 import com.ayd.reports_service.popularhours.dtos.PopularHoursReportDTO;
-import com.ayd.reports_service.reservations.port.ReservationClientPort;
 import com.ayd.reports_service.shared.ports.ReportParameterBuilderPort;
+import com.ayd.reports_service.shared.ports.ReservationClientPort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.ReportGenerationExeption;
 import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;

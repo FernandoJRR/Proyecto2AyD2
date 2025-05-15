@@ -27,8 +27,8 @@ public class ReservationTicketParameterBuilderAdapter implements ReportParameter
         Map<String, Object> params = new HashMap<>();
 
         params.put("reservationId", report.getId());
-        params.put("clientNit", report.getCustomerNit());
-        params.put("clientFullname", report.getCustomerFullname());
+        params.put("clientNit", report.getCustomerNIT());
+        params.put("clientFullname", report.getCustomerFullName());
         params.put("date", report.getDate());
         params.put("startTime", report.getStartTime());
         params.put("endTime", report.getEndTime());

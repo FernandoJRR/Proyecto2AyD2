@@ -14,6 +14,7 @@ public class ReservationResponseDTO {
     private Boolean notShow;
     private Boolean paid;
     private String gameId;
-    private String customerFullname;
-    private String customerNit;
+    private String customerFullName;
+    private String customerNIT;
+    private String invoiceId;
 }

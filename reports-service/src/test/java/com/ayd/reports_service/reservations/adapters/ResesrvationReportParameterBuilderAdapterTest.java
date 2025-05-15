@@ -59,7 +59,7 @@ public class ResesrvationReportParameterBuilderAdapterTest {
                 NOT_SHOW,
                 GAME_ID,
                 CUSTOMER_NAME,
-                CUSTOMER_CUI);
+                CUSTOMER_CUI,"");
 
         response2 = new ReservationResponseDTO(
                 RESERVATION_ID_2,
@@ -70,7 +70,7 @@ public class ResesrvationReportParameterBuilderAdapterTest {
                 NOT_SHOW_2,
                 GAME_ID_2,
                 CUSTOMER_NAME_2,
-                CUSTOMER_CUI_2);
+                CUSTOMER_CUI_2,"");
 
         reportDTO = new ReportReservationsDTO(List.of(response1, response2), 2);
     }
