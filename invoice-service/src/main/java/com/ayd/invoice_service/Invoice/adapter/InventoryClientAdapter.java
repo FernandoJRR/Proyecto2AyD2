@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ayd.invoice_service.Invoice.ports.InventoryClientPort;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedInventoryService.cashRegister.dto.CashRegisterResponseDTO;
 import com.ayd.sharedInventoryService.stock.dto.ModifyStockRequest;
 import com.ayd.sharedInventoryService.stock.dto.StockResponseDTO;
 
@@ -22,7 +23,7 @@ public class InventoryClientAdapter implements InventoryClientPort {
     public List<StockResponseDTO> substractVariousStockByProductIdAndWarehouseId(
             List<ModifyStockRequest> modifyStockRequests) throws NotFoundException, IllegalStateException {
         return webClientBuilder.build()
-                .post()
+                .patch()
                 .uri("lb://API-GATEWAY/api/v1/stocks/modify-stock")
                 .bodyValue(modifyStockRequests)
                 .retrieve()
@@ -34,6 +35,19 @@ public class InventoryClientAdapter implements InventoryClientPort {
                                 .map(message -> new IllegalStateException(message)))
                 .bodyToFlux(StockResponseDTO.class)
                 .collectList()
+                .block();
+    }
+
+    @Override
+    public CashRegisterResponseDTO findByEmployeeId(String employeeId) throws NotFoundException {
+        return webClientBuilder.build()
+                .get()
+                .uri("lb://API-GATEWAY/api/v1/cash-registers/employee/" + employeeId)
+                .retrieve()
+                .onStatus(status -> status.value() == 404,
+                        clientResponse -> clientResponse.bodyToMono(String.class)
+                                .map(message -> new NotFoundException(message)))
+                .bodyToMono(CashRegisterResponseDTO.class)
                 .block();
     }
 }

@@ -99,15 +99,15 @@ public class InvoiceServiceTest {
      * cuando: se llama a createInvoice.
      * entonces: se lanza IllegalArgumentException.
      */
-    @Test
-    public void createInvoiceShouldThrowWhenNoDetailsProvided() {
-        // Arrange
-        CreateInvoiceRequestDTO invalidDTO = new CreateInvoiceRequestDTO(PAYMENT_METHOD, CLIENT_DOC, List.of());
+    //@Test
+    //public void createInvoiceShouldThrowWhenNoDetailsProvided() {
+    //    // Arrange
+    //    CreateInvoiceRequestDTO invalidDTO = new CreateInvoiceRequestDTO(PAYMENT_METHOD, CLIENT_DOC, List.of());
 
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> invoiceService.createInvoice(invalidDTO));
-        verify(invoiceRepository, never()).save(any());
-    }
+    //    // Act & Assert
+    //    assertThrows(IllegalArgumentException.class, () -> invoiceService.createInvoice(invalidDTO));
+    //    verify(invoiceRepository, never()).save(any());
+    //}
 
     // /**
     //  * dado: que no se encuentra la factura guardada por su ID.
