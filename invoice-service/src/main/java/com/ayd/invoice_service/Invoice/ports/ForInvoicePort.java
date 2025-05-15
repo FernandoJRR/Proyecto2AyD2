@@ -10,7 +10,15 @@ import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.shared.exceptions.NotFoundException;
 
 public interface ForInvoicePort {
-    public Invoice createInvoice(CreateInvoiceRequestDTO createInvoiceRequestDTO)
+
+    public Invoice createInvoiceByWarehouseId(CreateInvoiceRequestDTO createInvoiceRequestDTO, String warehouseId)
+            throws IllegalArgumentException, NotFoundException;
+
+    public Invoice createInvoiceIdentifyEmplooyeWarehouse(CreateInvoiceRequestDTO createInvoiceRequestDTO)
+            throws IllegalArgumentException,
+            NotFoundException;
+
+    public Invoice createInvoice(CreateInvoiceRequestDTO createInvoiceRequestDTO, String warehouseId)
             throws IllegalArgumentException, NotFoundException;
 
     public Invoice getInvoiceById(String id) throws NotFoundException;

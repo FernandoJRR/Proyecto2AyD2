@@ -4,7 +4,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ayd.config.AuthenticationFilter;
+import com.ayd.invoice_service.Invoice.ports.InventoryClientPort;
+import com.ayd.sharedInventoryService.stock.dto.ModifyStockRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import com.ayd.invoice_service.Invoice.dtos.CreateInvoiceRequestDTO;
@@ -36,9 +40,25 @@ public class InvoiceService implements ForInvoicePort {
     private final InvoiceRepository invoiceRepository;
     private final ForInvoiceDetailPort forInvoiceDetailPort;
     private final ConfigClientPort configClientPort;
+    private final InventoryClientPort inventoryClientPort;
+    private final AuthenticationFilter authenticationFilter;
 
     @Override
-    public Invoice createInvoice(CreateInvoiceRequestDTO createInvoiceRequestDTO)
+    public Invoice createInvoiceByWarehouseId(CreateInvoiceRequestDTO createInvoiceRequestDTO, String warehouseId)
+            throws IllegalArgumentException, NotFoundException {
+        return createInvoice(createInvoiceRequestDTO,warehouseId);
+    }
+
+    @Override
+    public Invoice createInvoiceIdentifyEmplooyeWarehouse(CreateInvoiceRequestDTO createInvoiceRequestDTO)
+            throws IllegalArgumentException, NotFoundException {
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) authenticationFilter.getAuthentication();
+        String id = authentication.getName();
+        return createInvoice(createInvoiceRequestDTO,id);
+    }
+
+    @Override
+    public Invoice createInvoice(CreateInvoiceRequestDTO createInvoiceRequestDTO, String warehouseId)
             throws IllegalArgumentException, NotFoundException {
         // Verificamos quue el modelo de creacion tenga detalles
         if (createInvoiceRequestDTO.getDetails().isEmpty()) {
@@ -76,6 +96,15 @@ public class InvoiceService implements ForInvoicePort {
         for (var detail : createInvoiceRequestDTO.getDetails()) {
             invoiceDetails.addAll(forInvoiceDetailPort.createInvoiceDetail(detail, invoice));
         }
+        //Sobre los invoice details se hace la actualizacion del stock
+        List<ModifyStockRequest> modifyStockRequests = new ArrayList<>();
+        for (InvoiceDetail invoiceDetail : invoiceDetails) {
+            if(invoiceDetail.getItemType() == ItemType.GOOD) {
+                ModifyStockRequest modifyStockRequest = new ModifyStockRequest(invoiceDetail.getItemId(), invoiceDetail.getQuantity(),warehouseId);
+                modifyStockRequests.add(modifyStockRequest);
+            }
+        }
+        inventoryClientPort.substractVariousStockByProductIdAndWarehouseId(modifyStockRequests);
         return invoiceRepository.findById(saveInvoice.getId())
                 .orElseThrow(() -> new NotFoundException("No se encontró la factura con id: " + saveInvoice.getId()));
     }
@@ -118,5 +147,4 @@ public class InvoiceService implements ForInvoicePort {
         itemTypes.add(new ItemTypeResponseDTO(ItemType.SERVICE, "Servicios"));
         return itemTypes;
     }
-
 }
