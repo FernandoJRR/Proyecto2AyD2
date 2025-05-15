@@ -37,7 +37,7 @@ spring:
         - id: reports-service
           uri: lb://REPORTS-SERVICE
           predicates:
-            - Path=/api/v1/reservation-reports,/api/v1/reservation-reports/**,/api/v1/popular-hours-report/**,/api/v1/popular-hours-report,/api/v1/reservations-exports/**,/api/v1/reservation-profit,/api/v1/reservation-profit/**,/api/v1/reservation-not-show,/api/v1/reservation-not-show/**
+            - Path=/api/v1/reservation-reports,/api/v1/reservation-reports/**,/api/v1/popular-hours-report/**,/api/v1/popular-hours-report,/api/v1/reservations-exports/**,/api/v1/reservation-profit,/api/v1/reservation-profit/**,/api/v1/reservation-not-show,/api/v1/reservation-not-show/**,/api/v1/averange-time,/api/v1/averange-time/**
         - id: config-service
           uri: lb://CONFIG-SERVICE
           predicates:
