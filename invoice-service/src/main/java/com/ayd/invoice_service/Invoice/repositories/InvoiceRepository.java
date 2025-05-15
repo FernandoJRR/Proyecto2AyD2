@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.ayd.invoice_service.Invoice.models.Invoice;
 
-
 public interface InvoiceRepository extends JpaRepository<Invoice, String>, JpaSpecificationExecutor<Invoice> {
     List<Invoice> findByClientDocument(String clientDocument);
+
+    public List<Invoice> findAllByIdIn(List<String> ids);
 }

@@ -109,6 +109,7 @@ public class InvoiceService implements ForInvoicePort {
             }
         }
         inventoryClientPort.substractVariousStockByProductIdAndWarehouseId(modifyStockRequests);
+        invoice.setDetails(invoiceDetails);
         return invoiceRepository.findById(saveInvoice.getId())
                 .orElseThrow(() -> new NotFoundException("No se encontró la factura con id: " + saveInvoice.getId()));
     }
@@ -151,4 +152,10 @@ public class InvoiceService implements ForInvoicePort {
         itemTypes.add(new ItemTypeResponseDTO(ItemType.SERVICE, "Servicios"));
         return itemTypes;
     }
+
+    @Override
+    public List<Invoice> getAllInvoicesByIds(List<String> ids) {
+        return invoiceRepository.findAllByIdIn(ids);
+    }
+
 }

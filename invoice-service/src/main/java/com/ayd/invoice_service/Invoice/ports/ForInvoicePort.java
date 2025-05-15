@@ -30,4 +30,6 @@ public interface ForInvoicePort {
     public List<PaymentMethodResponse> getPaymentMethods();
 
     public List<ItemTypeResponseDTO> getItemTypes();
+
+    public List<Invoice> getAllInvoicesByIds(List<String> ids);
 }

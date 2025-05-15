@@ -35,10 +35,10 @@ public class Reservation extends Auditor {
     private Boolean notShow;
 
     @Column(nullable = false)
-    private String customerNit;
+    private String customerNIT;
 
     @Column(nullable = false)
-    private String customerFullname;
+    private String customerFullName;
 
     @Column(nullable = true, unique = true)
     private String gameId;
@@ -52,7 +52,7 @@ public class Reservation extends Auditor {
         this.date = createReservationRequestDTO.getDate();
         this.paid = false;
         notShow = false;
-        customerFullname = createReservationRequestDTO.getCustomerFullname();
-        customerNit = createReservationRequestDTO.getCustomerNit();
+        customerFullName = createReservationRequestDTO.getCustomerFullName();
+        customerNIT = createReservationRequestDTO.getCustomerNIT();
     }
 }
