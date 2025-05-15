@@ -102,7 +102,6 @@ class ReservationExportsServiceTest {
     @Test
     void exportReservationTicketReturnsPdfBytes() throws ReportGenerationExeption {
         // arrange
-        when(reservationTicketParameterBuilder.buildParameters()).thenReturn(Map.of("key2", "value2"));
         when(pdfPrinterPort.exportPdf(any(), any())).thenReturn(PDF_BYTES);
 
         // act
