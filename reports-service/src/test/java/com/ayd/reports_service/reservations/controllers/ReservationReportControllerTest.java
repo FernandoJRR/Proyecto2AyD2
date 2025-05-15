@@ -14,6 +14,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -28,7 +29,7 @@ import com.ayd.shared.exceptions.ReportGenerationExeption;
 import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = FrequentCustomersReportController.class)
+@WebMvcTest(controllers = ReservationReportController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class ReservationReportControllerTest {
 
@@ -38,6 +39,7 @@ public class ReservationReportControllerTest {
     private ObjectMapper objectMapper;
 
     @MockitoBean
+    @Qualifier("reservationReportService")
     private ReportServicePort<ReportReservationsDTO, PeriodRequestDTO> reservationReportPort;
 
     private final String BASE_URL = "/api/v1/reservation-reports";
