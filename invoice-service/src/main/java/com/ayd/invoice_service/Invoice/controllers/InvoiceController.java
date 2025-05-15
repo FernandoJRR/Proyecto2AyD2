@@ -49,7 +49,17 @@ public class InvoiceController {
     @PreAuthorize("hasAnyAuthority('CREATE_INVOICE')")
     public InvoiceResponseDTO createInvoice(@Valid @RequestBody CreateInvoiceRequestDTO createInvoiceRequestDTO)
             throws IllegalArgumentException, NotFoundException {
-        Invoice invoice = forInvoicePort.createInvoice(createInvoiceRequestDTO);
+        Invoice invoice = forInvoicePort.createInvoiceIdentifyEmplooyeWarehouse(createInvoiceRequestDTO);
+        return invoiceMapper.fromInvoiceToInvoiceResponseDTO(invoice);
+    }
+
+    @PostMapping("/warehouse")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('CREATE_INVOICE')")
+    public InvoiceResponseDTO createInvoiceByWarehouseId(
+            @Valid @RequestBody CreateInvoiceRequestDTO createInvoiceRequestDTO,
+            @PathVariable String warehouseId) throws IllegalArgumentException, NotFoundException {
+        Invoice invoice = forInvoicePort.createInvoiceByWarehouseId(createInvoiceRequestDTO, warehouseId);
         return invoiceMapper.fromInvoiceToInvoiceResponseDTO(invoice);
     }
 
