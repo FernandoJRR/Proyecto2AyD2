@@ -15,14 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayd.employee_service.employees.dtos.EmployeeTypeResponseDTO;
 import com.ayd.employee_service.employees.dtos.SaveEmployeeTypeRequestDTO;
 import com.ayd.employee_service.employees.mappers.EmployeeTypeMapper;
 import com.ayd.employee_service.employees.models.EmployeeType;
 import com.ayd.employee_service.employees.ports.ForEmployeeTypePort;
 import com.ayd.employee_service.permissions.mappers.PermissionMapper;
 import com.ayd.employee_service.permissions.models.Permission;
-import com.ayd.shared.exceptions.*;
+import com.ayd.shared.exceptions.DuplicatedEntryException;
+import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedEmployeeService.dto.EmployeeTypeResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

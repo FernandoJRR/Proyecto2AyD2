@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.ayd.employee_service.permissions.dtos.PermissionResponseDTO;
 import com.ayd.employee_service.permissions.models.Permission;
 import com.ayd.shared.dtos.IdRequestDTO;
+import com.ayd.sharedEmployeeService.dto.PermissionResponseDTO;
 
 @Mapper(componentModel = "spring")
 public interface PermissionMapper {

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +19,11 @@ import com.ayd.employee_service.employees.ports.ForEmployeesPort;
 import com.ayd.employee_service.employees.repositories.EmployeeRepository;
 import com.ayd.employee_service.employees.specifications.EmployeeSpecifications;
 import com.ayd.employee_service.shared.enums.EmployeeTypeEnum;
-import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.users.models.User;
 import com.ayd.employee_service.users.ports.ForUsersPort;
+import com.ayd.shared.exceptions.DuplicatedEntryException;
+import com.ayd.shared.exceptions.InvalidPeriodException;
+import com.ayd.shared.exceptions.NotFoundException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

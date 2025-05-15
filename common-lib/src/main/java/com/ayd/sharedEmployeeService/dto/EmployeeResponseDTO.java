@@ -1,4 +1,4 @@
-package com.ayd.employee_service.employees.dtos;
+package com.ayd.sharedEmployeeService.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

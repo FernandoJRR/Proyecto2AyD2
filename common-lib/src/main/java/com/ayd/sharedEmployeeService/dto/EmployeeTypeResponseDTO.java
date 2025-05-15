@@ -1,8 +1,6 @@
-package com.ayd.employee_service.employees.dtos;
+package com.ayd.sharedEmployeeService.dto;
 
 import java.util.List;
-
-import com.ayd.employee_service.permissions.dtos.PermissionResponseDTO;
 
 import lombok.Value;
 

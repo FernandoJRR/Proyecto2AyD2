@@ -36,7 +36,7 @@ public class ReservationExportsService implements ForReservationExportsPort {
     public byte[] exportReservationTicket(ReservationResponseDTO reservationResponseDTO) throws ReportGenerationExeption {
         // mandamos a crear los parametros para la invoice con qr
         reservationTicketParameterBuilder.init(reservationResponseDTO);
-        Map<String, Object> parameters = invoiceQrParameterBuilder.buildParameters();
+        Map<String, Object> parameters = reservationTicketParameterBuilder.buildParameters();
         // mandamos a exportar el reporte a pdf
         byte[] report = pdfPrinterPort.exportPdf("/ReservationTicket", parameters);
 
