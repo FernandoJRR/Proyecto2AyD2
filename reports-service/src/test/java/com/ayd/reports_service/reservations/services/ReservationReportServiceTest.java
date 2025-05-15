@@ -23,8 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ayd.reports_service.pdf.ports.PdfPrinterPort;
 import com.ayd.reports_service.reservations.dto.ReportReservationsDTO;
-import com.ayd.reports_service.reservations.port.ReservationClientPort;
 import com.ayd.reports_service.shared.ports.ReportParameterBuilderPort;
+import com.ayd.reports_service.shared.ports.ReservationClientPort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.ReportGenerationExeption;
 import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
@@ -79,7 +79,7 @@ class ReservationReportServiceTest {
                 NOT_SHOW,
                 GAME_ID,
                 CUSTOMER_NAME,
-                CUSTOMER_CUI);
+                CUSTOMER_CUI,"");
 
         response2 = new ReservationResponseDTO(
                 RESERVATION_ID_2,
@@ -90,7 +90,7 @@ class ReservationReportServiceTest {
                 NOT_SHOW_2,
                 GAME_ID_2,
                 CUSTOMER_NAME_2,
-                CUSTOMER_CUI_2);
+                CUSTOMER_CUI_2,"");
 
     }
 

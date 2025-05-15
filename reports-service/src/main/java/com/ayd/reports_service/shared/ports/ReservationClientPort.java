@@ -1,4 +1,4 @@
-package com.ayd.reports_service.reservations.port;
+package com.ayd.reports_service.shared.ports;
 
 import java.util.List;
 

@@ -41,7 +41,7 @@ public class QrCodeAdapterTest {
             true,
             TEST_GAME_ID,
             "",
-            "");
+            "","");
 
     @BeforeEach
     void setUp() {

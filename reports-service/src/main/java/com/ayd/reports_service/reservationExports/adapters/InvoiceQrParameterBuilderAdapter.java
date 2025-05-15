@@ -52,8 +52,8 @@ public class InvoiceQrParameterBuilderAdapter implements ReportParameterBuilderP
 
             params.put("reservationId", report.getReservationResponseDTO().getId());
             params.put("gameId", report.getReservationResponseDTO().getGameId());
-            params.put("clientNit", report.getReservationResponseDTO().getCustomerNit());
-            params.put("clientFullname", report.getReservationResponseDTO().getCustomerFullname());
+            params.put("clientNit", report.getReservationResponseDTO().getCustomerNIT());
+            params.put("clientFullname", report.getReservationResponseDTO().getCustomerFullName());
             params.put("date", report.getReservationResponseDTO().getDate());
             params.put("startTime", report.getReservationResponseDTO().getStartTime());
             params.put("endTime", report.getReservationResponseDTO().getEndTime());

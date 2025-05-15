@@ -6,7 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.ayd.reports_service.reservations.port.ReservationClientPort;
+import com.ayd.reports_service.shared.ports.ReservationClientPort;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
