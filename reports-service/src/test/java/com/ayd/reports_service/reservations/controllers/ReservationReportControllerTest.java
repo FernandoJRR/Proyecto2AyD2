@@ -68,7 +68,7 @@ public class ReservationReportControllerTest {
                 NOT_SHOW,
                 GAME_ID,
                 CUSTOMER_NAME,
-                CUSTOMER_CUI);
+                CUSTOMER_CUI,"");
         reportDTO = new ReportReservationsDTO(List.of(reservation), 1);
     }
 
