@@ -9,14 +9,14 @@ import com.ayd.employee_service.auth.jwt.ports.ForJwtGenerator;
 import com.ayd.employee_service.auth.login.dtos.LoginResponseDTO;
 import com.ayd.employee_service.auth.login.ports.ForLogin;
 import com.ayd.employee_service.auth.login.ports.ForUserLoader;
-import com.ayd.employee_service.employees.dtos.EmployeeResponseDTO;
 import com.ayd.employee_service.employees.mappers.EmployeeMapper;
-import com.ayd.employee_service.permissions.dtos.PermissionResponseDTO;
 import com.ayd.employee_service.permissions.mappers.PermissionMapper;
-import com.ayd.shared.exceptions.*;
 import com.ayd.employee_service.shared.utils.PasswordEncoderUtil;
 import com.ayd.employee_service.users.models.User;
 import com.ayd.employee_service.users.ports.ForUsersPort;
+import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedEmployeeService.dto.EmployeeResponseDTO;
+import com.ayd.sharedEmployeeService.dto.PermissionResponseDTO;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

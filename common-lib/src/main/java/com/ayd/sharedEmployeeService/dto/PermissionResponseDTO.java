@@ -1,4 +1,4 @@
-package com.ayd.employee_service.permissions.dtos;
+package com.ayd.sharedEmployeeService.dto;
 
 import lombok.Value;
 
