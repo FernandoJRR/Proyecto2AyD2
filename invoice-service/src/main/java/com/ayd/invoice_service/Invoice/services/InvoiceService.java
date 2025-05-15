@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ayd.config.AuthenticationFilter;
-import com.ayd.invoice_service.Invoice.ports.InventoryClientPort;
+import com.ayd.invoice_service.Invoice.ports.*;
+import com.ayd.sharedEmployeeService.dto.EmployeeResponseDTO;
 import com.ayd.sharedInventoryService.cashRegister.dto.CashRegisterResponseDTO;
 import com.ayd.sharedInventoryService.stock.dto.ModifyStockRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,9 +19,6 @@ import com.ayd.invoice_service.Invoice.dtos.PaymentMethodResponse;
 import com.ayd.invoice_service.Invoice.dtos.SpecificationInvoiceRequestDTO;
 import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
-import com.ayd.invoice_service.Invoice.ports.ConfigClientPort;
-import com.ayd.invoice_service.Invoice.ports.ForInvoiceDetailPort;
-import com.ayd.invoice_service.Invoice.ports.ForInvoicePort;
 import com.ayd.invoice_service.Invoice.repositories.InvoiceRepository;
 import com.ayd.invoice_service.Invoice.specifications.InvoiceSpecification;
 import com.ayd.shared.exceptions.NotFoundException;
@@ -43,6 +41,7 @@ public class InvoiceService implements ForInvoicePort {
     private final ForInvoiceDetailPort forInvoiceDetailPort;
     private final ConfigClientPort configClientPort;
     private final InventoryClientPort inventoryClientPort;
+    private final EmployeeClientPort employeeClientPort;
 
     @Override
     public Invoice createInvoiceByWarehouseId(CreateInvoiceRequestDTO createInvoiceRequestDTO, String warehouseId)
@@ -55,8 +54,9 @@ public class InvoiceService implements ForInvoicePort {
             throws IllegalArgumentException, NotFoundException {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder
                 .getContext().getAuthentication();
-        String id = authentication.getName();
-        CashRegisterResponseDTO cashRegisterResponseDTO = inventoryClientPort.findByEmployeeId(id);
+        String username = authentication.getName();
+        EmployeeResponseDTO employeeResponseDTO = employeeClientPort.findEmployeeByUserName(username);
+        CashRegisterResponseDTO cashRegisterResponseDTO = inventoryClientPort.findByEmployeeId(employeeResponseDTO.getId());
         return createInvoice(createInvoiceRequestDTO, cashRegisterResponseDTO.getWarehouse().getId());
     }
 
