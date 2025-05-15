@@ -22,10 +22,10 @@ public class CreateReservationOnlineRequestDTO extends CreateReservationDTO {
     public CreateReservationOnlineRequestDTO(@NotNull(message = "La hora de inicio es requerida") LocalTime startTime,
             @NotNull(message = "La hora de fin es requerida") LocalTime endTime,
             @NotNull(message = "La fecha es requerida") LocalDate date,
-            @NotBlank(message = "El NIT del cliente es requerido") String customerNit,
-            @NotBlank(message = "El nombre del cliente es requerido") String customerFullname,
+            @NotBlank(message = "El NIT del cliente es requerido") String customerNIT,
+            @NotBlank(message = "El nombre del cliente es requerido") String customerFullName,
             @Size(max = 4, message = "El maximo de jugadores es 4") @Valid List<CreatePlayerRequestDTO> players) {
-        super(startTime, endTime, date, customerNit, customerFullname);
+        super(startTime, endTime, date, customerNIT, customerFullName);
         this.players = players;
     }
 
