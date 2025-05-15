@@ -28,7 +28,7 @@ import com.ayd.shared.exceptions.ReportGenerationExeption;
 import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = ReservationReportController.class)
+@WebMvcTest(controllers = FrequentCustomersReportController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class ReservationReportControllerTest {
 
