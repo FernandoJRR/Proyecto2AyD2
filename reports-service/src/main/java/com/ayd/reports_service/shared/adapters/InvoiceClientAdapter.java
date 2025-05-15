@@ -24,7 +24,9 @@ public class InvoiceClientAdapter implements InvoiceClientPort {
                 // solicitud
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(URL + "/byIds")
+                        .scheme("lb")
+                        .host("API-GATEWAY")
+                        .path("/api/v1/invoices/byIds")
                         .queryParam("ids", ids.toArray())
                         .build())
                 // ejecutmaos la solicitud y se prepara para obtener la respuesta
