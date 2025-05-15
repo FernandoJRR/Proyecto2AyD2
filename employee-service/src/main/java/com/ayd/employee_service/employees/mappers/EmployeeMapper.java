@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 
 import com.ayd.employee_service.employees.dtos.CreateEmployeeRequestDTO;
 import com.ayd.employee_service.employees.dtos.EmployeeRequestDTO;
-import com.ayd.employee_service.employees.dtos.EmployeeResponseDTO;
 import com.ayd.employee_service.employees.models.Employee;
+import com.ayd.sharedEmployeeService.dto.EmployeeResponseDTO;
 
 @Mapper(componentModel = "spring")
 public interface EmployeeMapper {
