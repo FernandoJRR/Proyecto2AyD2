@@ -1,9 +1,10 @@
-package com.ayd.invoice_service.Invoice.dtos;
+package com.ayd.sharedInvoiceService.dtos;
 
-import com.ayd.invoice_service.Invoice.enums.ItemType;
 import lombok.Value;
 
 import java.math.BigDecimal;
+
+import com.ayd.sharedInvoiceService.enums.ItemType;
 
 @Value
 public class InvoiceDetailResponseDTO {

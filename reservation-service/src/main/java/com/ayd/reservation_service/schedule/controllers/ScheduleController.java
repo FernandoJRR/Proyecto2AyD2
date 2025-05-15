@@ -6,10 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,15 +20,13 @@ import com.ayd.reservation_service.schedule.dtos.UpdateScheduleRequestDTO;
 import com.ayd.reservation_service.schedule.mappers.ScheduleMapper;
 import com.ayd.reservation_service.schedule.models.Schedule;
 import com.ayd.reservation_service.schedule.ports.ForSchedulePort;
-import com.ayd.shared.exceptions.*;
+import com.ayd.shared.exceptions.DuplicatedEntryException;
+import com.ayd.shared.exceptions.NotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.RequestBody;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -52,15 +50,15 @@ public class ScheduleController {
         return scheduleMapper.formScheduleToScheduleResponseDTO(schedule);
     }
 
-    @Operation(summary = "Obtener horarios por modalidad", description = "Devuelve una lista de horarios filtrados por modalidad en línea (true para online, false para presencial).")
+    @Operation(summary = "Obtener horarios")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de horarios obtenida exitosamente"),
             @ApiResponse(responseCode = "500", description = "Error inesperado del servidor")
     })
-    @GetMapping("/online/{online}")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ScheduleResponseDTO> getSchedulesByOnline(@PathVariable boolean online) {
-        List<Schedule> schedules = forSchedulePort.getSchedulesByOnline(online);
+    public List<ScheduleResponseDTO> getSchedulesByOnline() {
+        List<Schedule> schedules = forSchedulePort.getAllSchedules();
         return scheduleMapper.formScheduleListToScheduleResponseDTOList(schedules);
     }
 

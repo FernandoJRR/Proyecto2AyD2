@@ -29,8 +29,8 @@ public class ScheduleService implements ForSchedulePort {
     }
 
     @Override
-    public List<Schedule> getSchedulesByOnline(boolean online) {
-        return scheduleRepository.findByOnline(online);
+    public List<Schedule> getAllSchedules() {
+        return scheduleRepository.findAll();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ScheduleService implements ForSchedulePort {
         if (createScheduleRequest.getStartTime().isAfter(createScheduleRequest.getEndTime())) {
             throw new IllegalStateException("La hora de inicio debe ser menor a la hora de fin.");
         }
-        if (scheduleRepository.existsByOnlineAndStartTimeBetween(createScheduleRequest.isOnline(),
+        if (scheduleRepository.existsByStartTimeAndEndTime(
                 createScheduleRequest.getStartTime(),
                 createScheduleRequest.getEndTime())) {
             throw new DuplicatedEntryException("Ya existe una programación con el mismo horario.");
@@ -58,10 +58,9 @@ public class ScheduleService implements ForSchedulePort {
         if (updateScheduleRequest.getStartTime().isAfter(updateScheduleRequest.getEndTime())) {
             throw new IllegalStateException("La hora de inicio debe ser menor a la hora de fin.");
         }
-        if (scheduleRepository.existsByStartTimeAndEndTimeAndOnlineNotAndIdNot(
+        if (scheduleRepository.existsByStartTimeAndEndTimeAndIdNot(
                 updateScheduleRequest.getStartTime(),
                 updateScheduleRequest.getEndTime(),
-                updateScheduleRequest.isOnline(),
                 scheduleId)) {
             throw new DuplicatedEntryException("Ya existe una programación con el mismo horario.");
         }

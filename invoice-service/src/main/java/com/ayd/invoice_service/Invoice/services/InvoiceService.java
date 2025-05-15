@@ -11,12 +11,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import com.ayd.invoice_service.Invoice.dtos.CreateInvoiceRequestDTO;
 import com.ayd.invoice_service.Invoice.dtos.ItemTypeResponseDTO;
 import com.ayd.invoice_service.Invoice.dtos.PaymentMethodResponse;
 import com.ayd.invoice_service.Invoice.dtos.SpecificationInvoiceRequestDTO;
-import com.ayd.invoice_service.Invoice.enums.ItemType;
-import com.ayd.invoice_service.Invoice.enums.PaymentMethod;
 import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
 import com.ayd.invoice_service.Invoice.ports.ConfigClientPort;
@@ -26,6 +23,9 @@ import com.ayd.invoice_service.Invoice.repositories.InvoiceRepository;
 import com.ayd.invoice_service.Invoice.specifications.InvoiceSpecification;
 import com.ayd.shared.exceptions.NotFoundException;
 import com.ayd.sharedConfigService.dto.ParameterResponseDTO;
+import com.ayd.sharedInvoiceService.dtos.CreateInvoiceRequestDTO;
+import com.ayd.sharedInvoiceService.enums.ItemType;
+import com.ayd.sharedInvoiceService.enums.PaymentMethod;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

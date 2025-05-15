@@ -27,14 +27,13 @@ public class SeedersConfig implements CommandLineRunner {
 				LocalTime start = LocalTime.of(i, 0);
 				LocalTime end = LocalTime.of(i + 1, 0);
 
-				Schedule presencial = new Schedule(start, end, false);
-				Schedule virtual = new Schedule(start, end, true);
+				Schedule presencial = new Schedule(start, end);
+
 
 				scheduleRepository.save(presencial);
-				scheduleRepository.save(virtual);
 			}
 
-			System.out.println("24 horarios creados correctamente (12 online, 12 presenciales).");
+			System.out.println("24 horarios creados correctamente.");
 		} else {
 			System.out.println("Ya existen horarios. No se crean duplicados.");
 		}

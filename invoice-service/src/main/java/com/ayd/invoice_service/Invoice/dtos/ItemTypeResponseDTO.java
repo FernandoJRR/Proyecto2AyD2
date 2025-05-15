@@ -1,6 +1,6 @@
 package com.ayd.invoice_service.Invoice.dtos;
 
-import com.ayd.invoice_service.Invoice.enums.ItemType;
+import com.ayd.sharedInvoiceService.enums.ItemType;
 
 import lombok.Value;
 

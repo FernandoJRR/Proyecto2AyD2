@@ -7,13 +7,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ayd.invoice_service.Invoice.adapter.ProductClientAdapter;
-import com.ayd.invoice_service.Invoice.dtos.CreateInvoiceDetailRequestDTO;
-import com.ayd.invoice_service.Invoice.enums.ItemType;
 import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
 import com.ayd.invoice_service.Invoice.ports.ForInvoiceDetailPort;
 import com.ayd.invoice_service.Invoice.repositories.InvoiceDetailRepository;
 import com.ayd.shared.exceptions.NotFoundException;
+import com.ayd.sharedInvoiceService.dtos.CreateInvoiceDetailRequestDTO;
+import com.ayd.sharedInvoiceService.enums.ItemType;
 import com.ayd.sharedProductService.packages.dtos.GolfPackageResponseDTO;
 import com.ayd.sharedProductService.product.dtos.ProductResponseDTO;
 

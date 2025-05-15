@@ -3,7 +3,9 @@ package com.ayd.reservation_service.reservation.ports;
 import java.io.IOException;
 import java.util.List;
 
-import com.ayd.reservation_service.reservation.dtos.CreateReservationRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationOnlineRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationPresentialRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.PayReservationRequestDTO;
 import com.ayd.reservation_service.reservation.models.Reservation;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.DuplicatedEntryException;
@@ -14,14 +16,15 @@ import com.google.zxing.WriterException;
 
 public interface ForReservationPort {
 
-    public byte[] createPresentialReservation(CreateReservationRequestDTO createReservationRequestDTO)
+    public byte[] createPresentialReservation(CreateReservationPresentialRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException, WriterException, IOException;
 
-    public byte[] payReservation(String reservationId) throws NotFoundException, WriterException, IOException;
+    public byte[] payReservation(PayReservationRequestDTO payReservationRequestDTO)
+            throws NotFoundException, WriterException, IOException;
 
-    public byte[] getReservationQr(String reservationId) throws WriterException, IOException, NotFoundException;
+    public byte[] getReservationInvoice(String reservationId) throws WriterException, IOException, NotFoundException;
 
-    public Reservation createOnlineReservation(CreateReservationRequestDTO createReservationRequestDTO)
+    public byte[] createOnlineReservation(CreateReservationOnlineRequestDTO createReservationRequestDTO)
             throws DuplicatedEntryException;
 
     public Reservation getReservation(String reservationId) throws NotFoundException;
