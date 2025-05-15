@@ -23,19 +23,16 @@ public class Schedule extends Auditor {
     private LocalTime startTime;
     @Column(nullable = false)
     private LocalTime endTime;
-    @Column(nullable = false)
-    private boolean online = false;
+
 
     public Schedule(CreateScheduleRequestDTO createScheduleRequest) {
         this.startTime = createScheduleRequest.getStartTime();
         this.endTime = createScheduleRequest.getEndTime();
-        this.online = createScheduleRequest.isOnline();
     }
 
     public Schedule update(UpdateScheduleRequestDTO updateScheduleRequest) {
         this.startTime = updateScheduleRequest.getStartTime();
         this.endTime = updateScheduleRequest.getEndTime();
-        this.online = updateScheduleRequest.isOnline();
         return this;
     }
 }

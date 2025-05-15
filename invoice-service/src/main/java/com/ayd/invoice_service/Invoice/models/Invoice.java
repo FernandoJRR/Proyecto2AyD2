@@ -3,11 +3,12 @@ package com.ayd.invoice_service.Invoice.models;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.ayd.invoice_service.Invoice.enums.PaymentMethod;
 import com.ayd.shared.models.Auditor;
+import com.ayd.sharedInvoiceService.enums.PaymentMethod;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,6 +32,6 @@ public class Invoice extends Auditor {
 
     private String clientDocument; // CUI/NIT // ID del cliente
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<InvoiceDetail> details;
 }

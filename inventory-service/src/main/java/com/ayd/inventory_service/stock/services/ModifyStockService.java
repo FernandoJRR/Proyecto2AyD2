@@ -1,5 +1,6 @@
 package com.ayd.inventory_service.stock.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -48,7 +49,7 @@ public class ModifyStockService implements ForModifiyStockPort {
     @Override
     public List<Stock> substractVariousStockByProductIdAndWarehouseId(List<ModifyStockRequest> modifyStockRequest)
             throws NotFoundException, IllegalStateException {
-        List<Stock> stocks = List.of();
+        List<Stock> stocks = new ArrayList<>();
         for (ModifyStockRequest request : modifyStockRequest) {
             stocks.add(substractStockByProductIdAndWarehouseId(request.getProductId(), request.getWarehouseId(),
                     request.getQuantity()));

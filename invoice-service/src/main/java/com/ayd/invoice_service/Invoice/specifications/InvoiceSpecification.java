@@ -1,7 +1,8 @@
 package com.ayd.invoice_service.Invoice.specifications;
 
-import com.ayd.invoice_service.Invoice.enums.PaymentMethod;
 import com.ayd.invoice_service.Invoice.models.Invoice;
+import com.ayd.sharedInvoiceService.enums.PaymentMethod;
+
 import org.springframework.data.jpa.domain.Specification;
 
 public class InvoiceSpecification {

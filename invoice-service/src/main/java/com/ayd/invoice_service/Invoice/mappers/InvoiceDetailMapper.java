@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.ayd.invoice_service.Invoice.dtos.InvoiceDetailResponseDTO;
 import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
+import com.ayd.sharedInvoiceService.dtos.InvoiceDetailResponseDTO;
 
 @Mapper(componentModel = "spring")
 public interface InvoiceDetailMapper {

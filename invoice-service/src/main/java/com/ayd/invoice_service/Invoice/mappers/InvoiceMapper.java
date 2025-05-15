@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.ayd.invoice_service.Invoice.dtos.InvoiceResponseDTO;
 import com.ayd.invoice_service.Invoice.models.Invoice;
+import com.ayd.sharedInvoiceService.dtos.InvoiceResponseDTO;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {InvoiceDetailMapper.class})
 public interface InvoiceMapper {
     public InvoiceResponseDTO fromInvoiceToInvoiceResponseDTO(Invoice invoice);
 

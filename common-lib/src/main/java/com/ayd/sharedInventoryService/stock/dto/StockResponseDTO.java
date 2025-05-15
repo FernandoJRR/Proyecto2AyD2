@@ -7,6 +7,7 @@ import lombok.Value;
 @Value
 public class StockResponseDTO {
     private String id;
+    private String productId;
     private Integer quantity;
     private Integer minimumStock;
     private WarehouseResponseDTO warehouse;
