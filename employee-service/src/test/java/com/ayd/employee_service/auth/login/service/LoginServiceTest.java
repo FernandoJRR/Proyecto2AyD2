@@ -1,4 +1,4 @@
-package com.ayd.auth.login.service;
+package com.ayd.employee_service.auth.login.service;
 
 import com.ayd.employee_service.auth.jwt.ports.ForJwtGenerator;
 import com.ayd.employee_service.auth.login.dtos.LoginResponseDTO;
