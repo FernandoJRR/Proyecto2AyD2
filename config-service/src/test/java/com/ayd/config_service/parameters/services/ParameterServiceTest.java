@@ -1,4 +1,4 @@
-package com.ayd.config_service.parameters;
+package com.ayd.config_service.parameters.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
