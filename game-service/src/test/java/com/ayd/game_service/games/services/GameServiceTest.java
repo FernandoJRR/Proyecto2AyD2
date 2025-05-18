@@ -134,7 +134,6 @@ public class GameServiceTest {
         foundGame.setId(GAME_ID);
         foundGame.setReservationId(RESERVATION_ID);
 
-
         playGame = new Game();
         playGame.setReservationId(GAME_ID);
         playGame.setCurrentHole(CURRENT_HOLE_NUMBER);
@@ -153,7 +152,6 @@ public class GameServiceTest {
         scoreGameRequest = new ScoreGameRequestDTO();
         scoreGameRequest.setHoleNumber(HOLE_NUMBER);
         scoreGameRequest.setScorePlayers(List.of(scoreRequest));
-
 
         finalHoleRequest = new ScoreGameRequestDTO();
         finalHoleRequest.setHoleNumber(LAST_HOLE_NUMBER);
@@ -214,20 +212,20 @@ public class GameServiceTest {
 
     @Test
     void createGame_Success() {
-            // ARRANGE
-            when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        // ARRANGE
+        when(gameRepository.save(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-            ArgumentCaptor<Game> gameCaptor = ArgumentCaptor.forClass(Game.class);
+        ArgumentCaptor<Game> gameCaptor = ArgumentCaptor.forClass(Game.class);
 
-            // ACT
-            Game savedGame = gameService.createGame(creationRequest);
+        // ACT
+        Game savedGame = gameService.createGame(creationRequest);
 
-            // ASSERT
-            verify(gameRepository).save(gameCaptor.capture());
-            Game capturedGame = gameCaptor.getValue();
-            List<Player> players = capturedGame.getPlayers();
+        // ASSERT
+        verify(gameRepository).save(gameCaptor.capture());
+        Game capturedGame = gameCaptor.getValue();
+        List<Player> players = capturedGame.getPlayers();
 
-            assertAll(
+        assertAll(
                 () -> assertEquals(RESERVATION_ID, capturedGame.getReservationId()),
                 () -> assertFalse(capturedGame.getHasFinished()),
                 () -> assertNotNull(capturedGame.getPlayers()),
@@ -236,8 +234,7 @@ public class GameServiceTest {
                 () -> assertEquals(PLAYER_2_NAME, players.get(1).getName()),
                 () -> assertSame(capturedGame, players.get(0).getGame()),
                 () -> assertSame(capturedGame, players.get(1).getGame()),
-                () -> assertEquals(savedGame, capturedGame)
-            );
+                () -> assertEquals(savedGame, capturedGame));
 
     }
 
@@ -251,9 +248,8 @@ public class GameServiceTest {
 
         // ASSERT
         assertAll(
-            () -> assertNotNull(result),
-            () -> assertEquals(GAME_ID, result.getId())
-        );
+                () -> assertNotNull(result),
+                () -> assertEquals(GAME_ID, result.getId()));
 
         verify(gameRepository).findById(GAME_ID);
     }
@@ -279,9 +275,8 @@ public class GameServiceTest {
 
         // ASSERT
         assertAll(
-            () -> assertNotNull(result),
-            () -> assertEquals(RESERVATION_ID, result.getReservationId())
-        );
+                () -> assertNotNull(result),
+                () -> assertEquals(RESERVATION_ID, result.getReservationId()));
         verify(gameRepository).findByReservationId(RESERVATION_ID);
     }
 
@@ -310,10 +305,9 @@ public class GameServiceTest {
 
         // ASSERT
         assertAll(
-            () -> assertNotNull(result),
-            () -> assertEquals(HOLE_NUMBER, result.getCurrentHole()),
-            () -> assertFalse(result.getHasFinished())
-        );
+                () -> assertNotNull(result),
+                () -> assertEquals(HOLE_NUMBER, result.getCurrentHole()),
+                () -> assertFalse(result.getHasFinished()));
         verify(playerHoleScoreRepository).save(any(PlayerHoleScore.class));
         verify(gameRepository).save(result);
     }
@@ -331,10 +325,9 @@ public class GameServiceTest {
 
         // ASSERT
         assertAll(
-            () -> assertNotNull(result),
-            () -> assertEquals(LAST_HOLE_NUMBER, result.getCurrentHole()),
-            () -> assertEquals(true, result.getHasFinished())
-        );
+                () -> assertNotNull(result),
+                () -> assertEquals(LAST_HOLE_NUMBER, result.getCurrentHole()),
+                () -> assertEquals(true, result.getHasFinished()));
         verify(playerHoleScoreRepository).save(any(PlayerHoleScore.class));
     }
 
@@ -345,9 +338,7 @@ public class GameServiceTest {
 
         // ACT
         // ASSERT
-        assertThrows(NotFoundException.class, () ->
-            gameService.updateScore(INVALID_GAME_ID, scoreGameRequest)
-        );
+        assertThrows(NotFoundException.class, () -> gameService.updateScore(INVALID_GAME_ID, scoreGameRequest));
     }
 
     @Test
@@ -362,12 +353,12 @@ public class GameServiceTest {
         assertEquals(2, response.getPlayerScores().size());
 
         ScorePlayerResponseDTO player1Score = response.getPlayerScores().stream()
-            .filter(p -> p.getId().equals(PLAYER_1_ID))
-            .findFirst().orElse(null);
+                .filter(p -> p.getId().equals(PLAYER_1_ID))
+                .findFirst().orElse(null);
 
         ScorePlayerResponseDTO player2Score = response.getPlayerScores().stream()
-            .filter(p -> p.getId().equals(PLAYER_2_ID))
-            .findFirst().orElse(null);
+                .filter(p -> p.getId().equals(PLAYER_2_ID))
+                .findFirst().orElse(null);
 
         assertNotNull(player1Score);
         assertEquals(PLAYER_1_NAME, player1Score.getName());
@@ -440,4 +431,60 @@ public class GameServiceTest {
         assertSame(savedGame, savedGame.getPlayers().get(0).getGame());
         assertSame(savedGame, savedGame.getPlayers().get(1).getGame());
     }
+
+    @Test
+    void updateScore_ShouldThrow_WhenHoleIsLowerThanCurrent() {
+        // Arrange
+        playGame.setCurrentHole(HOLE_NUMBER); // progreso actual = 5
+        when(gameRepository.findById(GAME_ID)).thenReturn(Optional.of(playGame));
+
+        // Mock para que no falle antes
+        when(holeRepository.findByNumber(HOLE_NUMBER - 1)).thenReturn(Optional.of(playHole));
+
+        ScoreGameRequestDTO invalidHoleRequest = new ScoreGameRequestDTO();
+        invalidHoleRequest.setHoleNumber(HOLE_NUMBER - 1); // retroceso inválido
+        invalidHoleRequest.setScorePlayers(List.of(scoreRequest));
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> gameService.updateScore(GAME_ID, invalidHoleRequest));
+    }
+
+    @Test
+    void getScoreHole_ShouldReturnCorrectScorePerHole() throws NotFoundException {
+        // Arrange
+        when(playerHoleScoreRepository.findByGame_IdAndHole_Number(GAME_ID, HOLE_NUMBER))
+                .thenReturn(List.of(score1, score3));
+
+        // Act
+        ScoreGameResponseDTO result = gameService.getScoreHole(GAME_ID, HOLE_NUMBER);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.getPlayerScores().size());
+
+        assertTrue(result.getPlayerScores().stream()
+                .anyMatch(p -> p.getName().equals(PLAYER_1_NAME) && p.getTotalShots() == 3));
+        assertTrue(result.getPlayerScores().stream()
+                .anyMatch(p -> p.getName().equals(PLAYER_2_NAME) && p.getTotalShots() == 2));
+
+        verify(playerHoleScoreRepository).findByGame_IdAndHole_Number(GAME_ID, HOLE_NUMBER);
+    }
+
+    @Test
+    void updatePlayersGame_ShouldInitializePlayersListIfNull() throws NotFoundException {
+        // Arrange
+        Game newGame = new Game();
+        newGame.setId(GAME_ID);
+        newGame.setPlayers(null); // fuerza condición
+        when(gameRepository.findById(GAME_ID)).thenReturn(Optional.of(newGame));
+        when(gameRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Game result = gameService.updatePlayersGame(GAME_ID, requestPlayer);
+
+        // Assert
+        assertNotNull(result.getPlayers());
+        assertEquals(2, result.getPlayers().size());
+    }
+
 }
