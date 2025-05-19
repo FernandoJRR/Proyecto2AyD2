@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@NoArgsConstructor
-@Getter
+@Value
 public class ParameterRegimenRequestDTO {
     @NotBlank(message = "El nuevo tipo de regimen es obligatorio")
     @Pattern(regexp = "gen|peq", message = "El valor del nuevo regimen debe ser 'gen' o 'peq'")
