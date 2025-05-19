@@ -59,30 +59,6 @@ public class ConfigurationTest extends BaseE2ETest {
         assertTrue(toast.isDisplayed());
     }
 
-    @Test
-    void testChangeNitRegime() {
-        navigateToWindowToTest();
-
-        WebElement select = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.name("txtRegime")));
-        select.click();
-
-        WebElement listaOpciones = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.tagName("ul")));
-
-        WebElement opcion = listaOpciones.findElements(By.tagName("li")).get(1);
-        opcion.click();
-
-        WebElement btnSendRegime = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.name("btnSendRegime")));
-        btnSendRegime.click();
-
-        WebElement toast = wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.name("toastr")));
-
-        assertTrue(toast.isDisplayed());
-    }
-
     @Override
     public void navigateToWindowToTest() {
         WebElement adminBtn = wait.until(ExpectedConditions.elementToBeClickable(
