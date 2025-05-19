@@ -17,7 +17,7 @@ spring:
         - id: employee-service
           uri: lb://EMPLOYEE-SERVICE
           predicates:
-            - Path=/api/v1/login, /api/v1/login/**,/api/v1/history-types/**,/api/v1/permissions/**,/api/v1/permissions,/api/v1/employee-types/**,/api/v1/employee-types,/api/v1/employees/**,/api/v1/employees,/api/v1/vacations/**
+            - Path=/api/v1/login, /api/v1/login/**,/api/v1/history-types/**,/api/v1/permissions/**,/api/v1/permissions,/api/v1/employee-types/**,/api/v1/employee-types,/api/v1/payment-types/**,/api/v1/payment-types,/api/v1/employees/**,/api/v1/employees,/api/v1/vacations/**,/api/v1/extra-payments/**,/api/v1/extra-payments
         - id: products-service
           uri: lb://PRODUCT-SERVICE
           predicates:

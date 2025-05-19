@@ -34,16 +34,16 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
         // agrega todas las rutas permitidas
-        configuration.setAllowedOrigins(List.of(appProperties.getFrontURL()));
+        configuration.setAllowedOriginPatterns(List.of("*"));
 
         // decimos que operaciones http estan permitidos
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         // decimos que headers estan permitidos
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("*"));
 
         // permite cookies y credenciales
-        configuration.setAllowCredentials(true);
+//        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 

@@ -22,13 +22,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/v1/login", "/api/v1/reservations/online",
-                        "/api/v1/games/free", "/api/v1/reservations-exports/reservation-ticket")
+                        "/api/v1/games/**", "/api/v1/reservations-exports/reservation-ticket", "/api/v1/schedules")
                 .permitAll()
                 .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter(),
