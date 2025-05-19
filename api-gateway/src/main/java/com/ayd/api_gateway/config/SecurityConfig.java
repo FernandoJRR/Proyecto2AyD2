@@ -24,33 +24,34 @@ public class SecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
                 .build();
     }
 
-    @Bean
-    public CorsWebFilter corsWebFilter() {
+    // @Bean
+    // public CorsWebFilter corsWebFilter() {
 
-        System.out.println(appProperties.getFrontURL());
+    //     System.out.println(appProperties.getFrontURL());
 
-        CorsConfiguration configuration = new CorsConfiguration();
-        // agrega todas las rutas permitidas
-        configuration.setAllowedOrigins(List.of(appProperties.getFrontURL()));
+    //     CorsConfiguration configuration = new CorsConfiguration();
+    //     // agrega todas las rutas permitidas
+    //     configuration.setAllowedOrigins(List.of(appProperties.getFrontURL()));
 
-        // decimos que operaciones http estan permitidos
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+    //     // decimos que operaciones http estan permitidos
+    //     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
-        // decimos que headers estan permitidos
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+    //     // decimos que headers estan permitidos
+    //     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
-        // permite cookies y credenciales
-        configuration.setAllowCredentials(true);
+    //     // permite cookies y credenciales
+    //     configuration.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        // aplicamos CORS a todas las rutas del sistema
-        source.registerCorsConfiguration("/**", configuration);
+    //     // aplicamos CORS a todas las rutas del sistema
+    //     source.registerCorsConfiguration("/**", configuration);
 
-        return new CorsWebFilter(source);
-    }
+    //     return new CorsWebFilter(source);
+    // }
 
 }
