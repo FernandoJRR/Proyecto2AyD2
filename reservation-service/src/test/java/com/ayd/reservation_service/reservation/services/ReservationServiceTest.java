@@ -28,12 +28,20 @@ import com.ayd.game_service_common.games.dtos.GameResponseDTO;
 import com.ayd.game_service_common.players.dtos.CreatePlayerRequestDTO;
 import com.ayd.reservation_service.reservation.dtos.CreateReservationDTO;
 import com.ayd.reservation_service.reservation.dtos.CreateReservationOnlineRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.CreateReservationPresentialRequestDTO;
+import com.ayd.reservation_service.reservation.dtos.PayReservationRequestDTO;
+import com.ayd.reservation_service.reservation.mappers.ReservationMapper;
 import com.ayd.reservation_service.reservation.models.Reservation;
 import com.ayd.reservation_service.reservation.ports.ForGameClientPort;
+import com.ayd.reservation_service.reservation.ports.ForInvoiceClientPort;
+import com.ayd.reservation_service.reservation.ports.ForReportClientPort;
 import com.ayd.reservation_service.reservation.repositories.ReservationRepository;
 import com.ayd.shared.dtos.PeriodRequestDTO;
 import com.ayd.shared.exceptions.NotFoundException;
 import com.ayd.shared.security.AppProperties;
+import com.ayd.sharedInvoiceService.dtos.CreateInvoiceRequestDTO;
+import com.ayd.sharedInvoiceService.dtos.InvoiceResponseDTO;
+import com.ayd.sharedReservationService.dto.ReservationResponseDTO;
 import com.ayd.sharedReservationService.dto.ReservationSpecificationRequestDTO;
 import com.ayd.sharedReservationService.dto.ReservationTimeStatsDTO;
 
@@ -44,6 +52,12 @@ class ReservationServiceTest {
     private ReservationRepository reservationRepository;
     @Mock
     private ForGameClientPort gameClientPort;
+    @Mock
+    private ForReportClientPort forReportClientPort;
+    @Mock
+    private ForInvoiceClientPort forInvoiceClient;
+    @Mock
+    private ReservationMapper reservationMapper;
     @Mock
     private AppProperties appProperties;
 
@@ -64,7 +78,7 @@ class ReservationServiceTest {
     public static final CreatePlayerRequestDTO PLAYER_1 = new CreatePlayerRequestDTO("Player 1", Integer.valueOf(25));
     public static final CreatePlayerRequestDTO PLAYER_2 = new CreatePlayerRequestDTO("Player 2", Integer.valueOf(28));
     private static final GameResponseDTO GAME_RESPONSE_DTO = new GameResponseDTO("game-789", "reserv", List.of(),
-            false,1);
+            false, 1);
     public static final List<CreatePlayerRequestDTO> VALID_PLAYERS = List.of(PLAYER_1, PLAYER_2);
 
     private CreateReservationDTO createDTO;
@@ -73,8 +87,8 @@ class ReservationServiceTest {
     @BeforeEach
     void setUp() {
 
-         createDTO = new CreateReservationDTO(START_TIME, END_TIME, DATE,
-                 CUSTOMER_CUI, CUSTOMER_FULL_NAME);
+        createDTO = new CreateReservationDTO(START_TIME, END_TIME, DATE,
+                CUSTOMER_CUI, CUSTOMER_FULL_NAME);
 
         reservation = new Reservation(createDTO);
         reservation.setId(RESERVATION_ID);
@@ -89,19 +103,20 @@ class ReservationServiceTest {
      */
     // @Test
     // void createPresentialReservationReturnsQrBytes() throws Exception {
-    //     // arrange
-    //     when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any(), any(), any())).thenReturn(false);
-    //     when(reservationRepository.save(any())).thenReturn(reservation);
-    //     when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
-    //     when(qrCodeAdapter.generateQrCode(any())).thenReturn("fake-qr".getBytes());
+    // // arrange
+    // when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any(),
+    // any(), any())).thenReturn(false);
+    // when(reservationRepository.save(any())).thenReturn(reservation);
+    // when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
+    // when(qrCodeAdapter.generateQrCode(any())).thenReturn("fake-qr".getBytes());
 
-    //     // act
-    //     byte[] qrBytes = reservationService.createPresentialReservation(createDTO);
+    // // act
+    // byte[] qrBytes = reservationService.createPresentialReservation(createDTO);
 
-    //     // assert
-    //     assertAll(
-    //             () -> assertNotNull(qrBytes),
-    //             () -> assertTrue(qrBytes.length > 0));
+    // // assert
+    // assertAll(
+    // () -> assertNotNull(qrBytes),
+    // () -> assertTrue(qrBytes.length > 0));
     // }
 
     /**
@@ -111,20 +126,21 @@ class ReservationServiceTest {
      */
     // @Test
     // void createOnlineReservationReturnsReservationWithGameId() throws Exception {
-    //     // arrange
-    //     when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(DATE,START_TIME, END_TIME)).thenReturn(false);
-    //     when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
-    //     when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
+    // // arrange
+    // when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(DATE,START_TIME,
+    // END_TIME)).thenReturn(false);
+    // when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+    // when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
 
-    //     // act
-    //     Reservation result = reservationService.createOnlineReservation(createDTO);
+    // // act
+    // Reservation result = reservationService.createOnlineReservation(createDTO);
 
-    //     // assert
-    //     assertAll(
-    //             () -> assertNotNull(result),
-    //             () -> assertEquals("game-789", result.getGameId()),
-    //             () -> verify(reservationRepository).save(any(Reservation.class)),
-    //             () -> verify(gameClientPort).createGame(any(CreateGameRequestDTO.class)));
+    // // assert
+    // assertAll(
+    // () -> assertNotNull(result),
+    // () -> assertEquals("game-789", result.getGameId()),
+    // () -> verify(reservationRepository).save(any(Reservation.class)),
+    // () -> verify(gameClientPort).createGame(any(CreateGameRequestDTO.class)));
     // }
 
     /**
@@ -134,18 +150,18 @@ class ReservationServiceTest {
      */
     // @Test
     // void payReservationMarksAsPaidAndReturnsQr() throws Exception {
-    //     // arrange
-    //     reservation.setGameId("game-789");
-    //     when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
-    //     when(qrCodeAdapter.generateQrCode(any())).thenReturn("fake-qr".getBytes());
+    // // arrange
+    // reservation.setGameId("game-789");
+    // when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+    // when(qrCodeAdapter.generateQrCode(any())).thenReturn("fake-qr".getBytes());
 
-    //     // act
-    //     byte[] qrBytes = reservationService.payReservation(RESERVATION_ID);
+    // // act
+    // byte[] qrBytes = reservationService.payReservation(RESERVATION_ID);
 
-    //     // assert
-    //     assertAll(
-    //             () -> assertNotNull(qrBytes),
-    //             () -> assertTrue(reservation.getPaid()));
+    // // assert
+    // assertAll(
+    // () -> assertNotNull(qrBytes),
+    // () -> assertTrue(reservation.getPaid()));
     // }
 
     /**
@@ -209,47 +225,50 @@ class ReservationServiceTest {
     }
 
     // /**
-    //  * dado: no existe una reserva con el ID proporcionado.
-    //  * cuando: se llama a setPaymentReservation.
-    //  * entonces: se lanza NotFoundException.
-    //  */
+    // * dado: no existe una reserva con el ID proporcionado.
+    // * cuando: se llama a setPaymentReservation.
+    // * entonces: se lanza NotFoundException.
+    // */
     // @Test
     // void shouldThrowNotFoundWhenSettingPaymentOnNonexistentReservation() {
-    //     when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.empty());
+    // when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.empty());
 
-    //     assertThrows(NotFoundException.class, () -> reservationService.payReservation(RESERVATION_ID));
+    // assertThrows(NotFoundException.class, () ->
+    // reservationService.payReservation(RESERVATION_ID));
 
-    //     verify(reservationRepository, never()).save(any());
+    // verify(reservationRepository, never()).save(any());
     // }
 
     // /**
-    //  * dado: la reserva ya ha sido pagada.
-    //  * cuando: se llama a setPaymentReservation.
-    //  * entonces: se lanza IllegalStateException.
-    //  */
+    // * dado: la reserva ya ha sido pagada.
+    // * cuando: se llama a setPaymentReservation.
+    // * entonces: se lanza IllegalStateException.
+    // */
     // @Test
     // void shouldThrowWhenReservationAlreadyPaidOnSetPayment() {
-    //     reservation.setPaid(true);
-    //     when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+    // reservation.setPaid(true);
+    // when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
-    //     assertThrows(IllegalStateException.class, () -> reservationService.payReservation(RESERVATION_ID));
+    // assertThrows(IllegalStateException.class, () ->
+    // reservationService.payReservation(RESERVATION_ID));
 
-    //     verify(reservationRepository, never()).save(any());
+    // verify(reservationRepository, never()).save(any());
     // }
 
     // /**
-    //  * dado: la reserva ha sido cancelada.
-    //  * cuando: se llama a setPaymentReservation.
-    //  * entonces: se lanza IllegalStateException.
-    //  */
+    // * dado: la reserva ha sido cancelada.
+    // * cuando: se llama a setPaymentReservation.
+    // * entonces: se lanza IllegalStateException.
+    // */
     // @Test
     // void shouldThrowWhenReservationCancelledOnSetPayment() {
-    //     reservation.setNotShow(true);
-    //     when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+    // reservation.setNotShow(true);
+    // when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
-    //     assertThrows(IllegalStateException.class, () -> reservationService.payReservation(RESERVATION_ID));
+    // assertThrows(IllegalStateException.class, () ->
+    // reservationService.payReservation(RESERVATION_ID));
 
-    //     verify(reservationRepository, never()).save(any());
+    // verify(reservationRepository, never()).save(any());
     // }
 
     /**
@@ -392,4 +411,117 @@ class ReservationServiceTest {
                         .findReservationsGroupedByTimeRangeAndFilteredByDate(any(), any()));
     }
 
+    /**
+     * dado: el DTO tiene datos válidos y no existe duplicado.
+     * cuando: se llama a createOnlineReservation.
+     * entonces: se guarda la reserva, se crea el juego y se genera el ID del juego.
+     */
+    @Test
+    void createPresentialReservation_ShouldReturnPDF() throws Exception {
+        CreateReservationPresentialRequestDTO dto = new CreateReservationPresentialRequestDTO(
+                START_TIME, END_TIME, DATE, CUSTOMER_CUI, CUSTOMER_FULL_NAME,
+                new CreateInvoiceRequestDTO(null, null, null));
+
+        when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any(), any(), any()))
+                .thenReturn(false);
+        when(reservationRepository.save(any())).thenReturn(reservation);
+        when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
+        when(forInvoiceClient.createInvoice(any()))
+                .thenReturn(new InvoiceResponseDTO("invoice-id", null, null, null, null, null, null));
+        when(forReportClientPort.exportInvoiceWithQR(any())).thenReturn("PDF_BYTES".getBytes());
+
+        byte[] result = reservationService.createPresentialReservation(dto);
+
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertTrue(result.length > 0),
+                () -> verify(forInvoiceClient).createInvoice(any()),
+                () -> verify(forReportClientPort).exportInvoiceWithQR(any()));
+    }
+
+    @Test
+    void createOnlineReservation_ShouldReturnPDF() throws Exception {
+        CreateReservationOnlineRequestDTO dto = new CreateReservationOnlineRequestDTO(
+                START_TIME, END_TIME, DATE, CUSTOMER_CUI, CUSTOMER_FULL_NAME, VALID_PLAYERS);
+
+        when(reservationRepository.existsByDateAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any(), any(), any()))
+                .thenReturn(false);
+        when(reservationRepository.save(any())).thenReturn(reservation);
+        when(gameClientPort.createGame(any())).thenReturn(GAME_RESPONSE_DTO);
+        when(forReportClientPort.exportReservationTicket(any())).thenReturn("TICKET_BYTES".getBytes());
+
+        byte[] result = reservationService.createOnlineReservation(dto);
+
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertTrue(result.length > 0),
+                () -> verify(forReportClientPort).exportReservationTicket(any()));
+    }
+
+    @Test
+    void getReservationInvoice_ShouldReturnPDF() throws Exception {
+        reservation.setPaid(true);
+        reservation.setInvoiceId("invoice-123");
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+        when(forInvoiceClient.getInvoice("invoice-123"))
+                .thenReturn(new InvoiceResponseDTO("invoice-123", null, null, null, null, null, null));
+        when(reservationMapper.fromReservationToReservationResponseDTO(any()))
+                .thenReturn(new ReservationResponseDTO(
+                        RESERVATION_ID,
+                        START_TIME,
+                        END_TIME,
+                        DATE,
+                        null, null, CUSTOMER_CUI,
+                        CUSTOMER_FULL_NAME,
+                        "game-id",
+                        "invoice-123"));
+        when(forReportClientPort.exportInvoiceWithQR(any())).thenReturn("INVOICE_QR_PDF".getBytes());
+
+        byte[] result = reservationService.getReservationInvoice(RESERVATION_ID);
+
+        assertAll(
+                () -> assertNotNull(result),
+                () -> verify(forInvoiceClient).getInvoice("invoice-123"),
+                () -> verify(forReportClientPort).exportInvoiceWithQR(any()));
+    }
+
+    @Test
+    void payReservationWithDTO_ShouldReturnPDF() throws Exception {
+        reservation.setGameId("game-id");
+        PayReservationRequestDTO dto = new PayReservationRequestDTO(RESERVATION_ID,
+                new CreateInvoiceRequestDTO(null, null, null));
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+        when(forInvoiceClient.createInvoice(any()))
+                .thenReturn(new InvoiceResponseDTO("invoice-id", null, null, null, null, null, null));
+        when(forReportClientPort.exportInvoiceWithQR(any())).thenReturn("INVOICE_PDF".getBytes());
+
+        byte[] result = reservationService.payReservation(dto);
+
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertTrue(result.length > 0),
+                () -> verify(reservationRepository).findById(RESERVATION_ID),
+                () -> verify(forInvoiceClient).createInvoice(any()));
+    }
+
+    @Test
+    void payReservationInternal_ShouldReturnPDF() {
+        CreateInvoiceRequestDTO invoiceDTO = new CreateInvoiceRequestDTO(null, null, null);
+        reservation.setGameId("game-id");
+
+        when(forInvoiceClient.createInvoice(any()))
+                .thenReturn(new InvoiceResponseDTO("invoice-id", null, null, null, null, null, null));
+        when(forReportClientPort.exportInvoiceWithQR(any())).thenReturn("QR_PDF".getBytes());
+
+        byte[] result = reservationService.payReservation(reservation, invoiceDTO);
+
+        assertAll(
+                () -> assertNotNull(result),
+                () -> assertTrue(reservation.getPaid()),
+                () -> assertEquals("invoice-id", reservation.getInvoiceId()),
+                () -> verify(forInvoiceClient).createInvoice(any()),
+                () -> verify(forReportClientPort).exportInvoiceWithQR(any()));
+    }
 }
