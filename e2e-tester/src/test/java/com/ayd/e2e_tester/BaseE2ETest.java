@@ -32,7 +32,7 @@ public abstract class BaseE2ETest {
     void setUpBase() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(TIME_TO_WAIT));
 
         login();
