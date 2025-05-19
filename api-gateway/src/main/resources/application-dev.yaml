@@ -1,5 +1,5 @@
 app:
-  frontURL: "*"
+  frontURL: https://mantis-easy-slightly.ngrok-free.app
 
 eureka:
   client:
