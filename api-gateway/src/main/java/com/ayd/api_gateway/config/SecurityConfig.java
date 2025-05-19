@@ -43,7 +43,7 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(List.of("*"));
 
         // permite cookies y credenciales
-        configuration.setAllowCredentials(true);
+//        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
