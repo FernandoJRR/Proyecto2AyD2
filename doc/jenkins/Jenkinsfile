@@ -176,25 +176,23 @@ pipeline {
                                 sh 'mvn clean compile -DskipTests'
                                 sh 'mvn clean install -DskipTests'
                             }
-
                             sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Config Service'
-                            ])
                         }
                         DEPLOY_CONFIG_JAR = true
                     } else {
                         echo "🚀 No hay cambios en el Config Service, no se compila."
                         // Marcamos DEPLOY_CONFIG_JAR como falso ya que no se ha compilado
                         DEPLOY_CONFIG_JAR = false
+                    }
+                    // Siempre publicamos el reporte de jacoco
+                    dir('config-service') {
+                        junit 'target/surefire-reports/*.xml'
+                        jacoco execPattern: 'target/jacoco.exec'
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage Config Service'
+                        ])
                     }
                 }
             }
@@ -223,25 +221,22 @@ pipeline {
                                 sh 'mvn clean compile -DskipTests'
                                 sh 'mvn clean install -DskipTests'
                             }
-
                             sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Employee Service'
-                            ])
                         }
                         DEPLOY_EMPLOYEE_JAR = true
                     } else {
                         echo "🚀 No hay cambios en el Employee Service, no se compila."
                         // Marcamos DEPLOY_EMPLOYEE_JAR como falso ya que no se ha compilado
                         DEPLOY_EMPLOYEE_JAR = false
+                    }
+                    dir('employee-service') {
+                        junit 'target/surefire-reports/*.xml'
+                        jacoco execPattern: 'target/jacoco.exec'
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage Employee Service'
+                        ])
                     }
                 }
             }
@@ -271,23 +266,21 @@ pipeline {
                                 sh 'mvn clean install -DskipTests'
                             }
                             sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Product Service'
-                            ])
                         }
                         DEPLOY_PRODUCT_JAR = true
                     } else {
                         echo "🚀 No hay cambios en el Product Service, no se compila."
                         // Marcamos DEPLOY_PRODUCT_JAR como falso ya que no se ha compilado
                         DEPLOY_PRODUCT_JAR = false
+                    }
+                    dir('product-service') {
+                        junit 'target/surefire-reports/*.xml'
+                        jacoco execPattern: 'target/jacoco.exec'
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage Product Service'
+                        ])
                     }
                 }
             }
@@ -317,23 +310,21 @@ pipeline {
                                 sh 'mvn clean install -DskipTests'
                             }
                             sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Reservation Service'
-                            ])
                         }
                         DEPLOY_RESERVATION_JAR = true
                     } else {
                         echo "🚀 No hay cambios en el Reservation Service, no se compila."
                         // Marcamos DEPLOY_RESERVATION_JAR como falso ya que no se ha compilado
                         DEPLOY_RESERVATION_JAR = false
+                    }
+                    dir('reservation-service') {
+                        junit 'target/surefire-reports/*.xml'
+                        jacoco execPattern: 'target/jacoco.exec'
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage Reservation Service'
+                        ])
                     }
                 }
             }
@@ -363,23 +354,21 @@ pipeline {
                                 sh 'mvn clean install -DskipTests'
                             }
                             sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Inventory Service'
-                            ])
                         }
                         DEPLOY_INVENTORY_JAR = true
                     } else {
                         echo "🚀 No hay cambios en el Inventory Service, no se compila."
                         // Marcamos DEPLOY_INVENTORY_JAR como falso ya que no se ha compilado
                         DEPLOY_INVENTORY_JAR = false
+                    }
+                    dir('inventory-service') {
+                        junit 'target/surefire-reports/*.xml'
+                        jacoco execPattern: 'target/jacoco.exec'
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage Inventory Service'
+                        ])
                     }
                 }
             }
@@ -409,23 +398,21 @@ pipeline {
                                 sh 'mvn clean install -DskipTests'
                             }
                             sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Invoice Service'
-                            ])
                         }
                         DEPLOY_INVOICE_JAR = true
                     } else {
                         echo "🚀 No hay cambios en el Invoice Service, no se compila."
                         // Marcamos DEPLOY_INVOICE_JAR como falso ya que no se ha compilado
                         DEPLOY_INVOICE_JAR = false
+                    }
+                    dir('invoice-service') {
+                        junit 'target/surefire-reports/*.xml'
+                        jacoco execPattern: 'target/jacoco.exec'
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage Invoice Service'
+                        ])
                     }
                 }
             }
@@ -455,23 +442,21 @@ pipeline {
                                 sh 'mvn clean install -DskipTests'
                             }
                             sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Game Service'
-                            ])
                         }
                         DEPLOY_GAME_JAR = true
                     } else {
                         echo "🚀 No hay cambios en el Game Service, no se compila."
                         // Marcamos DEPLOY_GAME_JAR como falso ya que no se ha compilado
                         DEPLOY_GAME_JAR = false
+                    }
+                    dir('game-service') {
+                        junit 'target/surefire-reports/*.xml'
+                        jacoco execPattern: 'target/jacoco.exec'
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage Game Service'
+                        ])
                     }
                 }
             }
@@ -501,23 +486,21 @@ pipeline {
                                 sh 'mvn clean install -DskipTests'
                             }
                             sh 'mvn clean verify'
-                            // Publicamos las pruebas de jacoco
-                            junit 'target/surefire-reports/*.xml'
-
-                            // Publicamos el reporte de jacoco
-                            jacoco execPattern: 'target/jacoco.exec'
-
-                            publishHTML (target : [
-                                reportDir: 'target/site/jacoco',
-                                reportFiles: 'index.html',
-                                reportName: 'Jacoco Code Coverage Reports Service'
-                            ])
                         }
                         DEPLOY_REPORTS_JAR = true
                     } else {
                         echo "🚀 No hay cambios en el Reports Service, no se compila."
                         // Marcamos DEPLOY_REPORTS_JAR como falso ya que no se ha compilado
                         DEPLOY_REPORTS_JAR = false
+                    }
+                    dir('reports-service') {
+                        junit 'target/surefire-reports/*.xml'
+                        jacoco execPattern: 'target/jacoco.exec'
+                        publishHTML (target : [
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'Jacoco Code Coverage Reports Service'
+                        ])
                     }
                 }
             }
