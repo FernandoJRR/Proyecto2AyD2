@@ -134,7 +134,7 @@ public class ReservationService implements ForReservationPort {
         // return createReservationQR(reservation);
     }
 
-    private byte[] payReservation(Reservation reservation, CreateInvoiceRequestDTO createReservationRequestDTO) {
+    byte[] payReservation(Reservation reservation, CreateInvoiceRequestDTO createReservationRequestDTO) {
 
         // MANR A GUARDAR LA FACTURA CreateReservationRequestDTO.createInvoiceRequestDTO
         InvoiceResponseDTO invoice = forInvoiceClient
