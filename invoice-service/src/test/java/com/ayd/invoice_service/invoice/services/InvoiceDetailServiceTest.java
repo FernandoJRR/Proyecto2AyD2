@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.ayd.invoice_service.Invoice.adapter.ProductClientAdapter;
 import com.ayd.invoice_service.Invoice.models.Invoice;
 import com.ayd.invoice_service.Invoice.models.InvoiceDetail;
 import com.ayd.invoice_service.Invoice.repositories.InvoiceDetailRepository;
@@ -26,12 +28,18 @@ import com.ayd.invoice_service.Invoice.services.InvoiceDetailService;
 import com.ayd.shared.exceptions.NotFoundException;
 import com.ayd.sharedInvoiceService.dtos.CreateInvoiceDetailRequestDTO;
 import com.ayd.sharedInvoiceService.enums.ItemType;
+import com.ayd.sharedProductService.packages.dtos.GolfPackageDetailResponseDTO;
+import com.ayd.sharedProductService.packages.dtos.GolfPackageResponseDTO;
+import com.ayd.sharedProductService.product.dtos.ProductResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
 public class InvoiceDetailServiceTest {
 
     @Mock
     private InvoiceDetailRepository invoiceDetailRepository;
+
+    @Mock
+    private ProductClientAdapter productClientAdapter;
 
     @InjectMocks
     private InvoiceDetailService invoiceDetailService;
@@ -192,4 +200,78 @@ public class InvoiceDetailServiceTest {
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> invoiceDetailService.calcValuesInvoiceDetail(list));
     }
+
+    /**
+     * dado: que se envía un producto válido tipo GOOD.
+     * cuando: se llama a createInvoiceDetail.
+     * entonces: se crea y retorna correctamente el detalle.
+     */
+    @Test
+    public void createInvoiceDetailShouldCreateWhenItemTypeIsGood() throws NotFoundException {
+        // Arrange
+        ProductResponseDTO dto = new ProductResponseDTO(
+                ITEM_ID,
+                ITEM_NAME,
+                "CODE-001",
+                "BAR-123",
+                UNIT_PRICE,
+                "GOOD",
+                "ACTIVE",
+                "2024-01-01T00:00:00Z");
+        InvoiceDetail savedDetail = new InvoiceDetail(ITEM_ID, ITEM_NAME, ITEM_TYPE, QUANTITY, UNIT_PRICE, TOTAL,
+                invoice);
+
+        when(productClientAdapter.getProductById(ITEM_ID)).thenReturn(dto);
+        when(invoiceDetailRepository.save(any())).thenReturn(savedDetail);
+
+        // Act
+        List<InvoiceDetail> result = invoiceDetailService.createInvoiceDetail(validRequestDTO, invoice);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(ITEM_ID, result.get(0).getItemId());
+        verify(productClientAdapter).getProductById(ITEM_ID);
+        verify(invoiceDetailRepository).save(any());
+    }
+
+    /**
+     * dado: que se envía un paquete válido tipo SERVICE con múltiples productos.
+     * cuando: se llama a createInvoiceDetail.
+     * entonces: se crean varios detalles de factura correspondientes a los
+     * productos del paquete.
+     */
+    @Test
+    public void createInvoiceDetailShouldCreateMultipleWhenItemTypeIsService() throws NotFoundException {
+        // Arrange
+        CreateInvoiceDetailRequestDTO serviceRequest = new CreateInvoiceDetailRequestDTO(
+                "pack-123", "Paquete Salud", ItemType.SERVICE, 2, BigDecimal.valueOf(40));
+
+        ProductResponseDTO product1 = new ProductResponseDTO(
+                "p1", "Producto A", "CODE1", "BAR1", BigDecimal.valueOf(20), "GOOD", "ACTIVE", "2024-01-01T00:00:00Z");
+
+        ProductResponseDTO product2 = new ProductResponseDTO(
+                "p2", "Producto B", "CODE2", "BAR2", BigDecimal.valueOf(20), "GOOD", "ACTIVE", "2024-01-01T00:00:00Z");
+
+        GolfPackageDetailResponseDTO pd1 = new GolfPackageDetailResponseDTO("pd1", product1, 1);
+        GolfPackageDetailResponseDTO pd2 = new GolfPackageDetailResponseDTO("pd2", product2, 2);
+
+        GolfPackageResponseDTO pkg = new GolfPackageResponseDTO(
+                "pack-123", "Paquete Salud", "Descripción", BigDecimal.valueOf(40), true, List.of(pd1, pd2));
+
+        when(productClientAdapter.getPackageById("pack-123")).thenReturn(pkg);
+        when(invoiceDetailRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        // Act
+        List<InvoiceDetail> result = invoiceDetailService.createInvoiceDetail(serviceRequest, invoice);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("p1", result.get(0).getItemId());
+        assertEquals("p2", result.get(1).getItemId());
+        verify(productClientAdapter).getPackageById("pack-123");
+        verify(invoiceDetailRepository, times(2)).save(any());
+    }
+
 }
