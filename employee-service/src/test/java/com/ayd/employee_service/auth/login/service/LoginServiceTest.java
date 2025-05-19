@@ -1,9 +1,25 @@
 package com.ayd.employee_service.auth.login.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.BadCredentialsException;
+
 import com.ayd.employee_service.auth.jwt.ports.ForJwtGenerator;
 import com.ayd.employee_service.auth.login.dtos.LoginResponseDTO;
 import com.ayd.employee_service.auth.login.ports.ForUserLoader;
-import com.ayd.employee_service.auth.login.service.LoginService;
 import com.ayd.employee_service.employees.mappers.EmployeeMapper;
 import com.ayd.employee_service.employees.models.Employee;
 import com.ayd.employee_service.employees.models.EmployeeType;
@@ -15,21 +31,6 @@ import com.ayd.employee_service.users.ports.ForUsersPort;
 import com.ayd.shared.exceptions.NotFoundException;
 import com.ayd.sharedEmployeeService.dto.EmployeeResponseDTO;
 import com.ayd.sharedEmployeeService.dto.PermissionResponseDTO;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.BadCredentialsException;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LoginServiceTest {
