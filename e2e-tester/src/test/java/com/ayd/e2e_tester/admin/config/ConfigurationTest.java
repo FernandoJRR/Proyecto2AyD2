@@ -61,29 +61,22 @@ public class ConfigurationTest extends BaseE2ETest {
 
     @Test
     void testChangeNitRegime() {
-
         navigateToWindowToTest();
 
-        // arrange
-        WebElement opcionPequeno = wait.until(ExpectedConditions.visibilityOfElementLocated(
+        WebElement select = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.name("txtRegime")));
-
-        opcionPequeno.click();
+        select.click();
 
         WebElement listaOpciones = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("ul.p-dropdown-items")));
+                By.tagName("ul")));
 
         WebElement opcion = listaOpciones.findElements(By.tagName("li")).get(1);
         opcion.click();
 
-        WebElement btnSendRegime = driver.findElement(
-                By.name("btnSendRegime"));
-
-        // act
+        WebElement btnSendRegime = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.name("btnSendRegime")));
         btnSendRegime.click();
 
-        // assert
-        // busca en todos los elementos de la pagina con //* y evalua el texto
         WebElement toast = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.name("toastr")));
 
