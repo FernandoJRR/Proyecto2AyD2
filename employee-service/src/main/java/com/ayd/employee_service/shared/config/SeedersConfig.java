@@ -10,15 +10,18 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.ayd.employee_service.employees.enums.HistoryTypeEnum;
+import com.ayd.employee_service.employees.enums.PaymentTypeEnum;
 import com.ayd.employee_service.employees.models.Employee;
 import com.ayd.employee_service.employees.models.EmployeeHistory;
 import com.ayd.employee_service.employees.models.EmployeeType;
 import com.ayd.employee_service.employees.models.HistoryType;
+import com.ayd.employee_service.employees.models.PaymentType;
 import com.ayd.employee_service.employees.ports.ForEmployeeTypePort;
 import com.ayd.employee_service.employees.ports.ForEmployeesPort;
 import com.ayd.employee_service.employees.repositories.EmployeeRepository;
 import com.ayd.employee_service.employees.repositories.EmployeeTypeRepository;
 import com.ayd.employee_service.employees.repositories.HistoryTypeRepository;
+import com.ayd.employee_service.employees.repositories.PaymentTypeRepository;
 /*
 import com.ayd.employee_service.parameters.enums.ParameterEnum;
 import com.ayd.employee_service.parameters.models.Parameter;
@@ -47,6 +50,7 @@ public class SeedersConfig implements CommandLineRunner {
 
 	private final PermissionRepository permissionRepository;
 	private final UserRepository userRepository;
+	private final PaymentTypeRepository paymentTypeRepository;
 	//private final ParameterRepository parameterRepository;
 	private final EmployeeTypeRepository employeeTypeRepository;
 	private final EmployeeRepository employeeRepository;
@@ -73,6 +77,12 @@ public class SeedersConfig implements CommandLineRunner {
 			createdPermissions.add(createdPermission);
 		}
 
+		for (PaymentTypeEnum paymentTypeEnum : PaymentTypeEnum.values()) {
+            PaymentType createdType = new PaymentType();
+            createdType.setType(paymentTypeEnum.getType());
+			paymentTypeRepository.save(createdType);
+		}
+
 		// mandamos a crear el tipo de empleado admin
 		EmployeeType adminEmployeeType = forEmployeeTypePort.createEmployeeType(
 				EmployeeTypeEnum.ADMIN.getEmployeeType(),
@@ -84,7 +94,7 @@ public class SeedersConfig implements CommandLineRunner {
 		Employee newEmployee = new Employee("3349991110901","Luis", "Monterroso", new BigDecimal(2000),
 				new BigDecimal(10), new BigDecimal(10), null,
 				adminEmployeeType, null);
-	
+
 		// creamos el usuario admin
 		User userAdmin = new User("admin", "admin");
 
