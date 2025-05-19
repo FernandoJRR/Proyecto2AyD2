@@ -34,7 +34,9 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
         // agrega todas las rutas permitidas
-        configuration.setAllowedOrigins(List.of(appProperties.getFrontURL()));
+        //configuration.setAllowedOrigins(List.of(appProperties.getFrontURL()));
+        configuration.setAllowedOrigins(List.of("*"));
+
 
         // decimos que operaciones http estan permitidos
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
