@@ -1,7 +1,5 @@
 package com.ayd.e2e_tester.admin.config;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -24,6 +22,7 @@ public class ConfigurationTest extends BaseE2ETest {
                 By.name("btnSend"));
 
         // act
+        txtName.clear();
         txtName.sendKeys("Mi Empresa Test");
         btnCambiarNombre.click();
 
